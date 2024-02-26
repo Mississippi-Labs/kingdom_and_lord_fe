@@ -1,0 +1,98 @@
+export const cityList = [{
+  "id": 0,
+  "name": "wood_factory_1",
+  "level": 0,
+  "type": "wood"
+}, {
+  "id": 1,
+  "name": "wood_factory_2",
+  "level": 0,
+  "type": "wood"
+}, {
+  "id": 2,
+  "name": "wood_factory_3",
+  "level": 0,
+  "type": "wood"
+}, {
+  "id": 3,
+  "name": "wood_factory_4",
+  "level": 0,
+  "type": "wood"
+}, {
+  "id": 4,
+  "name": "steel_factory_1",
+  "level": 0,
+  "type": "steel"
+}, {
+  "id": 5,
+  "name": "steel_factory_2",
+  "level": 0,
+  "type": "steel"
+}, {
+  "id": 6,
+  "name": "steel_factory_3",
+  "level": 0,
+  "type": "steel"
+}, {
+  "id": 7,
+  "name": "steel_factory_4",
+  "level": 0,
+  "type": "steel"
+}, {
+  "id": 8,
+  "name": "brick_factory_1",
+  "level": 0,
+  "type": "brick"
+}, {
+  "id": 9,
+  "name": "brick_factory_2",
+  "level": 0,
+  "type": "brick"
+}, {
+  "id": 10,
+  "name": "brick_factory_3",
+  "level": 0,
+  "type": "brick"
+}, {
+  "id": 11,
+  "name": "brick_factory_4",
+  "level": 0,
+  "type": "brick"
+}, {
+  "id": 12,
+  "name": "farm_1",
+  "level": 0,
+  "type": "food"
+}, {
+  "id": 13,
+  "name": "farm_2",
+  "level": 0,
+  "type": "food"
+}, {
+  "id": 14,
+  "name": "farm_3",
+  "level": 0,
+  "type": "food"
+}, {
+  "id": 15,
+  "name": "farm_4",
+  "level": 0,
+  "type": "food"
+}, {
+  "id": 16,
+  "name": "farm_5",
+  "level": 0,
+  "type": "food"
+}, {
+  "id": 17,
+  "name": "farm_6",
+  "level": 0,
+  "type": "food"
+}]
+
+export const resource = {
+  "wood": 0,
+  "steel": 0,
+  "brick": 0,
+  "food": 0
+}
