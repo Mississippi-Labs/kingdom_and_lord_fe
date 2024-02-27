@@ -8,6 +8,10 @@ import { delay } from '../utils/index'
 
 let interval = null
 
+const cost = 100
+const growthRate = 10
+const house = 1000
+
 const message = useMessage()
 
 const menuIndex = ref(0)
@@ -16,24 +20,19 @@ const buildingList = ref([])
 const blockHeight = ref(0)
 const resourceData = ref(resource)
 const castleListData = ref(castleList)
-const castleBuildingList = ref([])
 
-const upgrade = (city) => {
+const upgrade = async (city) => {
+  if (buildingList.value.length >= 2) {
+    message.error('You can only build 2 buildings at the same time')
+    return
+  }
+  await delay(400)
   let targetLevel = city.level + 1
-  if (targetLevel * 100 > resourceData.value.food || targetLevel * 100 > resourceData.value.wood || targetLevel * 100 > resourceData.value.steel || targetLevel * 100 > resourceData.value.brick) {
+  if (targetLevel * cost > resourceData.value.food || targetLevel * cost > resourceData.value.wood || targetLevel * cost > resourceData.value.steel || targetLevel * cost > resourceData.value.brick) {
     message.error('Resource is not enough')
     return
   }
   const block = targetLevel * 5
-  if (city.type === 'castle') {
-    castleBuildingList.value.push({
-      id: city.id,
-      name: city.name,
-      targetLevel: targetLevel,
-      endBlock: blockHeight.value + block,
-    })
-    localStorage.setItem('castleBuildingList', JSON.stringify(castleBuildingList.value))
-  } else {
     buildingList.value.push({
       id: city.id,
       name: city.name,
@@ -41,12 +40,11 @@ const upgrade = (city) => {
       endBlock: blockHeight.value + block,
     })
     localStorage.setItem('buildingList', JSON.stringify(buildingList.value))
-  }
   resourceData.value = {
-    food: resourceData.value.food - targetLevel * 100,
-    wood: resourceData.value.wood - targetLevel * 100,
-    steel: resourceData.value.steel - targetLevel * 100,
-    brick: resourceData.value.brick - targetLevel * 100,
+    food: resourceData.value.food - targetLevel * cost,
+    wood: resourceData.value.wood - targetLevel * cost,
+    steel: resourceData.value.steel - targetLevel * cost,
+    brick: resourceData.value.brick - targetLevel * cost,
   }
   localStorage.setItem('resource', JSON.stringify(resourceData.value))
 }
@@ -68,27 +66,23 @@ const getData = () => {
   if (localCastleList) {
     castleListData.value = JSON.parse(localCastleList)
   }
-  let localCastleBuildingList = localStorage.getItem('castleBuildingList') || ''
-  if (localCastleBuildingList) {
-    castleBuildingList.value = JSON.parse(localCastleBuildingList)
-  }
   let localBlockHeight = localStorage.getItem('blockHeight') || 0
   blockHeight.value = Number(localBlockHeight)
 }
 
 const getRate = (type) => {
-  let rate = cityListData.value.filter(item => item.type === type).reduce((prev, next) => prev + (next.level + 1) * 10, 0)
+  let rate = cityListData.value.filter(item => item.type === type).reduce((prev, next) => prev + (next.level + 1) * growthRate, 0)
   return rate
 }
 
 const updateResource = () => {
-  let food = cityListData.value.filter(item => item.type === 'food').reduce((prev, next) => prev + (next.level + 1) * 10, 0)
-  let wood = cityListData.value.filter(item => item.type === 'wood').reduce((prev, next) => prev + (next.level + 1) * 10, 0)
-  let steel = cityListData.value.filter(item => item.type === 'steel').reduce((prev, next) => prev + (next.level + 1) * 10, 0)
-  let brick = cityListData.value.filter(item => item.type === 'brick').reduce((prev, next) => prev + (next.level + 1) * 10, 0)
+  let food = cityListData.value.filter(item => item.type === 'food').reduce((prev, next) => prev + (next.level + 1) * growthRate, 0)
+  let wood = cityListData.value.filter(item => item.type === 'wood').reduce((prev, next) => prev + (next.level + 1) * growthRate, 0)
+  let steel = cityListData.value.filter(item => item.type === 'steel').reduce((prev, next) => prev + (next.level + 1) * growthRate, 0)
+  let brick = cityListData.value.filter(item => item.type === 'brick').reduce((prev, next) => prev + (next.level + 1) * growthRate, 0)
   // 仓库容量
-  let warehouse = castleListData.value.filter(item => item.name === 'Warehouse').reduce((prev, next) => prev + (next.level + 1) * 1000, 0)
-  let granary = castleListData.value.filter(item => item.name === 'Granary').reduce((prev, next) => prev + (next.level + 1) * 1000, 0)
+  let warehouse = castleListData.value.filter(item => item.name === 'Warehouse').reduce((prev, next) => prev + (next.level + 1) * house, 0)
+  let granary = castleListData.value.filter(item => item.name === 'Granary').reduce((prev, next) => prev + (next.level + 1) * house, 0)
   if (resourceData.value.food + food > granary) {
     food = granary - resourceData.value.food
   }
@@ -111,12 +105,12 @@ const updateResource = () => {
 }
 
 const getPercentage = (key, value) => {
-  let warehouse = castleListData.value.filter(item => item.name === 'Warehouse').reduce((prev, next) => prev + (next.level + 1) * 1000, 0)
-  let granary = castleListData.value.filter(item => item.name === 'Granary').reduce((prev, next) => prev + (next.level + 1) * 1000, 0)
+  let warehouse = castleListData.value.filter(item => item.name === 'Warehouse').reduce((prev, next) => prev + (next.level + 1) * house, 0)
+  let granary = castleListData.value.filter(item => item.name === 'Granary').reduce((prev, next) => prev + (next.level + 1) * house, 0)
   if (key === 'food') {
-    return (value / granary) * 100
+    return (value / granary) * cost
   } else {
-    return (value / warehouse) * 100
+    return (value / warehouse) * cost
   }
 }
 
@@ -137,12 +131,6 @@ watch(() => blockHeight.value, (newVal) => {
         }
         return city
       })
-      return false
-    }
-    return true
-  })
-  castleBuildingList.value = castleBuildingList.value.filter(item => {
-    if (item.endBlock <= newVal) {
       castleListData.value = castleListData.value.map(city => {
         if (city.id === item.id) {
           city.level = item.targetLevel
@@ -155,7 +143,6 @@ watch(() => blockHeight.value, (newVal) => {
   })
   localStorage.setItem('buildingList', JSON.stringify(buildingList.value))
   localStorage.setItem('cityList', JSON.stringify(cityListData.value))
-  localStorage.setItem('castleBuildingList', JSON.stringify(castleBuildingList.value))
   localStorage.setItem('castleList', JSON.stringify(castleListData.value))
 })
 </script>
@@ -185,7 +172,7 @@ watch(() => blockHeight.value, (newVal) => {
       <div style="flex: 1">
         <CityList v-if="menuIndex == 0" :cityList="cityListData" :buildingList="buildingList" :blockHeight="blockHeight"
           @upgrade="upgrade" />
-        <CityList v-if="menuIndex == 1" :cityList="castleListData" :buildingList="castleBuildingList" :blockHeight="blockHeight"
+        <CityList v-if="menuIndex == 1" :cityList="castleListData" :buildingList="buildingList" :blockHeight="blockHeight"
           @upgrade="upgrade" />
         <Message v-if="menuIndex == 3" />
       </div>

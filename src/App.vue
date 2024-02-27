@@ -3,10 +3,10 @@ import { ref, watch, onBeforeMount } from 'vue'
 
 onBeforeMount(() => {
   let isV2 = localStorage.getItem('isV2') || ''
-  if (isV2 != 1) {
+  if (isV2 != 3) {
     // 清除所有缓存
     localStorage.clear()
-    localStorage.setItem('isV2', 1)
+    localStorage.setItem('isV2', 3)
   }
 })
 </script>

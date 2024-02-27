@@ -98,17 +98,17 @@ export const resource = {
 }
 
 export const castleList = [{
-  "id": 0,
+  "id": 18,
   "name": "Architects' Hall",
   "level": 0,
   "type": "castle"
 }, {
-  "id": 1,
+  "id": 19,
   "name": "Warehouse",
   "level": 0,
   "type": "castle"
 }, {
-  "id": 2,
+  "id": 20,
   "name": "Granary",
   "level": 0,
   "type": "castle"
