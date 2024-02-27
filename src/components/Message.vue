@@ -5,7 +5,10 @@ import { ref } from 'vue'
 <template>
   <n-list bordered style="margin-top: 68px;margin-right: 20px;" hoverable>
     <template #header>
-      <p style="font-size: 18px;font-weight: 500;line-height: 2.5;">Inbox</p>
+      <div class="flex-sb">
+        <p style="font-size: 18px;font-weight: 500;line-height: 2.5;">Inbox</p>
+        <n-button strong secondary >New Message</n-button>
+      </div>
     </template>
     <n-list-item>
       <n-thing title="Please Help Me" title-extra="Player1"  style="padding: 20px;border-bottom: 1px solid rgb(239, 239, 245);">
@@ -31,6 +34,11 @@ import { ref } from 'vue'
 </template>
 
 <style lang="scss">
+.flex-sb {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .n-thing {
   &:hover {
     background-color: #f5f7f8;
