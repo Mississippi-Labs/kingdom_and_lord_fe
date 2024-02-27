@@ -17,8 +17,8 @@ const upgradeFun = (city) => {
 <template>
   <div class="title">City List</div>
   <div class="list">
-    <n-card v-for="city in cityList" :key="city.id" :title="`${city.name} (${city.level})`" style="width: 220px;margin: 0 16px 16px 0;">
-      <n-button strong secondary @click="upgradeFun(city)">upgrade</n-button>
+    <n-card v-for="city in cityList" hoverable :key="city.id" :title="`${city.name} (${city.level})`" style="width: 220px;height: 124px;margin: 0 16px 16px 0;">
+      <n-button v-if="!buildingList.find(item => item.id === city.id)" strong secondary @click="upgradeFun(city)">upgrade</n-button>
     </n-card>
   </div>
   <div class="title">Building List</div>
