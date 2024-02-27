@@ -3,6 +3,7 @@ import { ref, watch, onBeforeMount } from 'vue'
 import { cityList, resource, castleList } from '../libs/data'
 import CityList from '../components/CityList.vue'
 import Message from '../components/Message.vue'
+import Map from '../components/Map.vue'
 import { useMessage } from 'naive-ui'
 import { delay } from '../utils/index'
 
@@ -175,6 +176,7 @@ watch(() => blockHeight.value, (newVal) => {
         <CityList v-if="menuIndex == 1" :cityList="castleListData" :buildingList="buildingList" :blockHeight="blockHeight"
           @upgrade="upgrade" />
         <Message v-if="menuIndex == 3" />
+        <Map v-if="menuIndex == 2" />
       </div>
       <div class="main-r">
         <n-card class="r-item" title="GrowthRate">
