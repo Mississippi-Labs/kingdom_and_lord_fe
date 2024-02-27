@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
+import { map } from '../libs/data'
 
-// 10*10的地图
-const map = Array.from({ length: 10 }, () => Array.from({ length: 10 }, () => 0))
 const colors = [
   '255, 0, 0',
   '0, 255, 0',
@@ -11,72 +10,8 @@ const colors = [
   '0, 255, 255'
 ]
 
-const villages = ref([])
+const villages = ref([{"x":7,"y":9},{"x":1,"y":1},{"x":0,"y":3},{"x":5,"y":0},{"x":8,"y":3},{"x":2,"y":9},{"x":6,"y":2},{"x":0,"y":9},{"x":8,"y":8}])
 const mapData = ref(map)
-
-onBeforeMount(() => {
-  // 随机生成5个村庄 并且上下左右是该村庄的势力范围 并且不跟其他的势力范围重合
-  for (let i = 0; i < 5; i++) {
-    let x = Math.floor(Math.random() * 10)
-    let y = Math.floor(Math.random() * 10)
-    while (map[x][y] !== 0) {
-      x = Math.floor(Math.random() * 10)
-      y = Math.floor(Math.random() * 10)
-    }
-    map[x][y] = i + 1
-    villages.value.push({ x, y, id: i + 1 })
-    if (x - 1 >= 0) {
-      map[x - 1][y] = i + 1
-    }
-    if (x + 1 < 10) {
-      map[x + 1][y] = i + 1
-    }
-    if (y - 1 >= 0) {
-      map[x][y - 1] = i + 1
-    }
-    if (y + 1 < 10) {
-      map[x][y + 1] = i + 1
-    }
-  }
-
-  // 随机生成10个怪兽 不覆盖在村庄上
-  for (let i = 0; i < 10; i++) {
-    let x = Math.floor(Math.random() * 10)
-    let y = Math.floor(Math.random() * 10)
-    while (map[x][y] !== 0) {
-      x = Math.floor(Math.random() * 10)
-      y = Math.floor(Math.random() * 10)
-    }
-    map[x][y] = -1
-  }
-
-  // 随机生成8个山脉 不覆盖在村庄和怪兽上
-  for (let i = 0; i < 8; i++) {
-    let x = Math.floor(Math.random() * 10)
-    let y = Math.floor(Math.random() * 10)
-    while (map[x][y] !== 0) {
-      x = Math.floor(Math.random() * 10)
-      y = Math.floor(Math.random() * 10)
-    }
-    map[x][y] = -2
-  }
-
-  let localMap = localStorage.getItem('map') || ''
-  let localVillages = localStorage.getItem('villages') || ''
-  if (localVillages) {
-    villages.value = JSON.parse(localVillages)
-  } else {
-    localStorage.setItem('villages', JSON.stringify(villages.value))
-  }
-  if (localMap) {
-    mapData.value = JSON.parse(localMap)
-
-  } else {
-    mapData.value = map
-    localStorage.setItem('map', JSON.stringify(map))
-  }
-})
-
 const getBg = (col) => {
   if (col > 0) {
     return { background: `rgba(${colors[col - 1]}, 0.2)` }
@@ -92,9 +27,25 @@ const getBg = (col) => {
       <div class="row" v-for="(row, rowIndex) in mapData" :key="rowIndex">
         <div class="col" v-for="(col, colIndex) in row" :key="colIndex">
           <div class="item" :style="getBg(col)">
-            <span v-if="col === -1">😈</span>
-            <span v-if="col === -2">⛰️</span>
-            <span v-if="villages.some(v => v.x === rowIndex && v.y === colIndex)">🏛️</span>
+            <n-popover v-if="col === -1" trigger="hover" :show-arrow="false">
+              <template #trigger>
+                <div style="background: rgba(255, 0, 0, .2);">🥷🏻</div>
+              </template>
+              <span>hidden soilder</span>
+            </n-popover>
+            <n-popover v-if="col === -2" trigger="hover" :show-arrow="false">
+              <template #trigger>
+                <div>⛰️</div>
+              </template>
+              <span>oasis</span>
+            </n-popover>
+            <n-popover v-if="col > 0" trigger="hover" :show-arrow="false">
+              <template #trigger>
+                <div v-if="villages.some(v => v.x === rowIndex && v.y === colIndex)">🏛️</div>
+                <div v-else></div>
+              </template>
+              <div>alliance_{{ col }}</div>
+            </n-popover>
           </div>
         </div>
       </div>
@@ -137,6 +88,14 @@ const getBg = (col) => {
         justify-content: center;
         align-items: center;
         font-size: 28px;
+        div {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
       }
     }
   }

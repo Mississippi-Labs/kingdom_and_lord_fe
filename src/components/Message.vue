@@ -3,7 +3,7 @@ import { ref } from 'vue'
 </script>
 
 <template>
-  <n-list bordered style="margin-top: 68px;margin-right: 20px;">
+  <n-list bordered style="margin-top: 68px;margin-right: 20px;" hoverable>
     <template #header>
       <p style="font-size: 18px;font-weight: 500;line-height: 2.5;">Inbox</p>
     </template>
@@ -30,6 +30,10 @@ import { ref } from 'vue'
   </n-list>
 </template>
 
-<style scoped lang="scss">
-
+<style lang="scss">
+.n-thing {
+  &:hover {
+    background-color: #f5f7f8;
+  }
+}
 </style>

@@ -164,13 +164,13 @@ watch(() => blockHeight.value, (newVal) => {
       <div class="resource-item" v-for="(item, key) in resourceData" :key="item.id">
         <div class="item-name">
           <div class="flex-sb"><p>{{ key }}</p><p>{{ item }}</p></div>
-          <n-progress type="line" :percentage="getPercentage(key, item)" :show-indicator="false" style="margin-top: 8px;" />
+          <n-progress type="line" :color="getPercentage(key, item) == 100 ? 'red' : ''" :percentage="getPercentage(key, item)" :show-indicator="false" style="margin-top: 8px;" />
         </div>
       </div>
     </div>
 
     <div class="main">
-      <div style="flex: 1">
+      <div style="width: 950px;flex: 0 0 950px;">
         <CityList v-if="menuIndex == 0" :cityList="cityListData" :buildingList="buildingList" :blockHeight="blockHeight"
           @upgrade="upgrade" />
         <CityList v-if="menuIndex == 1" :cityList="castleListData" :buildingList="buildingList" :blockHeight="blockHeight"
@@ -210,6 +210,8 @@ watch(() => blockHeight.value, (newVal) => {
 .content {
   padding: 0 30px;
   box-sizing: border-box;
+  // max-width: 1440px;
+  margin: auto;
 
   .header {
     height: 100px;
@@ -272,6 +274,7 @@ watch(() => blockHeight.value, (newVal) => {
   .main {
     display: flex;
     align-items: flex-start;
+    justify-content: center;
 
     .main-r {
       flex: 0 0 220px;
