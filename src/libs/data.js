@@ -1,91 +1,91 @@
 export const cityList = [{
   "id": 0,
-  "name": "wood_factory_1",
+  "name": "Wood Factory",
   "level": 0,
   "type": "wood"
 }, {
   "id": 1,
-  "name": "wood_factory_2",
+  "name": "Wood Factory",
   "level": 0,
   "type": "wood"
 }, {
   "id": 2,
-  "name": "wood_factory_3",
+  "name": "Wood Factory",
   "level": 0,
   "type": "wood"
 }, {
   "id": 3,
-  "name": "wood_factory_4",
+  "name": "Wood Factory",
   "level": 0,
   "type": "wood"
 }, {
   "id": 4,
-  "name": "steel_factory_1",
+  "name": "Steel Factory",
   "level": 0,
   "type": "steel"
 }, {
   "id": 5,
-  "name": "steel_factory_2",
+  "name": "Steel Factory",
   "level": 0,
   "type": "steel"
 }, {
   "id": 6,
-  "name": "steel_factory_3",
+  "name": "Steel Factory",
   "level": 0,
   "type": "steel"
 }, {
   "id": 7,
-  "name": "steel_factory_4",
+  "name": "Steel Factory",
   "level": 0,
   "type": "steel"
 }, {
   "id": 8,
-  "name": "brick_factory_1",
+  "name": "Brick Factory",
   "level": 0,
   "type": "brick"
 }, {
   "id": 9,
-  "name": "brick_factory_2",
+  "name": "Brick Factory",
   "level": 0,
   "type": "brick"
 }, {
   "id": 10,
-  "name": "brick_factory_3",
+  "name": "Brick Factory",
   "level": 0,
   "type": "brick"
 }, {
   "id": 11,
-  "name": "brick_factory_4",
+  "name": "Brick Factory",
   "level": 0,
   "type": "brick"
 }, {
   "id": 12,
-  "name": "farm_1",
+  "name": "Farm",
   "level": 0,
   "type": "food"
 }, {
   "id": 13,
-  "name": "farm_2",
+  "name": "Farm",
   "level": 0,
   "type": "food"
 }, {
   "id": 14,
-  "name": "farm_3",
+  "name": "Farm",
   "level": 0,
   "type": "food"
 }, {
   "id": 15,
-  "name": "farm_4",
+  "name": "Farm",
   "level": 0,
   "type": "food"
 }, {
   "id": 16,
-  "name": "farm_5",
+  "name": "Farm",
   "level": 0,
   "type": "food"
 }, {
   "id": 17,
-  "name": "farm_6",
+  "name": "Farm",
   "level": 0,
   "type": "food"
 }]
@@ -96,3 +96,20 @@ export const resource = {
   "brick": 0,
   "food": 0
 }
+
+export const castleList = [{
+  "id": 0,
+  "name": "Architects' Hall",
+  "level": 0,
+  "type": "castle"
+}, {
+  "id": 1,
+  "name": "Warehouse",
+  "level": 0,
+  "type": "castle"
+}, {
+  "id": 2,
+  "name": "Granary",
+  "level": 0,
+  "type": "castle"
+}]
