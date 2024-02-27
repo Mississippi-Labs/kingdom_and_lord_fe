@@ -9,8 +9,8 @@ import { delay } from '../utils/index'
 
 let interval = null
 
-const cost = 100
-const growthRate = 10
+const cost = 200
+const growthRate = 5
 const house = 1000
 
 const message = useMessage()
@@ -109,9 +109,9 @@ const getPercentage = (key, value) => {
   let warehouse = castleListData.value.filter(item => item.name === 'Warehouse').reduce((prev, next) => prev + (next.level + 1) * house, 0)
   let granary = castleListData.value.filter(item => item.name === 'Granary').reduce((prev, next) => prev + (next.level + 1) * house, 0)
   if (key === 'food') {
-    return (value / granary) * cost
+    return (value / granary) * 100
   } else {
-    return (value / warehouse) * cost
+    return (value / warehouse) * 100
   }
 }
 
@@ -300,5 +300,13 @@ watch(() => blockHeight.value, (newVal) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+</style>
+<style>
+.n-card.n-card--bordered {
+  --n-padding-top: 10px !important;
+  --n-padding-bottom: 8px !important;
+  --n-padding-left: 10px !important;
+  --n-padding-right: 10px !important;
 }
 </style>

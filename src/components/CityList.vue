@@ -17,7 +17,7 @@ const upgradeFun = (city) => {
 <template>
   <div class="title">City List</div>
   <div class="list">
-    <n-card v-for="city in cityList" hoverable :key="city.id" :title="`${city.name} (${city.level})`" style="width: 220px;height: 124px;margin: 0 16px 16px 0;">
+    <n-card v-for="city in cityList" hoverable :key="city.id" :title="`${city.name} (${city.level})`" style="width: 220px;height: 94px;margin: 0 12px 12px 0;font-size: 0;">
       <n-button v-if="!buildingList.find(item => item.id === city.id)" :disabled="buildingList.length >= 2" strong secondary @click="upgradeFun(city)">upgrade</n-button>
     </n-card>
   </div>
@@ -45,6 +45,7 @@ const upgradeFun = (city) => {
     padding: 10px;
     box-sizing: border-box;
     border-radius: 10px;
+    font-size: 0;
     .name {
       font-size: 16px;
     }
