@@ -8,4 +8,5 @@ import { create, NMessageProvider, NDialogProvider, NSpin, NButton, NCard, NProg
 const naive = create({
   components: [ NMessageProvider, NDialogProvider, NSpin, NButton, NCard, NProgress, NList, NThing, NPopover ]
 })
+
 createApp(App).use(router).use(naive).mount('#app')

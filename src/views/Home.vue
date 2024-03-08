@@ -1,155 +1,170 @@
 <script setup>
-import { ref, watch, onBeforeMount } from 'vue'
+import { ref, watch, onBeforeMount, inject, onBeforeUnmount } from 'vue'
 import { cityList, resource, castleList } from '../libs/data'
 import CityList from '../components/CityList.vue'
 import Message from '../components/Message.vue'
 import Map from '../components/Map.vue'
 import { useMessage } from 'naive-ui'
 import { delay } from '../utils/index'
+import { useGlobalStore } from '../hooks/globalStore.js'
+import { RpcProvider } from "starknet";
+import Loading from '../components/Loading.vue'
 
 let interval = null
 
-const cost = 200
-const growthRate = 5
-const house = 1000
+const providerRPC = new RpcProvider({
+  nodeUrl: import.meta.env.VITE_PUBLIC_NODE_URL,
+});
+
+const dojoContext = inject('DojoContext');
+
+const { store } = useGlobalStore()
 
 const message = useMessage()
 
+const showLoading = ref(false)
 const menuIndex = ref(0)
-const cityListData = ref(cityList)
+const cityListData = ref([])
 const buildingList = ref([])
 const blockHeight = ref(0)
 const resourceData = ref(resource)
-const castleListData = ref(castleList)
+const growthRateData = ref({ resource })
+const castleListData = ref([])
+
+watch(() => store.dojoComponents, (newVal) => {
+  console.log('newVal', newVal)
+  if (newVal) {
+    cityListData.value = newVal.cityBuilding.sort((a, b) => a.building_id - b.building_id)
+    castleListData.value = [...newVal.cityHall, ...newVal.warehouse, ...newVal.barn]
+  }
+}, { deep: true, immediate: true })
+
+const spawnFun = async () => {
+  console.log('spawnFun')
+  console.log(dojoContext)
+  showLoading.value = true
+  let { spawn } = dojoContext.setup.systemCalls
+  try {
+    spawn({ account: dojoContext.account })
+  } catch (error) {
+    console.error('Failed to spawn:', error)
+    message.error('Failed to spawn:' + error)
+  }
+  showLoading.value = false
+}
+
+const verify = async (requirement) => {
+  if (Number(requirement.brick.amount) > resourceData.value.brick && Number(requirement.steel.amount) > resourceData.value.steel && Number(requirement.wood.amount) > resourceData.value.wood && Number(requirement.food.amount) > resourceData.value.food) {
+    return false;
+  }
+  return true;
+}
 
 const upgrade = async (city) => {
   if (buildingList.value.length >= 2) {
     message.error('You can only build 2 buildings at the same time')
     return
   }
-  await delay(400)
-  let targetLevel = city.level + 1
-  if (targetLevel * cost > resourceData.value.food || targetLevel * cost > resourceData.value.wood || targetLevel * cost > resourceData.value.steel || targetLevel * cost > resourceData.value.brick) {
-    message.error('Resource is not enough')
-    return
+  showLoading.value = true
+  const id = city.building_id
+  const { startUpgrade, getUpgradeInfo } = dojoContext.setup.systemCalls
+  const account = dojoContext.account
+  const requirement = await getUpgradeInfo(id, account.address)
+  console.log('requirement', requirement)
+  const isCanUpgrade = await verify(requirement.required_resource)
+  console.log('isCanUpgrade', isCanUpgrade)
+  if (!isCanUpgrade) {
+    console.log("not enough resources")
+    showLoading.value = false
+    message.error('Not enough resources')
+    return;
   }
-  const block = targetLevel * 5
-    buildingList.value.push({
-      id: city.id,
-      name: city.name,
-      targetLevel: targetLevel,
-      endBlock: blockHeight.value + block,
-    })
-    localStorage.setItem('buildingList', JSON.stringify(buildingList.value))
-  resourceData.value = {
-    food: resourceData.value.food - targetLevel * cost,
-    wood: resourceData.value.wood - targetLevel * cost,
-    steel: resourceData.value.steel - targetLevel * cost,
-    brick: resourceData.value.brick - targetLevel * cost,
+  try {
+    await startUpgrade({ account, id })
+  } catch (error) {
+    console.error('Failed to startUpgrade:', error)
+    message.error('Failed to startUpgrade:' + error)
   }
-  localStorage.setItem('resource', JSON.stringify(resourceData.value))
+  showLoading.value = false
 }
 
-const getData = () => {
-  let localBuildingList = localStorage.getItem('buildingList') || ''
-  if (localBuildingList) {
-    buildingList.value = JSON.parse(localBuildingList)
+const getStorage = (key, value) => {
+  const { warehouse, barn } = store.dojoComponents
+  const warehouseAmount = warehouse?.[0]?.max_storage
+  const barnAmount = barn?.[0]?.max_storage
+  if (key === 'food') {
+    return barnAmount
+  } else {
+    return warehouseAmount
   }
-  let localCityList = localStorage.getItem('cityList') || ''
-  if (localCityList) {
-    cityListData.value = JSON.parse(localCityList)
-  }
-  let localresource = localStorage.getItem('resource') || ''
-  if (localresource) {
-    resourceData.value = JSON.parse(localresource)
-  }
-  let localCastleList = localStorage.getItem('castleList') || ''
-  if (localCastleList) {
-    castleListData.value = JSON.parse(localCastleList)
-  }
-  let localBlockHeight = localStorage.getItem('blockHeight') || 0
-  blockHeight.value = Number(localBlockHeight)
-}
-
-const getRate = (type) => {
-  let rate = cityListData.value.filter(item => item.type === type).reduce((prev, next) => prev + (next.level + 1) * growthRate, 0)
-  return rate
-}
-
-const updateResource = () => {
-  let food = cityListData.value.filter(item => item.type === 'food').reduce((prev, next) => prev + (next.level + 1) * growthRate, 0)
-  let wood = cityListData.value.filter(item => item.type === 'wood').reduce((prev, next) => prev + (next.level + 1) * growthRate, 0)
-  let steel = cityListData.value.filter(item => item.type === 'steel').reduce((prev, next) => prev + (next.level + 1) * growthRate, 0)
-  let brick = cityListData.value.filter(item => item.type === 'brick').reduce((prev, next) => prev + (next.level + 1) * growthRate, 0)
-  // 仓库容量
-  let warehouse = castleListData.value.filter(item => item.name === 'Warehouse').reduce((prev, next) => prev + (next.level + 1) * house, 0)
-  let granary = castleListData.value.filter(item => item.name === 'Granary').reduce((prev, next) => prev + (next.level + 1) * house, 0)
-  if (resourceData.value.food + food > granary) {
-    food = granary - resourceData.value.food
-  }
-  if (resourceData.value.wood + wood > warehouse) {
-    wood = warehouse - resourceData.value.wood
-  }
-  if (resourceData.value.steel + steel > warehouse) {
-    steel = warehouse - resourceData.value.steel
-  }
-  if (resourceData.value.brick + brick > warehouse) {
-    brick = warehouse - resourceData.value.brick
-  }
-  resourceData.value = {
-    food: resourceData.value.food + food,
-    wood: resourceData.value.wood + wood,
-    steel: resourceData.value.steel + steel,
-    brick: resourceData.value.brick + brick,
-  }
-  localStorage.setItem('resource', JSON.stringify(resourceData.value))
 }
 
 const getPercentage = (key, value) => {
-  let warehouse = castleListData.value.filter(item => item.name === 'Warehouse').reduce((prev, next) => prev + (next.level + 1) * house, 0)
-  let granary = castleListData.value.filter(item => item.name === 'Granary').reduce((prev, next) => prev + (next.level + 1) * house, 0)
+  const { warehouse, barn } = store.dojoComponents
+  const warehouseAmount = warehouse?.[0]?.max_storage
+  const barnAmount = barn?.[0]?.max_storage
   if (key === 'food') {
-    return (value / granary) * 100
+    return (value / barnAmount) * 100
   } else {
-    return (value / warehouse) * 100
+    return (value / warehouseAmount) * 100
+  }
+}
+
+const getLastBlock = async () => {
+  const lastBlock = await providerRPC.getBlockLatestAccepted();
+  blockHeight.value = lastBlock.block_number
+}
+
+const getData = async () => {
+  const { getResource, getGrowthRate } = dojoContext.setup.systemCalls
+  const account = dojoContext.account
+  const resource = await getResource(account.address)
+  const growthRate = await getGrowthRate(account.address)
+  resourceData.value = {
+    food: Number(resource?.[3]?.amount),
+    wood: Number(resource?.[0]?.amount),
+    steel: Number(resource?.[1]?.amount),
+    brick: Number(resource?.[2]?.amount),
+  }
+  growthRateData.value = {
+    food: Number(growthRate?.[3]?.amount),
+    wood: Number(growthRate?.[0]?.amount),
+    steel: Number(growthRate?.[1]?.amount),
+    brick: Number(growthRate?.[2]?.amount),
   }
 }
 
 onBeforeMount(() => {
-  getData()
+  getLastBlock()
   interval = setInterval(() => {
-    blockHeight.value += 1
+    getLastBlock()
+    if (dojoContext.setup) {
+      getData()
+    }
   }, 2000)
 })
-watch(() => blockHeight.value, (newVal) => {
-  localStorage.setItem('blockHeight', newVal)
-  updateResource()
-  buildingList.value = buildingList.value.filter(item => {
-    if (item.endBlock <= newVal) {
-      cityListData.value = cityListData.value.map(city => {
-        if (city.id === item.id) {
-          city.level = item.targetLevel
-        }
-        return city
-      })
-      castleListData.value = castleListData.value.map(city => {
-        if (city.id === item.id) {
-          city.level = item.targetLevel
-        }
-        return city
-      })
-      return false
-    }
-    return true
-  })
-  localStorage.setItem('buildingList', JSON.stringify(buildingList.value))
-  localStorage.setItem('cityList', JSON.stringify(cityListData.value))
-  localStorage.setItem('castleList', JSON.stringify(castleListData.value))
+
+onBeforeUnmount(() => {
+  clearInterval(interval)
 })
+
+watch(() => blockHeight.value, (newVal) => {
+  console.log('blockHeight', newVal)
+  const { underUpgrading } = store.dojoComponents
+  if (!underUpgrading) return
+  buildingList.value = underUpgrading.filter(item => !item.is_finished)
+  underUpgrading.forEach(async (item) => {
+    if (item.end_time <= newVal && item.end_time !== 0 && item.is_finished != 1) {
+      const { finishUpgrade } = dojoContext.setup.systemCalls
+      const account = dojoContext.account
+      await finishUpgrade({ account, id: item.upgrade_id })
+    }
+  })
+}, {immediate: true})
 </script>
 
 <template>
-  <div class="content">
+  <div v-if="store.state.isSpawn" class="content">
     <div class="header flex-sb">
       <div class="logo">Kindoms Lords</div>
       <div class="menu flex">
@@ -163,8 +178,12 @@ watch(() => blockHeight.value, (newVal) => {
     <div class="resource">
       <div class="resource-item" v-for="(item, key) in resourceData" :key="item.id">
         <div class="item-name">
-          <div class="flex-sb"><p>{{ key }}</p><p>{{ item }}</p></div>
-          <n-progress type="line" :color="getPercentage(key, item) == 100 ? 'red' : ''" :percentage="getPercentage(key, item)" :show-indicator="false" style="margin-top: 8px;" />
+          <div class="flex-sb">
+            <p>{{ key }}</p>
+            <p>{{ item }} / {{getStorage(key, item)}}</p>
+          </div>
+          <n-progress type="line" :color="getPercentage(key, item) == 100 ? 'red' : ''"
+            :percentage="getPercentage(key, item)" :show-indicator="false" style="margin-top: 8px;" />
         </div>
       </div>
     </div>
@@ -173,17 +192,17 @@ watch(() => blockHeight.value, (newVal) => {
       <div style="width: 950px;flex: 0 0 950px;">
         <CityList v-if="menuIndex == 0" :cityList="cityListData" :buildingList="buildingList" :blockHeight="blockHeight"
           @upgrade="upgrade" />
-        <CityList v-if="menuIndex == 1" :cityList="castleListData" :buildingList="buildingList" :blockHeight="blockHeight"
-          @upgrade="upgrade" />
+        <CityList v-if="menuIndex == 1" :cityList="castleListData" :buildingList="buildingList"
+          :blockHeight="blockHeight" @upgrade="upgrade" />
         <Message v-if="menuIndex == 3" />
         <Map v-if="menuIndex == 2" />
       </div>
       <div class="main-r">
         <n-card class="r-item" title="GrowthRate">
-          <div class="r-content">food: {{ getRate('food') }}</div>
-          <div class="r-content">wood: {{ getRate('wood') }}</div>
-          <div class="r-content">steel: {{ getRate('steel') }}</div>
-          <div class="r-content">brick: {{ getRate('brick') }}</div>
+          <div class="r-content">food: {{ growthRateData.food }}</div>
+          <div class="r-content">wood: {{ growthRateData.wood }}</div>
+          <div class="r-content">steel: {{ growthRateData.steel }}</div>
+          <div class="r-content">brick: {{ growthRateData.brick }}</div>
         </n-card>
 
         <n-card class="r-item" title="Alliance">
@@ -204,9 +223,19 @@ watch(() => blockHeight.value, (newVal) => {
       </div>
     </div>
   </div>
+  <div v-else class="flex spawn-wrap">
+    <n-button type="primary" @click="spawnFun">Spawn</n-button>
+  </div>
+  <Loading v-if="showLoading" />
 </template>
 
 <style scoped lang="scss">
+.spawn-wrap {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  justify-content: center;
+}
 .content {
   padding: 0 30px;
   box-sizing: border-box;
@@ -259,7 +288,7 @@ watch(() => blockHeight.value, (newVal) => {
     align-items: center;
     justify-content: center;
     height: 50px;
-    width: 800px;
+    width: 980px;
     border-radius: 40px;
     border: 1px solid #E5E5E5;
     margin: auto;
@@ -281,8 +310,10 @@ watch(() => blockHeight.value, (newVal) => {
       width: 250px;
       padding-top: 68px;
       box-sizing: border-box;
+
       .r-item {
         margin-bottom: 20px;
+
         .r-content {
           margin-bottom: 10px;
         }
@@ -302,6 +333,7 @@ watch(() => blockHeight.value, (newVal) => {
   justify-content: space-between;
 }
 </style>
+
 <style>
 .n-card.n-card--bordered {
   --n-padding-top: 10px !important;
