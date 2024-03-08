@@ -25,25 +25,27 @@ const message = useMessage()
 const showLoading = ref(false)
 const menuIndex = ref(0)
 const cityListData = ref([])
-const buildingList = ref([])
 const blockHeight = ref(0)
 const resourceData = ref(resource)
 const growthRateData = ref({ resource })
 const castleListData = ref([])
 
 watch(() => store.dojoComponents, (newVal) => {
-  console.log('newVal', newVal)
   if (newVal) {
     cityListData.value = newVal.cityBuilding.sort((a, b) => a.building_id - b.building_id)
     castleListData.value = [...newVal.cityHall, ...newVal.warehouse, ...newVal.barn]
   }
 }, { deep: true, immediate: true })
 
+const getBuildingList = () => {
+  const { underUpgrading } = store.dojoComponents
+  if (!underUpgrading) return []
+  else return underUpgrading.filter(item => !item.is_finished)
+}
+
 const spawnFun = async () => {
-  console.log('spawnFun')
-  console.log(dojoContext)
   showLoading.value = true
-  let { spawn } = dojoContext.setup.systemCalls
+  const { spawn } = dojoContext.setup.systemCalls
   try {
     spawn({ account: dojoContext.account })
   } catch (error) {
@@ -61,7 +63,7 @@ const verify = async (requirement) => {
 }
 
 const upgrade = async (city) => {
-  if (buildingList.value.length >= 2) {
+  if (getBuildingList() >= 2) {
     message.error('You can only build 2 buildings at the same time')
     return
   }
@@ -70,9 +72,7 @@ const upgrade = async (city) => {
   const { startUpgrade, getUpgradeInfo } = dojoContext.setup.systemCalls
   const account = dojoContext.account
   const requirement = await getUpgradeInfo(id, account.address)
-  console.log('requirement', requirement)
   const isCanUpgrade = await verify(requirement.required_resource)
-  console.log('isCanUpgrade', isCanUpgrade)
   if (!isCanUpgrade) {
     console.log("not enough resources")
     showLoading.value = false
@@ -152,7 +152,6 @@ watch(() => blockHeight.value, (newVal) => {
   console.log('blockHeight', newVal)
   const { underUpgrading } = store.dojoComponents
   if (!underUpgrading) return
-  buildingList.value = underUpgrading.filter(item => !item.is_finished)
   underUpgrading.forEach(async (item) => {
     if (item.end_time <= newVal && item.end_time !== 0 && item.is_finished != 1) {
       const { finishUpgrade } = dojoContext.setup.systemCalls
@@ -190,9 +189,9 @@ watch(() => blockHeight.value, (newVal) => {
 
     <div class="main">
       <div style="width: 950px;flex: 0 0 950px;">
-        <CityList v-if="menuIndex == 0" :cityList="cityListData" :buildingList="buildingList" :blockHeight="blockHeight"
+        <CityList v-if="menuIndex == 0" :cityList="cityListData" :buildingList="getBuildingList()" :blockHeight="blockHeight"
           @upgrade="upgrade" />
-        <CityList v-if="menuIndex == 1" :cityList="castleListData" :buildingList="buildingList"
+        <CityList v-if="menuIndex == 1" :cityList="castleListData" :buildingList="getBuildingList()"
           :blockHeight="blockHeight" @upgrade="upgrade" />
         <Message v-if="menuIndex == 3" />
         <Map v-if="menuIndex == 2" />
