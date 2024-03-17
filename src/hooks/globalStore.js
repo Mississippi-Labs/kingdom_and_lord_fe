@@ -11,7 +11,9 @@ const store = reactive({
     cityHall: null
   },
   state: {
-    isSpawn: false
+    isSpawn: false,
+    logs: localStorage.getItem('logs') ? JSON.parse(localStorage.getItem('logs')) : [],
+    lastBlock: 0
   }
 });
 
@@ -22,8 +24,19 @@ const setDojoComponents = (components) => {
   }
 }
 
+const setLogs = (logs) => {
+  store.state.logs = logs
+  localStorage.setItem('logs', JSON.stringify(logs))
+}
+
+const setLastBlock = (block) => {
+  store.state.lastBlock = block
+}
+
 
 export const useGlobalStore = () => ({
   store,
-  setDojoComponents
+  setDojoComponents,
+  setLogs,
+  setLastBlock
 });

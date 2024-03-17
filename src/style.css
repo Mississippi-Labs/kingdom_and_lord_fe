@@ -55,3 +55,77 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+
+.flex-center-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.flex-center-sb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-start-center {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.flex-start {
+  display: flex;
+  align-items: flex-start;
+}
+
+.flex-start-sb {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.flex-end-center {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.flex-end {
+  display: flex;
+  align-items: flex-end;
+}
+
+.flex-end-sb {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+@font-face {
+	font-family: 'Chalkboard';
+	src: url(./assets/fonts/ChalkboardSE-Regular.ttf);
+}
+
+@font-face {
+	font-family: 'Chalkboard-Bold';
+	src: url(./assets/fonts/ChalkboardSE-Bold.ttf);
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: 'Chalkboard-Light';
+	src: url(./assets/fonts/ChalkboardSE-Light.ttf);
+	font-weight: lighter;
+}
+
+* {
+	font-family: 'Chalkboard', sans-serif;
+	box-sizing: border-box;
+}
