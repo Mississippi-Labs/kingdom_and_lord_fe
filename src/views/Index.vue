@@ -185,6 +185,7 @@ watch(() => blockHeight.value, (newVal) => {
           </div>
         </div>
       </div>
+      
       <!-- <div v-for="i in 20" class="col">
         <div class="col-item"></div>
         <div class="col-item"></div>
