@@ -6,9 +6,10 @@ import Message from '../components/Message.vue'
 import Map from '../components/Map.vue'
 import { useMessage } from 'naive-ui'
 import { useGlobalStore } from '../hooks/globalStore.js'
-import { RpcProvider } from "starknet";
+import { RpcProvider, Contract } from "starknet";
 import Loading from '../components/Loading.vue'
 import { formatDate } from '../utils/index'
+import { tokenContractABI, tokenContractAddress } from '../libs/ERC20.js'
 
 let interval = null
 
@@ -16,6 +17,7 @@ const providerRPC = new RpcProvider({
   nodeUrl: import.meta.env.VITE_PUBLIC_NODE_URL,
 });
 
+const tokenContract = new Contract(tokenContractABI, tokenContractAddress, providerRPC);
 
 const dojoContext = inject('DojoContext');
 
@@ -32,6 +34,7 @@ const blockHeight = ref(0)
 const resourceData = ref(resource)
 const growthRateData = ref({ resource })
 const castleListData = ref([])
+const balance = ref(0)
 
 watch([store.state.logs, showLogs], ([newVal, show]) => {
   if (newVal || show) {
@@ -39,7 +42,7 @@ watch([store.state.logs, showLogs], ([newVal, show]) => {
       logsRef.value.scrollTop = logsRef.value.scrollHeight
     })
   }
-}, { immediate: true, deep: true})
+}, { immediate: true, deep: true })
 
 watch(() => store.dojoComponents, (newVal) => {
   if (newVal) {
@@ -131,6 +134,12 @@ const getData = async () => {
   const account = dojoContext.account
   const resource = await getResource(account.address)
   const growthRate = await getGrowthRate(account.address)
+  // console.log('resource', tokenContract)
+  tokenContract.balanceOf(account.address).then(accountBalance => {
+    balance.value = Number(accountBalance).toFixed(2)
+  }).catch(error => {
+    console.error('获取余额时出错:', error);
+  });
   resourceData.value = {
     food: Number(resource?.[3]?.amount),
     wood: Number(resource?.[0]?.amount),
@@ -205,7 +214,7 @@ watch(() => blockHeight.value, (newVal) => {
         <div class="menu-item" :class="{ active: menuIndex == 3 }" @click="menuIndex = 3">Message</div>
       </div>
       <div class="wallet" @click="copy(dojoContext?.account?.address)">{{ formatAddress(dojoContext?.account?.address)
-        }}</div>
+        }} | {{ balance }}</div>
     </div>
     <div class="resource">
       <div class="resource-item" v-for="(item, key) in resourceData" :key="item.id">
@@ -398,6 +407,7 @@ watch(() => blockHeight.value, (newVal) => {
     position: sticky;
     top: 0;
     background: #fff;
+
     img {
       width: 16px;
       height: auto;
