@@ -20,12 +20,64 @@ export function defineContractComponents(world) {
 	  Barn: (() => {
 	    return defineComponent(
 	      world,
-	      { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, food: { amount: RecsType.Number }, max_storage: RecsType.Number },
+	      { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, max_storage: RecsType.Number, population: RecsType.Number },
 	      {
 	        metadata: {
 	          name: "Barn",
 	          types: ["contractaddress","u64","u64","u64","u64"],
-	          customTypes: ["Level","Resource"],
+	          customTypes: ["Level"],
+	        },
+	      }
+	    );
+	  })(),
+	  BarnStorage: (() => {
+	    return defineComponent(
+	      world,
+	      { player: RecsType.BigInt, food: { amount: RecsType.Number }, max_storage: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "BarnStorage",
+	          types: ["contractaddress","u64","u64"],
+	          customTypes: ["Resource"],
+	        },
+	      }
+	    );
+	  })(),
+	  Barrack: (() => {
+	    return defineComponent(
+	      world,
+	      { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, bonus: RecsType.Number, population: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "Barrack",
+	          types: ["contractaddress","u64","u64","u64","u64"],
+	          customTypes: ["Level"],
+	        },
+	      }
+	    );
+	  })(),
+	  Troops: (() => {
+	    return defineComponent(
+	      world,
+	      { player: RecsType.BigInt, millitia: RecsType.Number, guard: RecsType.Number, heavy_infantry: RecsType.Number, scouts: RecsType.Number, knights: RecsType.Number, heavy_knights: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "Troops",
+	          types: ["contractaddress","u64","u64","u64","u64","u64","u64"],
+	          customTypes: [],
+	        },
+	      }
+	    );
+	  })(),
+	  UnderTraining: (() => {
+	    return defineComponent(
+	      world,
+	      { address: RecsType.BigInt, training_id: RecsType.Number, soldier_kind: RecsType.Number, start_time: RecsType.Number, end_time: RecsType.Number, is_finished: RecsType.Boolean },
+	      {
+	        metadata: {
+	          name: "UnderTraining",
+	          types: ["contractaddress","u64","u64","u64","u64","bool"],
+	          customTypes: [],
 	        },
 	      }
 	    );
@@ -33,12 +85,12 @@ export function defineContractComponents(world) {
 	  CityBuilding: (() => {
 	    return defineComponent(
 	      world,
-	      { player: RecsType.BigInt, building_id: RecsType.Number, building: { growth_rate: RecsType.Number, level: { level: RecsType.Number } } },
+	      { player: RecsType.BigInt, building_id: RecsType.Number, building_kind: RecsType.Number, level: { level: RecsType.Number }, growth_rate: RecsType.Number, population: RecsType.Number },
 	      {
 	        metadata: {
 	          name: "CityBuilding",
-	          types: ["contractaddress","u64","u64","u64"],
-	          customTypes: ["Building","Level"],
+	          types: ["contractaddress","u64","u64","u64","u64","u64"],
+	          customTypes: ["Level"],
 	        },
 	      }
 	    );
@@ -46,11 +98,11 @@ export function defineContractComponents(world) {
 	  CityHall: (() => {
 	    return defineComponent(
 	      world,
-	      { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number } },
+	      { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, bonus: RecsType.Number, population: RecsType.Number },
 	      {
 	        metadata: {
 	          name: "CityHall",
-	          types: ["contractaddress","u64","u64"],
+	          types: ["contractaddress","u64","u64","u64","u64"],
 	          customTypes: ["Level"],
 	        },
 	      }
@@ -59,12 +111,25 @@ export function defineContractComponents(world) {
 	  UnderUpgrading: (() => {
 	    return defineComponent(
 	      world,
-	      { address: RecsType.BigInt, upgrade_id: RecsType.Number, building_id: RecsType.Number, target_level: { level: RecsType.Number }, start_time: RecsType.Number, end_time: RecsType.Number, is_finished: RecsType.Boolean },
+	      { address: RecsType.BigInt, upgrade_id: RecsType.Number, building_id: RecsType.Number, building_kind: RecsType.Number, target_level: { level: RecsType.Number }, start_time: RecsType.Number, end_time: RecsType.Number, is_finished: RecsType.Boolean, is_new_building: RecsType.Boolean, value: RecsType.Number, population: RecsType.Number },
 	      {
 	        metadata: {
 	          name: "UnderUpgrading",
-	          types: ["contractaddress","u64","u64","u64","u64","u64","bool"],
+	          types: ["contractaddress","u64","u64","u64","u64","u64","u64","bool","bool","u64","u64"],
 	          customTypes: ["Level"],
+	        },
+	      }
+	    );
+	  })(),
+	  Config: (() => {
+	    return defineComponent(
+	      world,
+	      { id_config: RecsType.Number, erc20_addr: RecsType.BigInt, amount: RecsType.BigInt, receiver: RecsType.BigInt, merkle_root: RecsType.BigInt },
+	      {
+	        metadata: {
+	          name: "Config",
+	          types: ["u64","contractaddress","u256","contractaddress","felt252"],
+	          customTypes: [],
 	        },
 	      }
 	    );
@@ -82,15 +147,41 @@ export function defineContractComponents(world) {
 	      }
 	    );
 	  })(),
+	  BuildingAreaInfo: (() => {
+	    return defineComponent(
+	      world,
+	      { player: RecsType.BigInt, building_id: RecsType.Number, building_kind: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "BuildingAreaInfo",
+	          types: ["contractaddress","u64","u64"],
+	          customTypes: [],
+	        },
+	      }
+	    );
+	  })(),
 	  Warehouse: (() => {
 	    return defineComponent(
 	      world,
-	      { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, wood: { amount: RecsType.Number }, bricks: { amount: RecsType.Number }, steel: { amount: RecsType.Number }, max_storage: RecsType.Number },
+	      { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, max_storage: RecsType.Number, population: RecsType.Number },
 	      {
 	        metadata: {
 	          name: "Warehouse",
-	          types: ["contractaddress","u64","u64","u64","u64","u64","u64"],
-	          customTypes: ["Level","Resource","Resource","Resource"],
+	          types: ["contractaddress","u64","u64","u64","u64"],
+	          customTypes: ["Level"],
+	        },
+	      }
+	    );
+	  })(),
+	  WarehouseStorage: (() => {
+	    return defineComponent(
+	      world,
+	      { player: RecsType.BigInt, wood: { amount: RecsType.Number }, bricks: { amount: RecsType.Number }, steel: { amount: RecsType.Number }, max_storage: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "WarehouseStorage",
+	          types: ["contractaddress","u64","u64","u64","u64"],
+	          customTypes: ["Resource","Resource","Resource"],
 	        },
 	      }
 	    );

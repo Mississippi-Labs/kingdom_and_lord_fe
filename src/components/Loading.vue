@@ -8,7 +8,7 @@
 <style scoped lang="scss">
 .loading {
   position: fixed;
-  z-index: 99;
+  z-index: 9900;
   top: 0;
   left: 0;
   right: 0;

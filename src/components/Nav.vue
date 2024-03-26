@@ -1,11 +1,24 @@
-<script setup></script>
+<script setup>
+const props = defineProps({
+  resource: {
+    type: Object,
+    default: {
+      "wood": 0,
+      "steel": 0,
+      "brick": 0,
+      "food": 0
+    }
+  }
+})
+
+</script>
 <template>
   <div class="nav flex-end-sb">
     <div class="l flex-center">
       <img src="../assets/images/logo.png" alt="" class="logo">
       <div class="menu flex-center-center">DOCS</div>
       <div class="menu flex-center-center">TW</div>
-      <div class="menu flex-center-center">More <br/> Icon</div>
+      <div class="menu flex-center-center">More <br /> Icon</div>
     </div>
     <div class="m flex-center-center">
       <div class="m-content">
@@ -29,19 +42,55 @@
         <div class="resource flex-center-center">
           <div class="resource-item resource-item-1 flex-center-sb">
             <div class="icon flex-center-center">
-              <div class="ellipse"></div>
               <img src="../assets/images/resource_1.png" alt="">
             </div>
             <div class="total-amount">1,0000</div>
-            <div class="item-detail flex-center-sb"></div>
+            <div class="item-detail flex-center-sb">
+              <div class="item flex-center">
+                <img src="../assets/images/resource_1_item.png" alt="">
+                <div class="item-info">
+                  <p>10,000</p>
+                  <div class="progress-wrap">
+                    <div class="progress"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="item flex-center">
+                <img src="../assets/images/resource_1_item.png" alt="">
+                <div class="item-info">
+                  <p>10,000</p>
+                  <div class="progress-wrap">
+                    <div class="progress"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="item flex-center">
+                <img src="../assets/images/resource_1_item.png" alt="">
+                <div class="item-info">
+                  <p>10,000</p>
+                  <div class="progress-wrap">
+                    <div class="progress"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="resource-item resource-item-2 flex-center-sb">
             <div class="icon flex-center-center">
-              <div class="ellipse"></div>
-              <img src="../assets/images/resource_1.png" alt="">
+              <img src="../assets/images/resource_2.png" alt="">
             </div>
             <div class="total-amount">1,0000</div>
-            <div class="item-detail flex-center-sb"></div>
+            <div class="item-detail flex-center-sb">
+              <div class="item flex-center">
+                <img src="../assets/images/resource_2_item.png" alt="">
+                <div class="item-info">
+                  <p>10,000</p>
+                  <div class="progress-wrap">
+                    <div class="progress"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -70,9 +119,11 @@
   padding-bottom: 12px;
   color: #fff;
   font-size: 12px;
+
   .m {
     flex: 1;
     font-size: 0;
+
     .m-content {
       width: 690px;
       height: 125px;
@@ -82,32 +133,40 @@
       top: 66px;
       padding: 8px 13px 13px;
       box-sizing: border-box;
+
       .section {
         width: 100%;
+
         .section-item {
           width: 64px;
           height: 64px;
           background: url('../assets/images/city_bg.png') no-repeat;
           background-size: 100% 100%;
+
           img {
             width: 100%;
             height: auto;
           }
-          & ~ .section-item {
+
+          &~.section-item {
             margin-left: 64px;
           }
         }
       }
+
       .resource {
         margin-top: 3px;
+
         .icon {
           position: relative;
+
           img {
             width: 24px;
             height: auto;
             position: relative;
             z-index: 2;
           }
+
           .ellipse {
             width: 24px;
             height: 24px;
@@ -121,33 +180,78 @@
             margin: auto;
           }
         }
+
         .resource-item {
           background: #463535;
           border-radius: 9px;
           padding: 0 3px 0 6px;
           box-sizing: border-box;
           height: 34px;
+
           .total-amount {
             color: #ffb700;
             font-size: 12px;
           }
+
           .item-detail {
             height: 28px;
             background: #fff;
             border-radius: 8px;
+            padding: 0 6px;
+
+            .item {
+              img {
+                width: 20px;
+                height: auto;
+              }
+
+              .item-info {
+                margin-left: 6px;
+                line-height: 1;
+                font-size: 12px;
+                color: #000;
+
+                p {
+                  margin-top: -2px;
+                  margin-bottom: 2px;
+                }
+
+                .progress-wrap {
+                  width: 68px;
+                  height: 8px;
+                  background: #231a1a;
+                  border-radius: 2px;
+                  position: relative;
+
+                  .progress {
+                    width: 50%;
+                    height: 100%;
+                    background: #8AA147;
+                    border-radius: 2px;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                  }
+                }
+              }
+            }
           }
         }
+
         .resource-item-1 {
           width: 414px;
           flex: 0 0 414px;
+
           .item-detail {
             width: 320px;
           }
         }
+
         .resource-item-2 {
           width: 230px;
           flex: 0 0 230px;
           margin-left: 8px;
+
           .item-detail {
             width: 137px;
           }
@@ -155,12 +259,14 @@
       }
     }
   }
+
   .l {
     .logo {
       height: 36px;
       width: auto;
       cursor: pointer;
     }
+
     .menu {
       margin-left: 10px;
       width: 36px;
@@ -171,11 +277,13 @@
       cursor: pointer;
     }
   }
+
   .r {
     .icon {
       width: 25px;
       height: 25px;
     }
+
     .network {
       background: url('../assets/images/nav_bg.png') no-repeat;
       background-size: 100% 100%;
@@ -184,6 +292,7 @@
       padding: 0 6px;
       box-sizing: border-box;
     }
+
     .wallet {
       margin-left: 10px;
       padding: 0 8px 0 6px;
@@ -192,6 +301,7 @@
       background-size: 100% 100%;
       width: 204px;
       height: 36px;
+
       .address {
         width: 96px;
         height: 24px;

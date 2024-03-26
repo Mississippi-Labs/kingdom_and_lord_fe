@@ -12,9 +12,9 @@ export function createSystemCalls(
     }
   }
 
-  const startUpgrade = async ({ account, id }) => {
+  const startUpgrade = async ({ account, id, data, proof }) => {
     try {
-      return await actions.startUpgrade({ account, id });
+      return await actions.startUpgrade({ account, id, data, proof });
     } catch (error) {
       console.error("Error executing spawn:", error);
       throw error;

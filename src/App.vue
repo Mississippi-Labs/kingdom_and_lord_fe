@@ -24,6 +24,7 @@ const getHexAddress = (address) => {
 const getData = async () => {
   try {
     const setupResult = await setup(dojoConfig())
+    console.log('setupResult', setupResult)
     const config = setupResult.config
     let account = null
     account = await getAccount(config.rpcUrl)
@@ -31,7 +32,7 @@ const getData = async () => {
       account = await createAccount(config.rpcUrl)
     }
     dojoContext.value = { account, setup: setupResult }
-    const { Barn, CityBuilding, CityHall, UnderUpgrading, SpawnStatus, Warehouse, OuterCity } = setupResult.clientComponents
+    const { Barn, BarnStorage, Barrack, BuildingAreaInfo, CityBuilding, CityHall, Config, UnderUpgrading, SpawnStatus, Warehouse, OuterCity, Troops, UnderTraining, WarehouseStorage } = setupResult.clientComponents
     const barn = useEntityQuery([Has(Barn)]);
     const cityBuilding = useEntityQuery([Has(CityBuilding)]);
     const cityHall = useEntityQuery([Has(CityHall)]);
@@ -39,8 +40,15 @@ const getData = async () => {
     const spawnStatus = useEntityQuery([Has(SpawnStatus)]);
     const warehouse = useEntityQuery([Has(Warehouse)]);
     const outerCity = useEntityQuery([Has(OuterCity)]);
+    const barnStorage = useEntityQuery([Has(BarnStorage)]);
+    const barrack = useEntityQuery([Has(Barrack)]);
+    const buildingAreaInfo = useEntityQuery([Has(BuildingAreaInfo)]);
+    const configData = useEntityQuery([Has(Config)]);
+    const troops = useEntityQuery([Has(Troops)]);
+    const underTraining = useEntityQuery([Has(UnderTraining)]);
+    const warehouseStorage = useEntityQuery([Has(WarehouseStorage)]);
 
-    watch(() => [barn, cityBuilding, cityHall, underUpgrading, spawnStatus, warehouse, outerCity], ([newBarnData, newCityBuildingData, newCityHallData, newUnderUpgradingData, newSpawnStatusData, newWarehouseData, newOuterCityData]) => {
+    watch(() => [barn, cityBuilding, cityHall, underUpgrading, spawnStatus, warehouse, outerCity, barnStorage, barrack, buildingAreaInfo, configData, troops, underTraining, warehouseStorage], ([newBarnData, newCityBuildingData, newCityHallData, newUnderUpgradingData, newSpawnStatusData, newWarehouseData, newOuterCityData, newBarnStorageData, newBarrackData, newBuildingAreaInfoData, newConfigData, newTroopsData, newUnderTrainingData, newWarehouseStorageData]) => {
       const barnData = newBarnData.value.map((entity) => {
         let data = getComponentValue(Barn, entity)
         data.player = getHexAddress(data.player)
@@ -76,6 +84,48 @@ const getData = async () => {
         data.player = getHexAddress(data.player)
         return data
       }).filter((outerCity) => outerCity.player === account.address)
+
+      const barnStorageData = newBarnStorageData.value.map((entity) => {
+        let data = getComponentValue(BarnStorage, entity)
+        data.player = getHexAddress(data.player)
+        return data
+      }).filter((barnStorage) => barnStorage.player === account.address)
+
+      const barrackData = newBarrackData.value.map((entity) => {
+        let data = getComponentValue(Barrack, entity)
+        data.player = getHexAddress(data.player)
+        return data
+      }).filter((barrack) => barrack.player === account.address)
+
+      const buildingAreaInfoData = newBuildingAreaInfoData.value.map((entity) => {
+        let data = getComponentValue(BuildingAreaInfo, entity)
+        data.player = getHexAddress(data.player)
+        return data
+      }).filter((buildingAreaInfo) => buildingAreaInfo.player === account.address)
+
+      const configDataData = newConfigData.value.map((entity) => {
+        let data = getComponentValue(Config, entity)
+        return data
+      })
+
+      const troopsData = newTroopsData.value.map((entity) => {
+        let data = getComponentValue(Troops, entity)
+        data.player = getHexAddress(data.player)
+        return data
+      }).filter((troops) => troops.player === account.address)
+
+      const underTrainingData = newUnderTrainingData.value.map((entity) => {
+        let data = getComponentValue(UnderTraining, entity)
+        data.player = getHexAddress(data.address)
+        return data
+      })
+
+      const warehouseStorageData = newWarehouseStorageData.value.map((entity) => {
+        let data = getComponentValue(WarehouseStorage, entity)
+        data.player = getHexAddress(data.player)
+        return data
+      }).filter((warehouseStorage) => warehouseStorage.player === account.address)
+
       const dojoComponents = {
         barn: barnData,
         cityBuilding: cityBuildingData,
@@ -83,7 +133,15 @@ const getData = async () => {
         underUpgrading: underUpgradingData,
         spawnStatus: spawnStatusData,
         warehouse: warehouseData,
-        outerCity: outerCityData
+        outerCity: outerCityData,
+        barnStorage: barnStorageData,
+        barrack: barrackData,
+        buildingAreaInfo: buildingAreaInfoData,
+        config: configDataData,
+        troops: troopsData,
+        underTraining: underTrainingData,
+        warehouseStorage: warehouseStorageData
+
       }
       setDojoComponents(dojoComponents)
     }, { deep: true, immediate: true})

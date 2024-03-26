@@ -64,13 +64,14 @@ export async function setupWorld(provider) {
       }
     };
 
-    const startUpgrade = async ({ account, id }) => {
+    const startUpgrade = async ({ account, id, data, proof }) => {
       try {
+        console.log("data: ", id, ...data, proof)
         const { transaction_hash } = await provider.execute(
           account,
           contract_name,
           "start_upgrade",
-          [id]
+          [id, ...data, proof]
         );
         setLogsFun({
           hash: transaction_hash,
