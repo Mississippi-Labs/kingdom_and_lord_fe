@@ -5,8 +5,8 @@
 <a href="https://twitter.com/0xMississippi">
 <img src="https://img.shields.io/twitter/follow/0xMississippi?style=social"/>
 </a>
-<a href="https://github.com/Mississippi-Labs/kingdom_and_lord">
-<img src="https://img.shields.io/github/stars/Mississippi-Labs/kingdom_and_lord?style=social"/>
+<a href="https://github.com/Mississippi-Labs/kingdom_and_lord_fe">
+<img src="https://img.shields.io/github/stars/Mississippi-Labs/kingdom_and_lord_fe?style=social"/>
 </a>
 
 [![discord](https://img.shields.io/badge/join-K&L-green?logo=discord&logoColor=white)](https://discord.gg/Ngnm5Nh9v3)
