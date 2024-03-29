@@ -562,7 +562,7 @@ $panelMB: 40px;
             padding: 0 10px;
             height: 32px;
             box-sizing: border-box;
-            font-size: 12px;
+            font-size: 14px;
 
             &:last-child {
               border: none;
