@@ -3,11 +3,11 @@ import Home from '../views/Home.vue'
 import Index from '../views/Index.vue'
 
 const routes = [{
-  path: '/demo',
+  path: '/',
   name: 'Index',
   component: Index
 }, {
-  path: '/',
+  path: '/demo',
   name: 'Home',
   component: Home
 }]
