@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, onBeforeMount, inject, onBeforeUnmount } from 'vue'
-import { resource, upgradeData, buildingList } from '../libs/data'
+import { resource } from '../libs/data'
+import { upgradeData } from '../libs/test_data'
 import Modal from '../components/Modal.vue'
 import Loading from '../components/Loading.vue'
 import { useMessage } from 'naive-ui'
@@ -8,7 +9,7 @@ import { formatTime, getProof } from '../utils/index'
 import { useGlobalStore } from '../hooks/globalStore.js'
 import { RpcProvider } from "starknet";
 import Nav from '../components/Nav.vue'
-import { cityList } from '../libs/city.js'
+import { innerBuildingOptions } from '../libs/building.js'
 
 let interval = null
 
@@ -18,22 +19,34 @@ const providerRPC = new RpcProvider({
 
 const dojoContext = inject('DojoContext');
 
-const { store } = useGlobalStore()
+const { store, setInnerBuildingList } = useGlobalStore()
 const message = useMessage()
 
 const showLoading = ref(false)
 const menuIndex = ref(0)
-const cityListData = ref(cityList)
 const blockHeight = ref(0)
 const resourceData = ref(resource)
 const growthRateData = ref({ resource })
-const castleListData = ref([])
 const buildingData = ref({})
+const underUpgradingData = ref({})
+const storage = ref({})
+
+const isUpgrading = (buildingId) => {
+  const { underUpgrading } = store.dojoComponents
+  if (!underUpgrading) return false
+  return underUpgrading.some(item => item.building_id === buildingId && !item.is_finished)
+}
 
 const getBuildingList = () => {
   const { underUpgrading } = store.dojoComponents
   if (!underUpgrading) return []
   else return underUpgrading.filter(item => !item.is_finished)
+}
+
+const getBuilding = (buildingKind) => {
+  if (buildingKind >= 5) {
+    return innerBuildingOptions.filter(e => e.buildingKind == buildingKind)[0]
+  }
 }
 
 const spawnFun = async () => {
@@ -83,6 +96,8 @@ const getLastBlock = async () => {
 }
 
 const getData = async () => {
+  if (!dojoContext?.setup?.systemCalls) return
+  if (!store.state.isSpawn) return
   const { getResource, getGrowthRate } = dojoContext.setup.systemCalls
   const account = dojoContext.account
   const resource = await getResource(account.address)
@@ -102,139 +117,178 @@ const getData = async () => {
   }
 }
 
+const getUpgradeData = (buildingKind) => {
+  if (buildingKind === 5) {
+    return upgradeData.cityhall
+  } else if (buildingKind === 6) {
+    return upgradeData.warehouse
+  } else if (buildingKind === 7) {
+    return upgradeData.barn
+  } else if (buildingKind === 8) {
+    return upgradeData.barracks
+  }
+}
+
 const upgrade = async (data) => {
-  console.log('upgrade', data)
-  if (getBuildingList() >= 2) {
+  if (getBuildingList().length >= 2) {
     message.error('You can only build 2 buildings at the same time')
     return
   }
   showLoading.value = true
-  // const id = city.building_id
-  const { startUpgrade, getUpgradeInfo } = dojoContext.setup.systemCalls
+  const { startUpgrade } = dojoContext.setup.systemCalls
   const account = dojoContext.account
-  // const requirement = await getUpgradeInfo(data.id, account.address)
-  // const isCanUpgrade = await verify(requirement.required_resource)
-  // if (!isCanUpgrade) {
-  //   console.log("not enough resources")
-  //   showLoading.value = false
-  //   message.error('Not enough resources')
-  //   return;
-  // }
   try {
-    // console.log(...data.resource)
-    const proof = [
-      '0x56e9e5ce79486d11d4079f6521d5de93bc3e474dc2cd647063fe45c22054ac8',
-      '0x575978c19ae8821f17dcb09f2865515b661bb72486a758da18853b0208c5081',
-      '0x751fea1cdd1b21696ae357f83c2b96fbd0a7891b053cdc652807c88320c942c',
-      '0x352510f1269cea2ac10dab006a027dee2dcc6fc82676fbb5b862269d99528ee',
-      '0x660a74333a6082be847d98d1779c25ab498eaf93ea998125db323a1bc0c8cc7',
-      '0x53292aa62ac71f440a6c19786b359d3242844aed9effad78c0e7972ef409a1b',
-      '0x59dc966df9f4d4b5a02fa4d584ce7280cc0c8633e411a3f92f558abe1ecc464',
-      '0x6f083eb9dc40b555e9f8c6ed4529c2c5bfd33087c0f80701992b254230a0c32'
-    ]
-    await startUpgrade({ account, id: data.id, data: data.resource, proof })
-    cityListData.value = cityListData.value.map(item => {
-      if (item.buildingId === data.id) {
-        item.img = buildingData.value.img
-      }
-      return item
-    })
+    let resource = getUpgradeData(data.buildingKind)[data.level.level]
+    const proof = getProof(resource)
+    const event = await startUpgrade({ account, id: data.id, data: resource, proof })
+    console.log('event', event)
+    if (event.length) {
+      const innerBuildingList = store.state.innerBuildingList
+      innerBuildingList.forEach(item => {
+        if (item.buildingId === data.id) {
+          item = Object.assign(item, data)
+        }
+      })
+      setInnerBuildingList(innerBuildingList)
+    }
   } catch (error) {
     console.error('Failed to startUpgrade:', error)
     message.error('Failed to startUpgrade:' + error)
   }
   buildingData.value = {}
+  underUpgradingData.value = {}
   showLoading.value = false
+
 }
 
-const createBuilding = (item) => {
-  const { buildingKind, img } = item
-  buildingData.value.buildingKind = buildingKind
-  buildingData.value.img = img
-  if (buildingKind === 5) {
-    buildingData.value.resource = upgradeData.cityhall[0]
-  } else if (buildingKind === 6) {
-    buildingData.value.resource = upgradeData.warehouse[0]
-  } else if (buildingKind === 7) {
-    buildingData.value.resource = upgradeData.barn[0]
-  } else if (buildingKind === 8) {
-    buildingData.value.resource = upgradeData.barracks[0]
+const upgradeBuilding = async (data) => {
+  if (isUpgrading(data.buildingId)) {
+    message.error('Building is under upgrading')
+    return
   }
+  underUpgradingData.value = data
+}
+const createBuilding = (item) => {
+  buildingData.value = Object.assign(buildingData.value, item)
+  buildingData.value.level = { level: 0 }
   upgrade(buildingData.value)
 }
 
-  onBeforeMount(() => {
-    getLastBlock()
-    interval = setInterval(() => {
-      getLastBlock()
-      if (dojoContext.setup) {
-        getData()
-      }
-    }, 2000)
+const getResourceArr = (buildingKind, level) => {
+  return getUpgradeData(buildingKind)[level].slice(2, 7)
+}
+
+const getTime = (buildingKind, level) => {
+  return (getUpgradeData(buildingKind)[level][7] * 2)
+}
+
+const toObject = (obj) => {
+  return JSON.parse(JSON.stringify(obj, (key, value) => typeof value === 'bigint' ? value.toString() : value))
+}
+
+const setInnerBuildingListFun = (cityHall, warehouse, barn, barrack) => {
+  cityHall.forEach(item => {
+    item.buildingKind = 5
   })
-
-  onBeforeUnmount(() => {
-    clearInterval(interval)
+  warehouse.forEach(item => {
+    item.buildingKind = 6
   })
-
-  watch(() => store.dojoComponents, (newVal) => {
-    if (newVal) {
-      console.log('newVal', newVal)
-      // cityListData.value = newVal.cityBuilding.sort((a, b) => a.building_id - b.building_id)
-      // castleListData.value = [...newVal.cityHall, ...newVal.warehouse, ...newVal.barn]
-    }
-  }, { deep: true, immediate: true })
-
-  watch(() => blockHeight.value, (newVal) => {
-    console.log('blockHeight', newVal)
-    const { underUpgrading } = store.dojoComponents
-    if (!underUpgrading) return
-    underUpgrading.forEach(async (item) => {
-      if (item.end_time <= newVal && item.end_time !== 0 && item.is_finished != 1) {
-        const { finishUpgrade } = dojoContext.setup.systemCalls
-        const account = dojoContext.account
-        await finishUpgrade({ account, id: item.upgrade_id })
+  barn.forEach(item => {
+    item.buildingKind = 7
+  })
+  barrack.forEach(item => {
+    item.buildingKind = 8
+  })
+  const underUpgrading = getBuildingList()
+  underUpgrading.forEach(item => {
+    item.buildingKind = item.building_kind
+  })
+  const list = [...cityHall, ...warehouse, ...barn, ...barrack, ...underUpgrading]
+  const innerBuildingList = store.state.innerBuildingList
+  list.forEach(item => {
+    const itemData = innerBuildingOptions.filter(e => e.buildingKind == item.buildingKind)[0]
+    innerBuildingList.forEach(e => {
+      if (e.buildingId === item.building_id) {
+        e = Object.assign(e, itemData, item)
       }
     })
-  }, { immediate: true })
+  })
+  console.log(innerBuildingList)
+  setInnerBuildingList(toObject(innerBuildingList))
+}
+
+onBeforeMount(() => {
+  getLastBlock()
+  getData()
+  interval = setInterval(() => {
+    getLastBlock()
+    if (dojoContext.setup) {
+      getData()
+    }
+  }, 2000)
+})
+
+onBeforeUnmount(() => {
+  clearInterval(interval)
+})
+
+watch(() => store.dojoComponents, (newVal) => {
+  if (newVal) {
+    console.log('newVal', newVal)
+    const { barnStorage, warehouseStorage } = store.dojoComponents
+    storage.value = {
+      barn: barnStorage[0]?.max_storage,
+      warehouse: warehouseStorage[0]?.max_storage
+    }
+    // cityListData.value = newVal.cityBuilding.sort((a, b) => a.building_id - b.building_id)
+    const { cityHall, warehouse, barn, barrack } = newVal
+    setInnerBuildingListFun(cityHall, warehouse, barn, barrack)
+  }
+}, { deep: true, immediate: true })
+
+watch(() => blockHeight.value, (newVal) => {
+  console.log('blockHeight', newVal)
+  const { underUpgrading } = store.dojoComponents
+  if (!underUpgrading) return
+  underUpgrading.forEach(async (item) => {
+    if (item.end_time <= newVal && item.end_time !== 0 && item.is_finished != 1) {
+      const { finishUpgrade } = dojoContext.setup.systemCalls
+      const account = dojoContext.account
+      await finishUpgrade({ account, id: item.upgrade_id })
+    }
+  })
+}, { immediate: true })
 </script>
 
 <template>
   <div v-if="store.state.isSpawn" class="wrap">
     <div class="main">
-      <Nav :resource="resourceData" />
+      <Nav :resource="resourceData" :storage="storage" />
       <div class="city">
-        <div v-for="item in cityListData" :key="item.buildingId" class="city-item"
+        <div v-for="item in store.state.innerBuildingList" :key="item.buildingId" class="city-item"
           :style="{ left: item.left, top: item.top }">
           <div v-if="!item.img" class="subgrade" @click="buildingData.id = item.buildingId"></div>
-          <img v-else :src="item.img" alt="">
-          <div v-if="item.img" class="upgrade-info">
+          <img v-else :src="item.img" alt="" @click="upgradeBuilding(item)">
+          <div v-if="item.img && item.level" class="upgrade-info">
             <div class="info-hd flex-center">
-              <p class="flex-end">Center Building <span> - Level 9</span></p>
+              <p class="flex-end">{{ item.name }}<span> - Level {{ item.level.level }}</span></p>
+              <p v-if="isUpgrading(item.buildingId)" style="margin-left: .25em;">(under upgrading)</p>
             </div>
             <div class="info-bd">
-              <p>Upgrading to level 15 requires resources</p>
+              <p>Upgrading to level {{ item.level.level + 1 }} requires resources</p>
               <div class="flex-center-sb consume">
-                <div class="flex-center">
-                  <img src="../assets/images/consume.png" alt="">
-                  <span>2000</span>
-                </div>
-                <div class="flex-center">
-                  <img src="../assets/images/consume.png" alt="">
-                  <span>2000</span>
-                </div>
-                <div class="flex-center">
-                  <img src="../assets/images/consume.png" alt="">
-                  <span>2000</span>
-                </div>
-                <div class="flex-center">
-                  <img src="../assets/images/consume.png" alt="">
-                  <span>2000</span>
+                <div v-for="(num, index) in getResourceArr(item.buildingKind, item.level.level)" class="flex-center">
+                  <img v-if="index == 0" src="../assets/images/resource_icon_1.png" alt="">
+                  <img v-else-if="index == 1" src="../assets/images/resource_icon_2.png" alt="">
+                  <img v-else-if="index == 2" src="../assets/images/resource_icon_3.png" alt="">
+                  <img v-else-if="index == 3" src="../assets/images/resource_icon_4.png" alt="">
+                  <img v-else-if="index == 4" src="../assets/images/resource_icon_5.png" alt="">
+                  <span>{{num}}</span>
                 </div>
               </div>
               <div class="flex-center time">
                 <img src="../assets/images/time.png" alt="">
-                <span>5:00:00</span>
+                <span>{{formatTime(getTime(item.buildingKind, item.level.level))}}</span>
               </div>
             </div>
           </div>
@@ -242,25 +296,52 @@ const createBuilding = (item) => {
       </div>
       <div class="content flex-start">
         <div class="l">
-          <div class="section"></div>
-          <div class="section"></div>
-          <div class="section-1">
-            <div></div>
-          </div>
-          <div class="section-1">
-            <div></div>
+          <!-- <div class="section-1"></div>
+          <div class="section-1"></div> -->
+          <div class="section">
+            <div class="hd flex-center">Prodction Rate</div>
+            <div class="bd">
+              <div class="bd-item flex-center-sb">
+                <div class="flex-center">
+                  <div class="img flex-center-center"><img src="../assets/images/resource_icon_4.png" alt=""></div>food
+                </div>{{ growthRateData.food }}
+              </div>
+              <div class="bd-item flex-center-sb">
+                <div class="flex-center">
+                  <div class="img flex-center-center"><img src="../assets/images/resource_icon_1.png" alt=""></div>wood
+                </div>{{ growthRateData.wood }}
+              </div>
+              <div class="bd-item flex-center-sb">
+                <div class="flex-center">
+                  <div class="img flex-center-center"><img src="../assets/images/resource_icon_3.png" alt=""></div>steel
+                </div>{{ growthRateData.steel }}
+              </div>
+              <div class="bd-item flex-center-sb">
+                <div class="flex-center">
+                  <div class="img flex-center-center"><img src="../assets/images/resource_icon_2.png" alt=""></div>brick
+                </div>{{ growthRateData.brick }}
+              </div>
+            </div>
+            <div class="ft"></div>
           </div>
         </div>
         <div class="m"></div>
         <div class="r">
-          <div class="section">
-            <div></div>
-          </div>
-          <div class="section-1">
-            <div></div>
-          </div>
-          <div class="section-1">
-            <div></div>
+          <div class="section" v-if="getBuildingList().length">
+            <div class="hd flex-center">Buildings</div>
+            <div class="bd">
+              <div v-for="(item, index) in getBuildingList()" :key="index" class="bd-item flex-center-sb">
+                <div class="flex-center">
+                  <div class="img flex-center-center">
+                    <img :src="getBuilding(item?.building_kind).img" alt="">
+                  </div>
+                  <span>{{ getBuilding(item?.building_kind).name }}</span>
+                  <p class="lv">LV{{ item.target_level.level }}</p>
+                </div>
+                <div>{{ item.end_time - blockHeight >= 0 ? item.end_time - blockHeight : 0 }}</div>
+              </div>
+            </div>
+            <div class="ft"></div>
           </div>
         </div>
       </div>
@@ -269,10 +350,43 @@ const createBuilding = (item) => {
   <div v-else class="flex-center spawn-wrap">
     <n-button type="primary" @click="spawnFun">Spawn</n-button>
   </div>
+  <Modal v-if="underUpgradingData.id" @close="underUpgradingData = {}">
+    <template v-slot:title>
+      <div class="flex-center"><img :src="underUpgradingData.img" style="width: 30px;margin-right: 10px" alt="">{{ underUpgradingData.name }} - level {{ underUpgradingData?.level?.level }}</div>
+    </template>
+    <div class="building-list">
+      <div class="building-item">
+        <div class="building-item-bd flex-center">
+          <div class="building-item-desc">{{ underUpgradingData.desc }}</div>
+        </div>
+        <div class="building-item-resource flex-center-center">
+          <div v-for="(resource, index) in getResourceArr(underUpgradingData.buildingKind, underUpgradingData?.level?.level)" :key="index" class="building-item-resource-item flex-center">
+            <div class="icon flex-center-center">
+              <img v-if="index == 0" src="../assets/images/resource_icon_1.png" alt="">
+              <img v-else-if="index == 1" src="../assets/images/resource_icon_2.png" alt="">
+              <img v-else-if="index == 2" src="../assets/images/resource_icon_3.png" alt="">
+              <img v-else-if="index == 3" src="../assets/images/resource_icon_4.png" alt="">
+              <img v-else-if="index == 4" src="../assets/images/resource_icon_5.png" alt="">
+            </div>
+            <div class="amount">{{ resource }}</div>
+          </div>
+        </div>
+        <div class="btn flex-center-center" @click="upgrade(underUpgradingData)">Upgrade To Level {{ underUpgradingData.level.level + 1 }}</div>
+        <div class="building-item-time flex-center-center">
+          <svg width="11" height="11" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M11 5V11L15 13M21 11C21 16.5228 16.5228 21 11 21C5.47715 21 1 16.5228 1 11C1 5.47715 5.47715 1 11 1C16.5228 1 21 5.47715 21 11Z"
+              stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>{{ formatTime(getTime(underUpgradingData.buildingKind, underUpgradingData?.level?.level)) }}</span>
+        </div>
+      </div>
+    </div>
+  </Modal>
   <Modal v-if="buildingData.id" @close="buildingData = {}">
     <template v-slot:title>New Building</template>
     <div class="building-list">
-      <div v-for="(item, index) in buildingList" :key="index" class="building-item">
+      <div v-for="(item, index) in innerBuildingOptions" :key="index" class="building-item">
         <div class="building-item-hd flex-center">{{ item.name }}</div>
         <div class="building-item-bd flex-center">
           <div class="building-item-desc">{{ item.desc }}</div>
@@ -281,9 +395,15 @@ const createBuilding = (item) => {
           </div>
         </div>
         <div class="building-item-resource flex-center-center">
-          <div v-for="resource in item.resource" :key="resource.type" class="building-item-resource-item flex-center">
-            <div class="icon flex-center-center"><img :src="resource.img" alt=""></div>
-            <div class="amount">{{ resource.amount }}</div>
+          <div v-for="(resource, index) in getResourceArr(item.buildingKind, 0)" :key="index" class="building-item-resource-item flex-center">
+            <div class="icon flex-center-center">
+              <img v-if="index == 0" src="../assets/images/resource_icon_1.png" alt="">
+              <img v-else-if="index == 1" src="../assets/images/resource_icon_2.png" alt="">
+              <img v-else-if="index == 2" src="../assets/images/resource_icon_3.png" alt="">
+              <img v-else-if="index == 3" src="../assets/images/resource_icon_4.png" alt="">
+              <img v-else-if="index == 4" src="../assets/images/resource_icon_5.png" alt="">
+            </div>
+            <div class="amount">{{ resource }}</div>
           </div>
         </div>
         <div class="building-item-time flex-center-center">
@@ -292,7 +412,7 @@ const createBuilding = (item) => {
               d="M11 5V11L15 13M21 11C21 16.5228 16.5228 21 11 21C5.47715 21 1 16.5228 1 11C1 5.47715 5.47715 1 11 1C16.5228 1 21 5.47715 21 11Z"
               stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          <span>{{ formatTime(item.time) }}</span>
+          <span>{{ formatTime(getTime(item.buildingKind, 0)) }}</span>
         </div>
         <div class="btn flex-center-center" @click="createBuilding(item)">Build</div>
       </div>
@@ -416,10 +536,64 @@ $panelMB: 40px;
     }
 
     .content {
-      display: none;
       margin-top: 80px;
       padding: 0 48px;
       box-sizing: border-box;
+
+      .section {
+        font-family: 'Chalkboard-Bold';
+
+        .hd {
+          height: 50px;
+          background: url(../assets/images/dialog_hd.png) no-repeat;
+          background-size: 100% 100%;
+          padding: 2px 20px 0;
+          box-sizing: border-box;
+        }
+
+        .bd {
+          background: url(../assets/images/dialog_bd.png) repeat;
+          background-size: 100% auto;
+          padding: 0 10px;
+          box-sizing: border-box;
+
+          .bd-item {
+            border-bottom: 1px solid #cfcfcf;
+            padding: 0 10px;
+            height: 32px;
+            box-sizing: border-box;
+            font-size: 12px;
+
+            &:last-child {
+              border: none;
+            }
+
+            .img {
+              width: 18px;
+              height: 18px;
+              border-radius: 50%;
+              background: rgba($color: #000000, $alpha: .1);
+              margin-right: 10px;
+
+              img {
+                width: 18px;
+                height: auto;
+              }
+            }
+
+            .lv {
+              color: #f17d00;
+              margin-left: 8px;
+            }
+          }
+        }
+
+        .ft {
+          background: url(../assets/images/dialog_ft.png) no-repeat;
+          background-size: 100% 100%;
+          height: 15px;
+        }
+      }
 
       .l {
         flex: 0 0 310px;
@@ -429,7 +603,7 @@ $panelMB: 40px;
         flex-direction: column;
         align-items: flex-end;
 
-        .section {
+        .section-1 {
           background: url(../assets/images/panel_1.png) no-repeat;
           background-size: 100% 100%;
           width: 310px;
@@ -437,23 +611,8 @@ $panelMB: 40px;
           margin-bottom: $panelMB;
         }
 
-        .section-1 {
-          border: 12px solid transparent;
-          border-image: url(../assets/images/panel.png) 36;
-          border-radius: 20px;
+        .section {
           width: 248px;
-          height: 188px;
-          margin-bottom: $panelMB;
-
-          div {
-            width: 100%;
-            height: 100%;
-            background: #e8e8e8;
-          }
-
-          &:last-child {
-            margin-bottom: 0;
-          }
         }
       }
 
@@ -467,35 +626,15 @@ $panelMB: 40px;
 
         .section {
           width: 100%;
-          height: 152px;
-          border: 12px solid transparent;
-          border-image: url(../assets/images/panel.png) 36;
-          border-radius: 20px;
-          margin-bottom: $panelMB;
 
-          div {
-            width: 100%;
-            height: 100%;
-            background: #e8e8e8;
-          }
-        }
-
-        .section-1 {
-          width: 100%;
-          height: 92px;
-          border: 12px solid transparent;
-          border-image: url(../assets/images/panel.png) 36;
-          border-radius: 20px;
-          margin-bottom: $panelMB;
-
-          div {
-            width: 100%;
-            height: 100%;
-            background: #e8e8e8;
-          }
-
-          &:last-child {
-            margin-bottom: 0;
+          .bd {
+            .bd-item {
+              .img {
+                img {
+                  width: 24px;
+                }
+              }
+            }
           }
         }
       }
@@ -520,10 +659,10 @@ $panelMB: 40px;
       font-family: 'Chalkboard-Bold';
       background: #e3e3e3;
       border-radius: 5px;
+      margin-bottom: 10px;
     }
 
     .building-item-bd {
-      margin-top: 10px;
 
       .building-item-desc {
         padding: 0 8px;

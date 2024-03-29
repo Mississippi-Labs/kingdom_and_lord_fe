@@ -1,4 +1,5 @@
 import { reactive, toRaw } from "vue";
+import { innerBuildingList } from '../libs/building.js'
 
 const store = reactive({
   dojoComponents: {
@@ -13,7 +14,8 @@ const store = reactive({
   state: {
     isSpawn: false,
     logs: localStorage.getItem('logs') ? JSON.parse(localStorage.getItem('logs')) : [],
-    lastBlock: 0
+    lastBlock: 0,
+    innerBuildingList: localStorage.getItem('innerBuildingList') ? JSON.parse(localStorage.getItem('innerBuildingList')) : innerBuildingList,
   }
 });
 
@@ -33,10 +35,16 @@ const setLastBlock = (block) => {
   store.state.lastBlock = block
 }
 
+const setInnerBuildingList = (list) => {
+  store.state.innerBuildingList = list
+  localStorage.setItem('innerBuildingList', JSON.stringify(list))
+}
+
 
 export const useGlobalStore = () => ({
   store,
   setDojoComponents,
   setLogs,
-  setLastBlock
+  setLastBlock,
+  setInnerBuildingList
 });

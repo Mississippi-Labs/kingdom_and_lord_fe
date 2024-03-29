@@ -949,7 +949,7 @@
     {
       "name": "kingdom_lord::actions::kingdom_lord_controller",
       "address": "0x1c9c0eac696e8b998fd586792939e7d902312e08ec45b6795de12e52b723e10",
-      "class_hash": "0x69aa93c9349e2eeaf2b50aad699d4da89fc1c9c4a657f9264510f73f09bd70b",
+      "class_hash": "0x4370da3c8e850ee087fd302372653dfe251ff5e83d300345f9892fba13526d6",
       "abi": [
         {
           "type": "impl",
@@ -1609,22 +1609,6 @@
               "outputs": [
                 {
                   "type": "core::result::Result::<kingdom_lord::components::barrack::UnderTraining, kingdom_lord::interface::Error>"
-                }
-              ],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "pay_to_finish_upgrade",
-              "inputs": [
-                {
-                  "name": "upgrade_id",
-                  "type": "core::integer::u64"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
                 }
               ],
               "state_mutability": "external"

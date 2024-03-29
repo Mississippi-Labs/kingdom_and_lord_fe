@@ -9,6 +9,7 @@ import { setupWorld } from "./generated";
 
 
 export async function setup({ ...config }) {
+  console.log("config", config);
   // torii client
   const toriiClient = await torii.createClient([], {
     rpcUrl: config.rpcUrl,

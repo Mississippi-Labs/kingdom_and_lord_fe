@@ -130,6 +130,8 @@ const getLastBlock = async () => {
 }
 
 const getData = async () => {
+  if (!dojoContext?.setup?.systemCalls) return
+  if (!store.state.isSpawn) return
   const { getResource, getGrowthRate } = dojoContext.setup.systemCalls
   const account = dojoContext.account
   const resource = await getResource(account.address)

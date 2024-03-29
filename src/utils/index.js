@@ -15,24 +15,41 @@ export const formatTime = (time) => {
   return `${hours}:${minutes}:${seconds}`
 }
 
-import { upgradeData } from '../libs/data.js'
-import { hash, num, merkle } from 'starknet'
+export const getCityName = (id) => {
+  if (id >= 0 && id <= 3) {
+    return "Wood Factory"
+  } else if (id >= 4 && id <= 7) {
+    return "Steel Factory"
+  } else if (id >= 8 && id <= 11) {
+    return "Brick Factory"
+  } else if (id >= 12 && id <= 17) {
+    return "Farm"
+  } else if (id == 18) {
+    return "City Hall"
+  } else if (id == 19) {
+    return "Warehouse"
+  } else if (id == 20) {
+    return "Barn"
+  }
+}
+
+import { upgradeData } from '../libs/test_data.js'
+import { computePoseidonHash, computePoseidonHashOnElements } from './hash.js'
+import { MerkleTree } from './merkle.ts'
 
 const hash_posei = (data) => {
-  return hash.computePoseidonHashOnElements(data);
+  return computePoseidonHashOnElements(data);
 }
 
 export const getProof = (arr) => {
+  console.log("upgradeData: ", [...arr])
   const { wood, brick, steel, food, cityhall, warehouse, barn, barracks } = upgradeData
   const data = wood.concat(brick, steel, food, cityhall, warehouse, barn, barracks);
   const leaves = data.map((d) =>
     hash_posei(d)
   )
-
-  const tree = new merkle.MerkleTree(leaves, hash.computePoseidonHash);
-
-  const h = hash_posei(arr)
+  const tree = new MerkleTree(leaves, computePoseidonHash);
+  const h = hash_posei([...arr])
   const proof = tree.getProof(h);
-  console.log("proof: ", proof)
   return proof
 }

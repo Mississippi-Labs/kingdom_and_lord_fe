@@ -8,8 +8,21 @@ const props = defineProps({
       "brick": 0,
       "food": 0
     }
+  },
+  storage: {
+    type: Object,
+    default: {
+      barn: 0,
+      warehouse: 0
+    }
   }
 })
+
+const getProgress = (count, storage) => {
+  let progress = ((+count) / (+storage)) * 100
+  if (progress >= 100) return '100%'
+  else return progress + '%'
+}
 
 </script>
 <template>
@@ -44,32 +57,32 @@ const props = defineProps({
             <div class="icon flex-center-center">
               <img src="../assets/images/resource_1.png" alt="">
             </div>
-            <div class="total-amount">1,0000</div>
+            <div class="total-amount">{{ (+storage.warehouse).toLocaleString() }}</div>
             <div class="item-detail flex-center-sb">
               <div class="item flex-center">
                 <img src="../assets/images/resource_1_item.png" alt="">
                 <div class="item-info">
-                  <p>10,000</p>
+                  <p>{{ (+resource.wood).toLocaleString() }}</p>
                   <div class="progress-wrap">
-                    <div class="progress"></div>
+                    <div class="progress" :style="{width: getProgress(resource.wood, storage.warehouse)}"></div>
                   </div>
                 </div>
               </div>
               <div class="item flex-center">
                 <img src="../assets/images/resource_1_item.png" alt="">
                 <div class="item-info">
-                  <p>10,000</p>
+                  <p>{{ (+resource.steel).toLocaleString() }}</p>
                   <div class="progress-wrap">
-                    <div class="progress"></div>
+                    <div class="progress" :style="{width: getProgress(resource.steel, storage.warehouse)}"></div>
                   </div>
                 </div>
               </div>
               <div class="item flex-center">
                 <img src="../assets/images/resource_1_item.png" alt="">
                 <div class="item-info">
-                  <p>10,000</p>
+                  <p>{{ (+resource.brick).toLocaleString() }}</p>
                   <div class="progress-wrap">
-                    <div class="progress"></div>
+                    <div class="progress" :style="{width: getProgress(resource.brick, storage.warehouse)}"></div>
                   </div>
                 </div>
               </div>
@@ -79,14 +92,14 @@ const props = defineProps({
             <div class="icon flex-center-center">
               <img src="../assets/images/resource_2.png" alt="">
             </div>
-            <div class="total-amount">1,0000</div>
+            <div class="total-amount">{{ (+storage.barn).toLocaleString() }}</div>
             <div class="item-detail flex-center-sb">
               <div class="item flex-center">
                 <img src="../assets/images/resource_2_item.png" alt="">
                 <div class="item-info">
-                  <p>10,000</p>
+                  <p>{{ (+resource.food).toLocaleString() }}</p>
                   <div class="progress-wrap">
-                    <div class="progress"></div>
+                    <div class="progress" :style="{width: getProgress(resource.food, storage.barn)}"></div>
                   </div>
                 </div>
               </div>
@@ -224,7 +237,6 @@ const props = defineProps({
                   position: relative;
 
                   .progress {
-                    width: 50%;
                     height: 100%;
                     background: #8AA147;
                     border-radius: 2px;

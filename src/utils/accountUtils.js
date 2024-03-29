@@ -1,4 +1,7 @@
-import { Account, ec, stark, RpcProvider, hash, CallData } from 'starknet';
+import {
+  Account, ec, stark, RpcProvider, hash, CallData
+} from 'starknet';
+
 
 export const createAccount = async (nodeUrl) => {
   const provider = new RpcProvider({ nodeUrl });
@@ -16,6 +19,7 @@ export const createAccount = async (nodeUrl) => {
     classHash,
     constructorCalldata: CallData.compile({ publicKey }),
     addressSalt: publicKey,
+    contractAddress: address
   });
   await account.waitForTransaction(transaction_hash);
   let burners = localStorage.getItem('burners') || '{}'

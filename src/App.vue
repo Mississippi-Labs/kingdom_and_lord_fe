@@ -28,6 +28,7 @@ const getData = async () => {
     const config = setupResult.config
     let account = null
     account = await getAccount(config.rpcUrl)
+    console.log(config)
     if (!account) {
       account = await createAccount(config.rpcUrl)
     }

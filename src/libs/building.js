@@ -1,14 +1,31 @@
-import CityA from '../assets/images/cityA.png'
-import CityB from '../assets/images/cityB.png'
-import CityC from '../assets/images/cityC.png'
-import CityD from '../assets/images/cityD.png'
-import CityE from '../assets/images/cityE.png'
-import CityF from '../assets/images/cityF.png'
-import CityG from '../assets/images/cityG.png'
-import CityH from '../assets/images/cityH.png'
-import CityI from '../assets/images/cityI.png'
 import CityJ from '../assets/images/cityJ.png'
-export const cityList = [{
+import CityB from '../assets/images/cityB.png'
+import CityD from '../assets/images/cityD.png'
+import CityA from '../assets/images/cityA.png'
+
+export const innerBuildingOptions = [{
+  name: 'Central Building',
+  desc: 'The main building of the village, also the residence of the chief architect, the higher the level of the central building, the faster the development speed of other buildings and resources, with a maximum reduction of 50% of the required time.',
+  img: CityJ,
+  buildingKind: 5
+}, {
+  name: 'Warehouse',
+  desc: 'The warehouse stores produced resources like wood, bricks, and steel. Higher warehouse levels allow for more storage, and multiple warehouses can be built after constructing one at the highest level.',
+  img: CityB,
+  buildingKind: 6
+}, {
+  name: 'Granary',
+  desc: 'The granary is a warehouse used to store crops. The higher the level of the granary, the more crops it can store. After constructing a granary at the highest level, additional granaries can be built.',
+  img: CityD,
+  buildingKind: 7
+}, {
+  name: 'Barracks',
+  desc: 'The Barracks is where infantry is trained, with higher levels resulting in faster training speeds for infantry units.',
+  img: CityA,
+  buildingKind: 8
+}]
+
+export const innerBuildingList = [{
   left: '80%',
   top: '15%',
   buildingId: 18,
@@ -114,3 +131,4 @@ export const cityList = [{
   buildingId: 38,
   img: null
 }]
+
