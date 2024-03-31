@@ -312,7 +312,21 @@ export async function setupWorld(provider) {
       }
     }
 
-    return { spawn, startUpgrade, getBuildingsLevels, getUnderUpgrading, getGrowthRate, getUpgradeInfo, finishUpgrade, getResource, getCompleteUpgrading, startTraining, finishTraining, getTroops };
+    const getTotalPopulation = async (player) => {
+      try {
+        let data = await provider.callContract(
+          contract_name,
+          "get_total_population",
+          [player]
+        );
+        return data
+      } catch (error) {
+        console.error("Error executing spawn:", error);
+        throw error;
+      }
+    }
+
+    return { spawn, startUpgrade, getBuildingsLevels, getUnderUpgrading, getGrowthRate, getUpgradeInfo, finishUpgrade, getResource, getCompleteUpgrading, startTraining, finishTraining, getTroops, getTotalPopulation };
   }
   return {
     actions: actions(),

@@ -33,7 +33,14 @@ const growthRateData = ref({ resource })
 const buildingData = ref({})
 const underUpgradingData = ref({})
 const storage = ref({})
-const troopsData = ref({})
+const troopsData = ref({
+  "Millita": 0,
+  "Guard": 0,
+  "Heavy Infantry": 0,
+  "Light Cavalry": 0,
+  "Knights": 0,
+  "Heavy Knights": 0
+})
 
 const getBuildingList = () => {
   const { underUpgrading } = store.dojoComponents
@@ -42,7 +49,7 @@ const getBuildingList = () => {
 }
 
 const getResourceArr = (buildingKind, level) => {
-  return getUpgradeData(buildingKind)[level].slice(2, 7)
+  return getUpgradeData(buildingKind)[level].slice(2, 6)
 }
 
 const getTime = (buildingKind, level) => {
@@ -91,12 +98,13 @@ const getLastBlock = async () => {
 const getData = async () => {
   if (!dojoContext?.setup?.systemCalls) return
   if (!store.state.isSpawn) return
-  const { getResource, getGrowthRate, getTroops } = dojoContext.setup.systemCalls
+  const { getResource, getGrowthRate, getTroops, getTotalPopulation } = dojoContext.setup.systemCalls
   const account = dojoContext.account
   const resource = await getResource(account.address)
   const growthRate = await getGrowthRate(account.address)
   const troops = await getTroops(account.address)
-  // console.log('troops', troops)
+  // const totalPopulation = await getTotalPopulation(account.address)
+  // console.log('totalPopulation', totalPopulation)
   troopsData.value = {
     "Millita": Number(troops?.millitia),
     "Guard": Number(troops?.guard),
@@ -270,7 +278,7 @@ watch(() => blockHeight.value, (newVal) => {
               <img v-else-if="index == 1" src="../assets/images/resource_icon_2.png" alt="">
               <img v-else-if="index == 2" src="../assets/images/resource_icon_3.png" alt="">
               <img v-else-if="index == 3" src="../assets/images/resource_icon_4.png" alt="">
-              <img v-else-if="index == 4" src="../assets/images/resource_icon_5.png" alt="">
+              <!-- <img v-else-if="index == 4" src="../assets/images/resource_icon_5.png" alt=""> -->
             </div>
             <div class="amount">{{ resource }}</div>
           </div>

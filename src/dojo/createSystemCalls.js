@@ -111,6 +111,15 @@ export function createSystemCalls(
     }
   }
 
+  const getTotalPopulation = async (player) => {
+    try {
+      return await actions.getTotalPopulation(player);
+    } catch (error) {
+      console.error("Error executing getTotalPopulation:", error);
+      throw error;
+    }
+  } 
+
   return {
     spawn,
     startUpgrade,
@@ -123,6 +132,7 @@ export function createSystemCalls(
     getCompleteUpgrading,
     finishTraining,
     startTraining,
-    getTroops
+    getTroops,
+    getTotalPopulation
   };
 }

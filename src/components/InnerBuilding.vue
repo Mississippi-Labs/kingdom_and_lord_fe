@@ -29,7 +29,7 @@ const createBuilding = (id) => {
 }
 
 const getResourceArr = (buildingKind, level) => {
-  return getUpgradeData(buildingKind)[level].slice(2, 7)
+  return getUpgradeData(buildingKind)[level].slice(2, 6)
 }
 
 const getTime = (buildingKind, level) => {
@@ -59,7 +59,7 @@ const getTime = (buildingKind, level) => {
                 <img v-else-if="index == 1" src="../assets/images/resource_icon_2.png" alt="">
                 <img v-else-if="index == 2" src="../assets/images/resource_icon_3.png" alt="">
                 <img v-else-if="index == 3" src="../assets/images/resource_icon_4.png" alt="">
-                <img v-else-if="index == 4" src="../assets/images/resource_icon_5.png" alt="">
+                <!-- <img v-else-if="index == 4" src="../assets/images/resource_icon_5.png" alt=""> -->
                 <span>{{ num }}</span>
               </div>
             </div>

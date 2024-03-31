@@ -1,4 +1,5 @@
 <script setup>
+import { watch, ref } from 'vue'
 import { useGlobalStore } from '../hooks/globalStore.js'
 import { innerBuildingOptions, outBuildingOptions  } from '../libs/building.js'
 import { infantry, knights } from '../libs/barrack.js'
@@ -32,6 +33,8 @@ const props = defineProps({
 
 const { store, setInnerBuildingList } = useGlobalStore()
 
+const troopsRef = ref(null)
+
 const getTrainingList = () => {
   const { underTraining } = store.dojoComponents
   if (!underTraining) return []
@@ -58,6 +61,17 @@ const getBuilding = (buildingKind) => {
     return outBuildingOptions.filter(e => e.buildingKind == buildingKind)[0]
   }
 }
+
+watch(() => props.troopsData, (newData) => {
+  // 删除为0字段
+  const troopsData = Object.keys(newData).reduce((acc, key) => {
+    if (newData[key] !== 0) {
+      acc[key] = newData[key]
+    }
+    return acc
+  }, {})
+  troopsRef.value = troopsData
+}, {immediate: true})
 
 </script>
 <template>
@@ -93,8 +107,8 @@ const getBuilding = (buildingKind) => {
       </div>
       <div class="section">
         <div class="hd flex-center">Troops</div>
-        <div class="bd">
-          <div class="bd-item flex-center-sb" v-for="(value, key) in troopsData">
+        <div v-if="troopsRef != {}" class="bd">
+          <div class="bd-item flex-center-sb" v-for="(value, key) in troopsRef">
             <div class="flex-center">
               <div class="img flex-center-center training-img">
                 <img v-if="key == 'Millita'" src="../assets/images/millita.png" alt="">
@@ -107,6 +121,7 @@ const getBuilding = (buildingKind) => {
             </div>{{ value }}
           </div>
         </div>
+        <div v-else class="no-data flex-center-center">No Troops data</div>
         <div class="ft"></div>
       </div>
     </div>
