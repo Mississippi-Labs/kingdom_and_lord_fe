@@ -7,12 +7,12 @@ const props = defineProps({
   troopsData: {
     type: Object,
     default: {
+      "Millitia": 0,
       "Guard": 0,
       "Heavy Infantry": 0,
-      "Heavy Knights": 0,
+      "Light Cavalry": 0,
       "Knights": 0,
-      "Millitia": 0,
-      "Scouts": 0
+      "Heavy Knights": 0
     }
   },
   growthRateData: {
@@ -35,7 +35,7 @@ const { store, setInnerBuildingList } = useGlobalStore()
 const getTrainingList = () => {
   const { underTraining } = store.dojoComponents
   if (!underTraining) return []
-  else return underTraining.filter(item => !item.is_finished)
+  else return underTraining.filter(item => !item.is_finished).sort((a, b) => a.training_id - b.training_id)
 }
 
 const getTraining = (soldierKind) => {
@@ -58,6 +58,7 @@ const getBuilding = (buildingKind) => {
     return outBuildingOptions.filter(e => e.buildingKind == buildingKind)[0]
   }
 }
+
 </script>
 <template>
   <div class="content flex-start">
@@ -95,7 +96,14 @@ const getBuilding = (buildingKind) => {
         <div class="bd">
           <div class="bd-item flex-center-sb" v-for="(value, key) in troopsData">
             <div class="flex-center">
-              <div class="img flex-center-center"><img src="../assets/images/tropps.png" alt=""></div>{{ key }}
+              <div class="img flex-center-center training-img">
+                <img v-if="key == 'Millita'" src="../assets/images/millita.png" alt="">
+                <img v-else-if="key == 'Guard'" src="../assets/images/guard.png" alt="">
+                <img v-else-if="key == 'Heavy Infantry'" src="../assets/images/heavy_infantry.png" alt="">
+                <img v-else-if="key == 'Light Cavalry'" src="../assets/images/scout.png" alt="">
+                <img v-else-if="key == 'Knights'" src="../assets/images/knights.png" alt="">
+                <img v-else-if="key == 'Heavy Knights'" src="../assets/images/heavy_knights.png" alt="">
+              </div>{{ key }}
             </div>{{ value }}
           </div>
         </div>
@@ -126,7 +134,7 @@ const getBuilding = (buildingKind) => {
         <div class="bd" v-if="getTrainingList().length">
           <div v-for="(item, index) in getTrainingList()" :key="index" class="bd-item flex-center-sb">
             <div class="flex-center">
-              <div class="img flex-center-center">
+              <div class="img flex-center-center training-img">
                 <img :src="getTraining(item?.soldier_kind)?.img" alt="">
               </div>
               <span>{{ getTraining(item?.soldier_kind)?.name }}</span>
@@ -194,9 +202,15 @@ $panelMB: 40px;
           border-radius: 50%;
           background: rgba($color: #000000, $alpha: .1);
           margin-right: 10px;
+          &.training-img {
+            img {
+              width: auto !important;
+              height: 26px;
+            }
+          }
 
           img {
-            width: 18px;
+            width: 22px;
             height: auto;
           }
         }
@@ -252,16 +266,6 @@ $panelMB: 40px;
 
     .section {
       width: 100%;
-
-      .bd {
-        .bd-item {
-          .img {
-            img {
-              width: 24px;
-            }
-          }
-        }
-      }
     }
   }
 }

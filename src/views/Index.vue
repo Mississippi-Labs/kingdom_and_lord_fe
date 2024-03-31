@@ -98,12 +98,12 @@ const getData = async () => {
   const troops = await getTroops(account.address)
   // console.log('troops', troops)
   troopsData.value = {
+    "Millita": Number(troops?.millitia),
     "Guard": Number(troops?.guard),
     "Heavy Infantry": Number(troops?.heavy_infantry),
-    "Heavy Knights": Number(troops?.heavy_knights),
+    "Light Cavalry": Number(troops?.scouts),
     "Knights": Number(troops?.knights),
-    "Millitia": Number(troops?.millitia),
-    "Scouts": Number(troops?.scouts)
+    "Heavy Knights": Number(troops?.heavy_knights)
   }
   resourceData.value = {
     food: Number(resource?.[3]?.amount),
@@ -304,7 +304,7 @@ watch(() => blockHeight.value, (newVal) => {
               </div>
             </div>
           </div>
-          <div class="btn flex-center-center" @click="startTrainingFun(index)">Train</div>
+          <div class="btn flex-center-center" @click="startTrainingFun(item.barrackKind)">Train</div>
         </div>
         <div v-for="(item, index) in knights" :key="index" class="building-item barrack">
           <div class="building-item-hd flex-center">{{ item.name }}</div>
@@ -324,7 +324,7 @@ watch(() => blockHeight.value, (newVal) => {
               </div>
             </div>
           </div>
-          <div class="btn flex-center-center" @click="startTrainingFun(index)">Train</div>
+          <div class="btn flex-center-center" @click="startTrainingFun(item.barrackKind)">Train</div>
         </div>
       </div>
 
@@ -489,7 +489,7 @@ watch(() => blockHeight.value, (newVal) => {
         margin-right: 16px;
 
         img {
-          width: 92px;
+          width: 120%;
           height: auto;
         }
       }

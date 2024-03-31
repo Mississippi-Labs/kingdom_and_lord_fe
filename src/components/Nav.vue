@@ -57,52 +57,65 @@ const getProgress = (count, storage) => {
         </div>
         <div class="resource flex-center-center">
           <div class="resource-item resource-item-1 flex-center-sb">
-            <div class="icon flex-center-center">
-              <img src="../assets/images/resource_1.png" alt="">
+            <div class="flex-center">
+              <div class="icon flex-end-center">
+                <img src="../assets/images/cityB.png" alt="">
+              </div>
+              <div class="total-amount">{{ (+storage.warehouse).toLocaleString() }}</div>
             </div>
-            <div class="total-amount">{{ (+storage.warehouse).toLocaleString() }}</div>
+
             <div class="item-detail flex-center-sb">
               <div class="item flex-center">
-                <img src="../assets/images/resource_1_item.png" alt="">
+                <div class="item-img flex-center-center">
+                  <img src="../assets/images/resource_icon_1.png" alt="">
+                </div>
                 <div class="item-info">
                   <p>{{ (+resource.wood).toLocaleString() }}</p>
                   <div class="progress-wrap">
-                    <div class="progress" :style="{width: getProgress(resource.wood, storage.warehouse)}"></div>
+                    <div class="progress" :style="{ width: getProgress(resource.wood, storage.warehouse) }"></div>
                   </div>
                 </div>
               </div>
               <div class="item flex-center">
-                <img src="../assets/images/resource_1_item.png" alt="">
+                <div class="item-img flex-center-center">
+                  <img src="../assets/images/resource_icon_3.png" alt="">
+                </div>
                 <div class="item-info">
                   <p>{{ (+resource.steel).toLocaleString() }}</p>
                   <div class="progress-wrap">
-                    <div class="progress" :style="{width: getProgress(resource.steel, storage.warehouse)}"></div>
+                    <div class="progress" :style="{ width: getProgress(resource.steel, storage.warehouse) }"></div>
                   </div>
                 </div>
               </div>
               <div class="item flex-center">
-                <img src="../assets/images/resource_1_item.png" alt="">
+                <div class="item-img flex-center-center">
+                  <img src="../assets/images/resource_icon_2.png" alt="">
+                </div>
                 <div class="item-info">
                   <p>{{ (+resource.brick).toLocaleString() }}</p>
                   <div class="progress-wrap">
-                    <div class="progress" :style="{width: getProgress(resource.brick, storage.warehouse)}"></div>
+                    <div class="progress" :style="{ width: getProgress(resource.brick, storage.warehouse) }"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="resource-item resource-item-2 flex-center-sb">
-            <div class="icon flex-center-center">
-              <img src="../assets/images/resource_2.png" alt="">
+            <div class="flex-center">
+              <div class="icon flex-end-center">
+                <img src="../assets/images/cityD.png" alt="">
+              </div>
+              <div class="total-amount">{{ (+storage.barn).toLocaleString() }}</div>
             </div>
-            <div class="total-amount">{{ (+storage.barn).toLocaleString() }}</div>
             <div class="item-detail flex-center-sb">
               <div class="item flex-center">
-                <img src="../assets/images/resource_2_item.png" alt="">
+                <div class="item-img flex-center-center">
+                  <img src="../assets/images/resource_icon_4.png" alt="">
+                </div>
                 <div class="item-info">
                   <p>{{ (+resource.food).toLocaleString() }}</p>
                   <div class="progress-wrap">
-                    <div class="progress" :style="{width: getProgress(resource.food, storage.barn)}"></div>
+                    <div class="progress" :style="{ width: getProgress(resource.food, storage.barn) }"></div>
                   </div>
                 </div>
               </div>
@@ -180,25 +193,16 @@ const getProgress = (count, storage) => {
 
         .icon {
           position: relative;
+          width: 24px;
+          height: 24px;
+          background-color: #000;
+          border-radius: 50%;
 
           img {
-            width: 24px;
+            width: 32px;
             height: auto;
             position: relative;
             z-index: 2;
-          }
-
-          .ellipse {
-            width: 24px;
-            height: 24px;
-            background-color: #000;
-            border-radius: 50%;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            margin: auto;
           }
         }
 
@@ -212,6 +216,7 @@ const getProgress = (count, storage) => {
           .total-amount {
             color: #ffb700;
             font-size: 12px;
+            margin-left: 8px;
           }
 
           .item-detail {
@@ -221,8 +226,17 @@ const getProgress = (count, storage) => {
             padding: 0 6px;
 
             .item {
-              img {
+              .item-img {
                 width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: rgba($color: #000000, $alpha: .2);
+                position: relative;
+                z-index: 2;
+              }
+
+              img {
+                width: 22px;
                 height: auto;
               }
 
