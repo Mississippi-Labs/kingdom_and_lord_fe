@@ -33,7 +33,7 @@ const props = defineProps({
 
 const { store, setInnerBuildingList } = useGlobalStore()
 
-const troopsRef = ref(null)
+const troopsRef = ref({})
 
 const getTrainingList = () => {
   const { underTraining } = store.dojoComponents
@@ -107,7 +107,7 @@ watch(() => props.troopsData, (newData) => {
       </div>
       <div class="section">
         <div class="hd flex-center">Troops</div>
-        <div v-if="troopsRef != {}" class="bd">
+        <div v-if="Object.keys(troopsRef).length" class="bd">
           <div class="bd-item flex-center-sb" v-for="(value, key) in troopsRef">
             <div class="flex-center">
               <div class="img flex-center-center training-img">
@@ -121,7 +121,7 @@ watch(() => props.troopsData, (newData) => {
             </div>{{ value }}
           </div>
         </div>
-        <div v-else class="no-data flex-center-center">No Troops data</div>
+        <div v-else class="no-data flex-center-center">No  data</div>
         <div class="ft"></div>
       </div>
     </div>
