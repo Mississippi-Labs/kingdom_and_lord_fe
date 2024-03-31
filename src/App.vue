@@ -119,7 +119,7 @@ const getData = async () => {
         let data = getComponentValue(UnderTraining, entity)
         data.player = getHexAddress(data.address)
         return data
-      })
+      }).filter((barrack) => barrack.player === account.address)
 
       const warehouseStorageData = newWarehouseStorageData.value.map((entity) => {
         let data = getComponentValue(WarehouseStorage, entity)

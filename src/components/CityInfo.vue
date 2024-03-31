@@ -1,8 +1,20 @@
 <script setup>
 import { useGlobalStore } from '../hooks/globalStore.js'
 import { innerBuildingOptions, outBuildingOptions  } from '../libs/building.js'
+import { infantry, knights } from '../libs/barrack.js'
 
 const props = defineProps({
+  troopsData: {
+    type: Object,
+    default: {
+      "Guard": 0,
+      "Heavy Infantry": 0,
+      "Heavy Knights": 0,
+      "Knights": 0,
+      "Millitia": 0,
+      "Scouts": 0
+    }
+  },
   growthRateData: {
     type: Object,
     default: {
@@ -19,6 +31,20 @@ const props = defineProps({
 })
 
 const { store, setInnerBuildingList } = useGlobalStore()
+
+const getTrainingList = () => {
+  const { underTraining } = store.dojoComponents
+  if (!underTraining) return []
+  else return underTraining.filter(item => !item.is_finished)
+}
+
+const getTraining = (soldierKind) => {
+  if (soldierKind > 2) {
+    return knights.filter(e => e.barrackKind == soldierKind)[0]
+  } else {
+    return infantry.filter(e => e.barrackKind == soldierKind)[0]
+  }
+}
 
 const getBuildingList = () => {
   const { underUpgrading } = store.dojoComponents
@@ -43,32 +69,43 @@ const getBuilding = (buildingKind) => {
         <div class="bd">
           <div class="bd-item flex-center-sb">
             <div class="flex-center">
-              <div class="img flex-center-center"><img src="../assets/images/resource_icon_4.png" alt=""></div>food
+              <div class="img flex-center-center"><img src="../assets/images/resource_icon_4.png" alt=""></div>Food
             </div>{{ growthRateData.food }}
           </div>
           <div class="bd-item flex-center-sb">
             <div class="flex-center">
-              <div class="img flex-center-center"><img src="../assets/images/resource_icon_1.png" alt=""></div>wood
+              <div class="img flex-center-center"><img src="../assets/images/resource_icon_1.png" alt=""></div>Wood
             </div>{{ growthRateData.wood }}
           </div>
           <div class="bd-item flex-center-sb">
             <div class="flex-center">
-              <div class="img flex-center-center"><img src="../assets/images/resource_icon_3.png" alt=""></div>steel
+              <div class="img flex-center-center"><img src="../assets/images/resource_icon_3.png" alt=""></div>Steel
             </div>{{ growthRateData.steel }}
           </div>
           <div class="bd-item flex-center-sb">
             <div class="flex-center">
-              <div class="img flex-center-center"><img src="../assets/images/resource_icon_2.png" alt=""></div>brick
+              <div class="img flex-center-center"><img src="../assets/images/resource_icon_2.png" alt=""></div>Brick
             </div>{{ growthRateData.brick }}
+          </div>
+        </div>
+        <div class="ft"></div>
+      </div>
+      <div class="section">
+        <div class="hd flex-center">Troops</div>
+        <div class="bd">
+          <div class="bd-item flex-center-sb" v-for="(value, key) in troopsData">
+            <div class="flex-center">
+              <div class="img flex-center-center"><img src="../assets/images/tropps.png" alt=""></div>{{ key }}
+            </div>{{ value }}
           </div>
         </div>
         <div class="ft"></div>
       </div>
     </div>
     <div class="r">
-      <div class="section" v-if="getBuildingList().length">
+      <div class="section">
         <div class="hd flex-center">Buildings</div>
-        <div class="bd">
+        <div class="bd" v-if="getBuildingList().length">
           <div v-for="(item, index) in getBuildingList()" :key="index" class="bd-item flex-center-sb">
             <div class="flex-center">
               <div class="img flex-center-center">
@@ -80,6 +117,25 @@ const getBuilding = (buildingKind) => {
             <div>{{ item.end_time - blockHeight >= 0 ? item.end_time - blockHeight : 0 }}</div>
           </div>
         </div>
+        <div v-else class="no-data flex-center-center"> No Building data</div>
+        <div class="ft"></div>
+      </div>
+
+      <div class="section">
+        <div class="hd flex-center">Training</div>
+        <div class="bd" v-if="getTrainingList().length">
+          <div v-for="(item, index) in getTrainingList()" :key="index" class="bd-item flex-center-sb">
+            <div class="flex-center">
+              <div class="img flex-center-center">
+                <img :src="getTraining(item?.soldier_kind)?.img" alt="">
+              </div>
+              <span>{{ getTraining(item?.soldier_kind)?.name }}</span>
+              <!-- <p class="lv">LV{{ item.target_level.level }}</p> -->
+            </div>
+            <div>{{ item.end_time - blockHeight >= 0 ? item.end_time - blockHeight : 0 }}</div>
+          </div>
+        </div>
+        <div v-else class="no-data flex-center-center"> No training data</div>
         <div class="ft"></div>
       </div>
     </div>
@@ -94,6 +150,7 @@ $panelMB: 40px;
 
   .section {
     font-family: 'Chalkboard-Bold';
+    margin-bottom: 20px;
 
     .hd {
       height: 50px;
@@ -101,6 +158,17 @@ $panelMB: 40px;
       background-size: 100% 100%;
       padding: 2px 20px 0;
       box-sizing: border-box;
+      font-size: 14px;
+      font-family: 'Chalkboard-Bold';
+    }
+
+    .no-data {
+      height: 50px;
+      background: url(../assets/images/dialog_bd.png) no-repeat;
+      background-size: 100% 100%;
+      box-sizing: border-box;
+      font-size: 14px;
+      color: rgba($color: #000000, $alpha: .6);
     }
 
     .bd {

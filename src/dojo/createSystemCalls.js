@@ -30,6 +30,24 @@ export function createSystemCalls(
     }
   }
 
+  const startTraining = async ({ account, barrackKind }) => {
+    try {
+      return await actions.startTraining({ account, barrackKind });
+    } catch (error) {
+      console.error("Error executing startTraining:", error);
+      throw error;
+    }
+  }
+
+  const finishTraining = async ({ account, trainingId }) => {
+    try {
+      return await actions.finishTraining({ account, trainingId });
+    } catch (error) {
+      console.error("Error executing finishTraining:", error);
+      throw error;
+    }
+  }
+
   const getBuildingsLevels = async (player) => {
     try {
       return await actions.getBuildingsLevels(player);
@@ -84,6 +102,15 @@ export function createSystemCalls(
     }
   }
 
+  const getTroops = async (player) => {
+    try {
+      return await actions.getTroops(player);
+    } catch (error) {
+      console.error("Error executing getTroops:", error);
+      throw error;
+    }
+  }
+
   return {
     spawn,
     startUpgrade,
@@ -93,6 +120,9 @@ export function createSystemCalls(
     getUpgradeInfo,
     finishUpgrade,
     getResource,
-    getCompleteUpgrading
+    getCompleteUpgrading,
+    finishTraining,
+    startTraining,
+    getTroops
   };
 }

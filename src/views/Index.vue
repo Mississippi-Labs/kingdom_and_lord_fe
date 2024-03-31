@@ -2,6 +2,7 @@
 import { ref, watch, onBeforeMount, inject, onBeforeUnmount } from 'vue'
 import { resource } from '../libs/data'
 import { upgradeData } from '../libs/test_data'
+import { infantry, knights } from '../libs/barrack'
 import Modal from '../components/Modal.vue'
 import Loading from '../components/Loading.vue'
 import { useMessage } from 'naive-ui'
@@ -32,12 +33,7 @@ const growthRateData = ref({ resource })
 const buildingData = ref({})
 const underUpgradingData = ref({})
 const storage = ref({})
-
-const isUpgrading = (buildingId) => {
-  const { underUpgrading } = store.dojoComponents
-  if (!underUpgrading) return false
-  return underUpgrading.some(item => item.building_id === buildingId && !item.is_finished)
-}
+const troopsData = ref({})
 
 const getBuildingList = () => {
   const { underUpgrading } = store.dojoComponents
@@ -45,9 +41,81 @@ const getBuildingList = () => {
   else return underUpgrading.filter(item => !item.is_finished)
 }
 
-const getBuilding = (buildingKind) => {
-  if (buildingKind >= 5) {
-    return innerBuildingOptions.filter(e => e.buildingKind == buildingKind)[0]
+const getResourceArr = (buildingKind, level) => {
+  return getUpgradeData(buildingKind)[level].slice(2, 7)
+}
+
+const getTime = (buildingKind, level) => {
+  return (getUpgradeData(buildingKind)[level][7] * 2)
+}
+
+const toObject = (obj) => {
+  return JSON.parse(JSON.stringify(obj, (key, value) => typeof value === 'bigint' ? value.toString() : value))
+}
+
+const setInnerBuildingListFun = (cityHall, warehouse, barn, barrack) => {
+  cityHall.forEach(item => {
+    item.buildingKind = 5
+  })
+  warehouse.forEach(item => {
+    item.buildingKind = 6
+  })
+  barn.forEach(item => {
+    item.buildingKind = 7
+  })
+  barrack.forEach(item => {
+    item.buildingKind = 8
+  })
+  const underUpgrading = getBuildingList()
+  underUpgrading.forEach(item => {
+    item.buildingKind = item.building_kind
+  })
+  const list = [...cityHall, ...warehouse, ...barn, ...barrack, ...underUpgrading]
+  const innerBuildingList = store.state.innerBuildingList
+  list.forEach(item => {
+    const itemData = innerBuildingOptions.filter(e => e.buildingKind == item.buildingKind)[0]
+    innerBuildingList.forEach(e => {
+      if (e.buildingId === item.building_id) {
+        e = Object.assign(e, itemData, item)
+      }
+    })
+  })
+  setInnerBuildingList(toObject(innerBuildingList))
+}
+
+const getLastBlock = async () => {
+  const lastBlock = await providerRPC.getBlockLatestAccepted();
+  blockHeight.value = lastBlock.block_number
+}
+
+const getData = async () => {
+  if (!dojoContext?.setup?.systemCalls) return
+  if (!store.state.isSpawn) return
+  const { getResource, getGrowthRate, getTroops } = dojoContext.setup.systemCalls
+  const account = dojoContext.account
+  const resource = await getResource(account.address)
+  const growthRate = await getGrowthRate(account.address)
+  const troops = await getTroops(account.address)
+  // console.log('troops', troops)
+  troopsData.value = {
+    "Guard": Number(troops?.guard),
+    "Heavy Infantry": Number(troops?.heavy_infantry),
+    "Heavy Knights": Number(troops?.heavy_knights),
+    "Knights": Number(troops?.knights),
+    "Millitia": Number(troops?.millitia),
+    "Scouts": Number(troops?.scouts)
+  }
+  resourceData.value = {
+    food: Number(resource?.[3]?.amount),
+    wood: Number(resource?.[0]?.amount),
+    steel: Number(resource?.[1]?.amount),
+    brick: Number(resource?.[2]?.amount),
+  }
+  growthRateData.value = {
+    food: Number(growthRate?.[3]?.amount),
+    wood: Number(growthRate?.[0]?.amount),
+    steel: Number(growthRate?.[1]?.amount),
+    brick: Number(growthRate?.[2]?.amount),
   }
 }
 
@@ -61,62 +129,6 @@ const spawnFun = async () => {
     message.error('Failed to spawn:' + error)
   }
   showLoading.value = false
-}
-
-const verify = async (requirement) => {
-  if (Number(requirement.brick.amount) > resourceData.value.brick && Number(requirement.steel.amount) > resourceData.value.steel && Number(requirement.wood.amount) > resourceData.value.wood && Number(requirement.food.amount) > resourceData.value.food) {
-    return false;
-  }
-  return true;
-}
-
-const getStorage = (key, value) => {
-  const { warehouse, barn } = store.dojoComponents
-  const warehouseAmount = warehouse?.[0]?.max_storage
-  const barnAmount = barn?.[0]?.max_storage
-  if (key === 'food') {
-    return barnAmount
-  } else {
-    return warehouseAmount
-  }
-}
-
-const getPercentage = (key, value) => {
-  const { warehouseStorage, barnStorage } = store.dojoComponents
-  const warehouseAmount = warehouseStorage?.[0]?.max_storage
-  const barnAmount = barnStorage?.[0]?.max_storage
-  if (key === 'food') {
-    return (value / barnAmount) * 100
-  } else {
-    return (value / warehouseAmount) * 100
-  }
-}
-
-const getLastBlock = async () => {
-  const lastBlock = await providerRPC.getBlockLatestAccepted();
-  blockHeight.value = lastBlock.block_number
-}
-
-const getData = async () => {
-  if (!dojoContext?.setup?.systemCalls) return
-  if (!store.state.isSpawn) return
-  const { getResource, getGrowthRate } = dojoContext.setup.systemCalls
-  const account = dojoContext.account
-  const resource = await getResource(account.address)
-  const growthRate = await getGrowthRate(account.address)
-  // console.log('resource', resource, growthRate)
-  resourceData.value = {
-    food: Number(resource?.[3]?.amount),
-    wood: Number(resource?.[0]?.amount),
-    steel: Number(resource?.[1]?.amount),
-    brick: Number(resource?.[2]?.amount),
-  }
-  growthRateData.value = {
-    food: Number(growthRate?.[3]?.amount),
-    wood: Number(growthRate?.[0]?.amount),
-    steel: Number(growthRate?.[1]?.amount),
-    brick: Number(growthRate?.[2]?.amount),
-  }
 }
 
 const upgrade = async (data) => {
@@ -164,47 +176,19 @@ const createBuilding = (item) => {
   upgrade(buildingData.value)
 }
 
-const getResourceArr = (buildingKind, level) => {
-  return getUpgradeData(buildingKind)[level].slice(2, 7)
-}
-
-const getTime = (buildingKind, level) => {
-  return (getUpgradeData(buildingKind)[level][7] * 2)
-}
-
-const toObject = (obj) => {
-  return JSON.parse(JSON.stringify(obj, (key, value) => typeof value === 'bigint' ? value.toString() : value))
-}
-
-const setInnerBuildingListFun = (cityHall, warehouse, barn, barrack) => {
-  cityHall.forEach(item => {
-    item.buildingKind = 5
-  })
-  warehouse.forEach(item => {
-    item.buildingKind = 6
-  })
-  barn.forEach(item => {
-    item.buildingKind = 7
-  })
-  barrack.forEach(item => {
-    item.buildingKind = 8
-  })
-  const underUpgrading = getBuildingList()
-  underUpgrading.forEach(item => {
-    item.buildingKind = item.building_kind
-  })
-  const list = [...cityHall, ...warehouse, ...barn, ...barrack, ...underUpgrading]
-  const innerBuildingList = store.state.innerBuildingList
-  list.forEach(item => {
-    const itemData = innerBuildingOptions.filter(e => e.buildingKind == item.buildingKind)[0]
-    innerBuildingList.forEach(e => {
-      if (e.buildingId === item.building_id) {
-        e = Object.assign(e, itemData, item)
-      }
-    })
-  })
-  console.log(innerBuildingList)
-  setInnerBuildingList(toObject(innerBuildingList))
+const startTrainingFun = async (barrackKind) => {
+  const { startTraining } = dojoContext.setup.systemCalls
+  const account = dojoContext.account
+  showLoading.value = true
+  try {
+    await startTraining({ account, barrackKind })
+  } catch (error) {
+    console.error('Failed to startTraining:', error)
+    message.error('Failed to startTraining:' + error)
+  }
+  buildingData.value = {}
+  underUpgradingData.value = {}
+  showLoading.value = false
 }
 
 onBeforeMount(() => {
@@ -238,13 +222,20 @@ watch(() => store.dojoComponents, (newVal) => {
 
 watch(() => blockHeight.value, (newVal) => {
   console.log('blockHeight', newVal)
-  const { underUpgrading } = store.dojoComponents
-  if (!underUpgrading) return
+  const { underUpgrading, underTraining } = store.dojoComponents
+  if (!underUpgrading || !underTraining) return
   underUpgrading.forEach(async (item) => {
     if (item.end_time <= newVal && item.end_time !== 0 && item.is_finished != 1) {
       const { finishUpgrade } = dojoContext.setup.systemCalls
       const account = dojoContext.account
       await finishUpgrade({ account, id: item.upgrade_id })
+    }
+  })
+  underTraining.forEach(async (item) => {
+    if (item.end_time <= newVal && item.end_time !== 0 && item.is_finished != 1) {
+      const { finishTraining } = dojoContext.setup.systemCalls
+      const account = dojoContext.account
+      await finishTraining({ account, trainingId: item.training_id })
     }
   })
 }, { immediate: true })
@@ -255,14 +246,15 @@ watch(() => blockHeight.value, (newVal) => {
     <Nav :resource="resourceData" :storage="storage" />
     <InnerBuilding @createBuilding="showCreateBuilding" @upgradeBuilding="upgradeBuilding" />
     <OutBuilding @upgradeBuilding="upgradeBuilding" />
-    <CityInfo :growthRateData="growthRateData" :blockHeight="blockHeight" />
+    <CityInfo :growthRateData="growthRateData" :blockHeight="blockHeight" :troopsData="troopsData" />
   </div>
   <div v-else class="flex-center spawn-wrap">
     <n-button type="primary" @click="spawnFun">Spawn</n-button>
   </div>
   <Modal v-if="underUpgradingData.buildingId" @close="underUpgradingData = {}">
     <template v-slot:title>
-      <div class="flex-center"><img :src="underUpgradingData.img" style="width: 30px;margin-right: 10px" alt="">{{ underUpgradingData.name }} - level {{ underUpgradingData?.level?.level }}</div>
+      <div class="flex-center"><img :src="underUpgradingData.img" style="width: 30px;margin-right: 10px" alt="">{{
+    underUpgradingData.name }} - level {{ underUpgradingData?.level?.level }}</div>
     </template>
     <div class="building-list">
       <div class="building-item">
@@ -270,7 +262,9 @@ watch(() => blockHeight.value, (newVal) => {
           <div class="building-item-desc">{{ underUpgradingData.desc }}</div>
         </div>
         <div class="building-item-resource flex-center-center">
-          <div v-for="(resource, index) in getResourceArr(underUpgradingData.buildingKind, underUpgradingData?.level?.level)" :key="index" class="building-item-resource-item flex-center">
+          <div
+            v-for="(resource, index) in getResourceArr(underUpgradingData.buildingKind, underUpgradingData?.level?.level)"
+            :key="index" class="building-item-resource-item flex-center">
             <div class="icon flex-center-center">
               <img v-if="index == 0" src="../assets/images/resource_icon_1.png" alt="">
               <img v-else-if="index == 1" src="../assets/images/resource_icon_2.png" alt="">
@@ -291,6 +285,49 @@ watch(() => blockHeight.value, (newVal) => {
           <span>{{ formatTime(getTime(underUpgradingData.buildingKind, underUpgradingData?.level?.level)) }}</span>
         </div>
       </div>
+      <div v-if="underUpgradingData.buildingKind == 8">
+        <div v-for="(item, index) in infantry" :key="index" class="building-item barrack">
+          <div class="building-item-hd flex-center">{{ item.name }}</div>
+          <div class="building-item-bd flex-center">
+            <div class="building-item-img">
+              <img :src="item.img" alt="">
+            </div>
+            <div class="flex-start-sb barrack-info">
+              <div class="building-item-desc">{{ item.desc }}</div>
+              <div class="building-item-resource flex-center-sb">
+                <div v-for="index in 4" :key="index" class="building-item-resource-item flex-center">
+                  <div class="icon flex-center-center">
+                    <img src="../assets/images/resource_icon_1.png" alt="">
+                  </div>
+                  <div class="amount">500</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="btn flex-center-center" @click="startTrainingFun(index)">Train</div>
+        </div>
+        <div v-for="(item, index) in knights" :key="index" class="building-item barrack">
+          <div class="building-item-hd flex-center">{{ item.name }}</div>
+          <div class="building-item-bd flex-center">
+            <div class="building-item-img">
+              <img :src="item.img" alt="">
+            </div>
+            <div class="flex-start-sb barrack-info">
+              <div class="building-item-desc">{{ item.desc }}</div>
+              <div class="building-item-resource flex-center-sb">
+                <div v-for="index in 4" :key="index" class="building-item-resource-item flex-center">
+                  <div class="icon flex-center-center">
+                    <img src="../assets/images/resource_icon_1.png" alt="">
+                  </div>
+                  <div class="amount">500</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="btn flex-center-center" @click="startTrainingFun(index)">Train</div>
+        </div>
+      </div>
+
     </div>
   </Modal>
   <Modal v-if="buildingData.buildingId" @close="buildingData = {}">
@@ -305,7 +342,8 @@ watch(() => blockHeight.value, (newVal) => {
           </div>
         </div>
         <div class="building-item-resource flex-center-center">
-          <div v-for="(resource, index) in getResourceArr(item.buildingKind, 0)" :key="index" class="building-item-resource-item flex-center">
+          <div v-for="(resource, index) in getResourceArr(item.buildingKind, 0)" :key="index"
+            class="building-item-resource-item flex-center">
             <div class="icon flex-center-center">
               <img v-if="index == 0" src="../assets/images/resource_icon_1.png" alt="">
               <img v-else-if="index == 1" src="../assets/images/resource_icon_2.png" alt="">
@@ -355,7 +393,7 @@ watch(() => blockHeight.value, (newVal) => {
       font-family: 'Chalkboard-Bold';
       background: #e3e3e3;
       border-radius: 5px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .building-item-bd {
@@ -417,6 +455,49 @@ watch(() => blockHeight.value, (newVal) => {
       svg {
         margin-right: 4px;
         margin-top: 1px;
+      }
+    }
+
+    &.barrack {
+      .building-item-bd {
+        align-items: flex-start;
+      }
+
+      .barrack-info {
+        flex-direction: column;
+        height: 120px;
+        flex: 1;
+
+        .building-item-desc {
+          flex: 1;
+        }
+
+        .building-item-resource {
+          width: 100%;
+        }
+      }
+
+      .building-item-img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-color: rgba($color: #cfcfcf, $alpha: .3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 0;
+        margin-right: 16px;
+
+        img {
+          width: 92px;
+          height: auto;
+        }
+      }
+
+      .building-item-resource {
+        .building-item-resource-item {
+          margin-right: 0;
+        }
       }
     }
   }

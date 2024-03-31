@@ -319,3 +319,4 @@ const soldiers = [
 ]
 
 export const upgradeData = { wood, brick, steel, food, cityhall, warehouse, barn, barracks }
+

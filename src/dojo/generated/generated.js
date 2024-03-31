@@ -134,7 +134,82 @@ export async function setupWorld(provider) {
           message: "finish upgrade",
           time: new Date().getTime()
         })
-        console.error("Error executing spawn:", error);
+        console.error("Error executing finish upgrade:", error);
+        throw error;
+      }
+    };
+
+    const startTraining = async ({ account, barrackKind }) => {
+      try {
+        const { transaction_hash } = await provider.execute(
+          account,
+          contract_name,
+          "start_training",
+          [barrackKind]
+        );
+        setLogsFun({
+          hash: transaction_hash,
+          status: "pending",
+          message: "start training",
+          time: new Date().getTime()
+        })
+        try {
+          const event = getEvents(
+            await account.waitForTransaction(transaction_hash, {
+              retryInterval: 300,
+            })
+          )
+          updateLogsFun(transaction_hash, "success")
+          return event
+        } catch (error) {
+          updateLogsFun(transaction_hash, "error")
+        }
+      } catch (error) {
+        setLogsFun({
+          hash: '',
+          status: "error",
+          message: "start training",
+          time: new Date().getTime()
+        })
+        console.error("Error executing start training:", error);
+        throw error;
+      }
+    };
+
+    const finishTraining = async ({ account, trainingId }) => {
+      try {
+        const { transaction_hash } = await provider.execute(
+          account,
+          contract_name,
+          "finish_training",
+          [trainingId]
+        );
+        setLogsFun({
+          hash: transaction_hash,
+          status: "pending",
+          message: "finish training",
+          time: new Date().getTime()
+        })
+        try {
+          const event = getEvents(
+            await account.waitForTransaction(transaction_hash, {
+              retryInterval: 300,
+            })
+          )
+          updateLogsFun(transaction_hash, "success")
+          return event
+        } catch (error) {
+          updateLogsFun(transaction_hash, "error")
+        }
+
+      } catch (error) {
+        setLogsFun({
+          hash: '',
+          status: "error",
+          message: "finish training",
+          time: new Date().getTime()
+        })
+        console.error("Error executing finish training:", error);
         throw error;
       }
     };
@@ -223,7 +298,21 @@ export async function setupWorld(provider) {
       }
     };
 
-    return { spawn, startUpgrade, getBuildingsLevels, getUnderUpgrading, getGrowthRate, getUpgradeInfo, finishUpgrade, getResource, getCompleteUpgrading };
+    const getTroops = async (player) => {
+      try {
+        let data = await provider.callContract(
+          contract_name,
+          "get_troops",
+          [player]
+        );
+        return data
+      } catch (error) {
+        console.error("Error executing spawn:", error);
+        throw error;
+      }
+    }
+
+    return { spawn, startUpgrade, getBuildingsLevels, getUnderUpgrading, getGrowthRate, getUpgradeInfo, finishUpgrade, getResource, getCompleteUpgrading, startTraining, finishTraining, getTroops };
   }
   return {
     actions: actions(),
