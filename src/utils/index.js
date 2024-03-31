@@ -53,3 +53,23 @@ export const getProof = (arr) => {
   const proof = tree.getProof(h);
   return proof
 }
+
+export const getUpgradeData = (buildingKind) => {
+  if (buildingKind === 5) {
+    return upgradeData.cityhall
+  } else if (buildingKind === 6) {
+    return upgradeData.warehouse
+  } else if (buildingKind === 7) {
+    return upgradeData.barn
+  } else if (buildingKind === 8) {
+    return upgradeData.barracks
+  } else if (buildingKind === 1) {
+    return upgradeData.wood
+  } else if (buildingKind === 2) {
+    return upgradeData.brick
+  } else if (buildingKind === 3) {
+    return upgradeData.steel
+  } else if (buildingKind === 4) {
+    return upgradeData.food
+  }
+}

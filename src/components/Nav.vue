@@ -1,4 +1,5 @@
 <script setup>
+import { useGlobalStore } from '../hooks/globalStore.js'
 const props = defineProps({
   resource: {
     type: Object,
@@ -18,6 +19,8 @@ const props = defineProps({
   }
 })
 
+const { store, setMenuIndex } = useGlobalStore()
+
 const getProgress = (count, storage) => {
   let progress = ((+count) / (+storage)) * 100
   if (progress >= 100) return '100%'
@@ -36,11 +39,11 @@ const getProgress = (count, storage) => {
     <div class="m flex-center-center">
       <div class="m-content">
         <div class="section flex-center-center">
-          <div class="section-item flex-center-center">
+          <div class="section-item flex-center-center" @click="setMenuIndex(0)">
             <img src="../assets/images/city_1.png" alt="">
           </div>
           <div class="section-item flex-center-center">
-            <img src="../assets/images/city_2.png" alt="">
+            <img src="../assets/images/city_2.png" alt="" @click="setMenuIndex(1)">
           </div>
           <div class="section-item flex-center-center">
             <img src="../assets/images/city_3.png" alt="">
@@ -132,6 +135,10 @@ const getProgress = (count, storage) => {
   padding-bottom: 12px;
   color: #fff;
   font-size: 12px;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  left: 0;
 
   .m {
     flex: 1;
@@ -155,6 +162,7 @@ const getProgress = (count, storage) => {
           height: 64px;
           background: url('../assets/images/city_bg.png') no-repeat;
           background-size: 100% 100%;
+          cursor: pointer;
 
           img {
             width: 100%;

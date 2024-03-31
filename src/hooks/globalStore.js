@@ -15,9 +15,14 @@ const store = reactive({
     isSpawn: false,
     logs: localStorage.getItem('logs') ? JSON.parse(localStorage.getItem('logs')) : [],
     lastBlock: 0,
-    innerBuildingList: localStorage.getItem('innerBuildingList') ? JSON.parse(localStorage.getItem('innerBuildingList')) : innerBuildingList,
+    innerBuildingList: innerBuildingList,
+    menuIndex: 1
   }
 });
+
+const setMenuIndex = (index) => {
+  store.state.menuIndex = index
+}
 
 const setDojoComponents = (components) => {
   store.dojoComponents = toRaw(components)
@@ -37,7 +42,6 @@ const setLastBlock = (block) => {
 
 const setInnerBuildingList = (list) => {
   store.state.innerBuildingList = list
-  localStorage.setItem('innerBuildingList', JSON.stringify(list))
 }
 
 
@@ -46,5 +50,6 @@ export const useGlobalStore = () => ({
   setDojoComponents,
   setLogs,
   setLastBlock,
-  setInnerBuildingList
+  setInnerBuildingList,
+  setMenuIndex
 });
