@@ -121,7 +121,7 @@ watch(() => props.troopsData, (newData) => {
             </div>{{ value }}
           </div>
         </div>
-        <div v-else class="no-data flex-center-center">No  data</div>
+        <div v-else class="no-data flex-center-center">No data</div>
         <div class="ft"></div>
       </div>
     </div>
