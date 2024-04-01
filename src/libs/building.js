@@ -132,24 +132,30 @@ export const innerBuildingList = [{
   img: null
 }]
 
+import Wood from '../assets/images/resource_icon_1.png'
+import Steel from '../assets/images/resource_icon_3.png'
+import Brick from '../assets/images/resource_icon_2.png'
+import Farm from '../assets/images/resource_icon_4.png'
+
 export const outBuildingOptions = [{
   name: 'Wood Factory',
   desc: 'The wood factory produces wood, which is used to construct buildings. Higher levels of the wood factory result in faster wood production.',
-  buildingKind: 1
+  buildingKind: 1,
+  img: Wood
 }, {
   name: 'Steel Factory',
   desc: 'The steel factory produces steel, which is used to construct buildings. Higher levels of the steel factory result in faster steel production.',
-  img: CityB,
+  img: Steel,
   buildingKind: 3
 }, {
   name: 'Brick Factory',
   desc: 'The brick factory produces bricks, which are used to construct buildings. Higher levels of the brick factory result in faster brick production.',
-  img: CityD,
+  img: Brick,
   buildingKind: 2
 }, {
   name: 'Farm',
   desc: 'The farm produces food, which is used to feed the village. Higher levels of the farm result in faster food production.',
-  img: CityA,
+  img: Farm,
   buildingKind: 4
 }]
 

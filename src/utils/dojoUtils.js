@@ -27,9 +27,9 @@ export function useEntityQuery(fragments) {
     setEntities([...query.matching])
   })
 
-  onUnmounted(() => {
-    subscription.unsubscribe()
-  })
+  // onUnmounted(() => {
+  //   subscription.unsubscribe()
+  // })
 
   return entitiesRef
 }

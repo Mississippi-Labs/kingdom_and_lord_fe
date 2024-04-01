@@ -425,14 +425,14 @@ watch(() => blockHeight.value, (newVal) => {
     }
 
     .building-item-resource {
-      margin-top: 20px;
+      // margin-top: 10px;
       padding: 0 14px;
       box-sizing: border-box;
       flex-wrap: wrap;
 
       .building-item-resource-item {
         margin-right: 30px;
-        margin-bottom: 10px;
+        margin-top: 10px;
 
         .icon {
           width: 30px;
