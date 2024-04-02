@@ -97,7 +97,7 @@ const getBg = (buildingId) => {
         <div v-if="!item.img" class="subgrade" @click="createBuilding(item.buildingId)"></div>
         <div v-else class="building-item" @click="upgradeBuilding(item)">
           <img :src="item.img" alt="">
-          <div class="level flex-center-center" :style="{backgroundImage: getBg(item.buildingId)}">{{ item?.level?.level || 0 }}</div>
+          <div class="level flex-center-center" :style="{'background-image': getBg(item.buildingId)}">{{ item?.level?.level || 0 }}</div>
         </div>
         <div v-if="item.img && item.level" class="upgrade-info">
           <div class="info-hd flex-center">

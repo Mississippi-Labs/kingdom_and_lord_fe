@@ -102,7 +102,7 @@ watch(() => store.state.menuIndex, (newData) => {
       <img src="../assets/images/out_bg.jpg" class="out-bg" alt="">
       <div class="out-building-list">
         <div v-for="item in outBuildingList" :key="item.buildId" class="out-building-item flex-center-center"
-          :style="{ left: item.left, top: item.top, backgroundImage: getBg(item.buildingId) }" @click="upgrade(item)">{{ getLevel(item.buildingId) }}</div>
+          :style="{ left: item.left, top: item.top, 'background-image': getBg(item.buildingId) }" @click="upgrade(item)">{{ getLevel(item.buildingId) }}</div>
       </div>
     </div>
   </div>
