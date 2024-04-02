@@ -172,7 +172,12 @@ const upgrade = async (data) => {
 }
 
 const upgradeBuilding = async (data) => {
-  console.log(data)
+  // 是否升级中
+  const isUpgrading = getBuildingList().some(item => item.building_id === data.buildingId)
+  if (isUpgrading) {
+    message.error('Building is under upgrading')
+    return
+  }
   underUpgradingData.value = data
 }
 const showCreateBuilding = (id) => {
@@ -252,14 +257,14 @@ watch(() => blockHeight.value, (newVal) => {
 <template>
   <div v-if="store.state.isSpawn" class="wrap">
     <Nav :resource="resourceData" :storage="storage" />
-    <InnerBuilding @createBuilding="showCreateBuilding" @upgradeBuilding="upgradeBuilding" />
-    <OutBuilding @upgradeBuilding="upgradeBuilding" />
+    <InnerBuilding @createBuilding="showCreateBuilding" @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
+    <OutBuilding @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
     <CityInfo :growthRateData="growthRateData" :blockHeight="blockHeight" :troopsData="troopsData" />
   </div>
   <div v-else class="flex-center spawn-wrap">
     <n-button type="primary" @click="spawnFun">Spawn</n-button>
   </div>
-  <Modal v-if="underUpgradingData.buildingId" @close="underUpgradingData = {}">
+  <Modal v-if="Object.keys(underUpgradingData).length" @close="underUpgradingData = {}">
     <template v-slot:title>
       <div class="flex-center"><img :src="underUpgradingData.img" style="width: 30px;margin-right: 10px" alt="">{{
     underUpgradingData.name }} - level {{ underUpgradingData?.level?.level }}</div>
@@ -338,7 +343,7 @@ watch(() => blockHeight.value, (newVal) => {
 
     </div>
   </Modal>
-  <Modal v-if="buildingData.buildingId" @close="buildingData = {}">
+  <Modal v-if="Object.keys(buildingData).length" @close="buildingData = {}">
     <template v-slot:title>New Building</template>
     <div class="building-list">
       <div v-for="(item, index) in innerBuildingOptions" :key="index" class="building-item">

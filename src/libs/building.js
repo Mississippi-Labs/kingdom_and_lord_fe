@@ -138,23 +138,23 @@ import Brick from '../assets/images/resource_icon_2.png'
 import Farm from '../assets/images/resource_icon_4.png'
 
 export const outBuildingOptions = [{
-  name: 'Wood Factory',
-  desc: 'The wood factory produces wood, which is used to construct buildings. Higher levels of the wood factory result in faster wood production.',
+  name: 'Forest',
+  desc: 'The forest is where wood is produced. The higher the level of the forest, the higher the wood production per unit of time.',
   buildingKind: 1,
   img: Wood
 }, {
-  name: 'Steel Factory',
-  desc: 'The steel factory produces steel, which is used to construct buildings. Higher levels of the steel factory result in faster steel production.',
+  name: 'Mine',
+  desc: 'The mine is where iron extracted. The higher the level of the mine, the higher the iron extraction per unit of time.',
   img: Steel,
   buildingKind: 3
 }, {
-  name: 'Brick Factory',
-  desc: 'The brick factory produces bricks, which are used to construct buildings. Higher levels of the brick factory result in faster brick production.',
+  name: 'Mudhole',
+  desc: 'The mudhole is where bricks are produced. The higher the level of the mudhole, the higher the brick production per unit of time.',
   img: Brick,
   buildingKind: 2
 }, {
   name: 'Farm',
-  desc: 'The farm produces food, which is used to feed the village. Higher levels of the farm result in faster food production.',
+  desc: 'The farm is where grains are produced. The higher the level of the farm, the higher the grain production per unit of time.',
   img: Farm,
   buildingKind: 4
 }]
@@ -182,42 +182,42 @@ export const outBuildingList = [{
 }, {
   left: '36%',
   top: '28%',
-  buildingId: 4,
+  buildingId: 8,
   buildingKind: 3
 }, {
   left: '53%',
   top: '33%',
-  buildingId: 5,
+  buildingId: 9,
   buildingKind: 3
 }, {
   left: '63%',
   top: '35%',
-  buildingId: 6,
+  buildingId: 10,
   buildingKind: 3
 }, {
   left: '58%',
   top: '28%',
-  buildingId: 7,
+  buildingId: 11,
   buildingKind: 3
 }, {
   left: '36%',
   top: '60%',
-  buildingId: 8,
+  buildingId: 4,
   buildingKind: 2
 }, {
   left: '44%',
   top: '68%',
-  buildingId: 9,
+  buildingId: 5,
   buildingKind: 2
 }, {
   left: '60%',
   top: '64%',
-  buildingId: 10,
+  buildingId: 6,
   buildingKind: 2
 }, {
   left: '56%',
   top: '56%',
-  buildingId: 11,
+  buildingId: 7,
   buildingKind: 2
 }, {
   left: '26%',

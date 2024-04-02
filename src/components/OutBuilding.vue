@@ -2,8 +2,27 @@
 import { watch, ref, nextTick } from "vue";
 import { outBuildingList, outBuildingOptions } from '../libs/building.js'
 import { useGlobalStore } from '../hooks/globalStore.js'
+import { checkUpgrade } from '../utils/index'
+
+import LevelBg1 from '../assets/images/level_btn_1.svg'
+import LevelBg2 from '../assets/images/level_btn_2.svg'
+import LevelBg3 from '../assets/images/level_btn_3.svg'
+import LevelBg4 from '../assets/images/level_btn_4.svg'
+import LevelBg5 from '../assets/images/level_btn_5.svg'
+import LevelBg6 from '../assets/images/level_btn_6.svg'
 
 const emit = defineEmits(['upgradeBuilding'])
+const props = defineProps({
+  resource: {
+    type: Object,
+    default: {
+      "wood": 0,
+      "steel": 0,
+      "brick": 0,
+      "food": 0
+    }
+  }
+})
 
 const { store } = useGlobalStore()
 
@@ -14,6 +33,37 @@ const getLevel = (buildingId) => {
   if (!store.dojoComponents.cityBuilding) return 0
   const building = store.dojoComponents.cityBuilding.find(item => item.building_id === buildingId)
   return building?.level?.level || 0
+}
+
+const getBg = (buildingId) => {
+  const building = store.dojoComponents.cityBuilding.find(item => item.building_id === buildingId)
+  const isUpgrading = store.dojoComponents.underUpgrading.some(item => item.building_id === buildingId && !item.is_finished)
+  if (isUpgrading) {
+    const nextlevel = building.level.level + 1
+
+    if (Object.keys(props.resource).length && nextlevel < 20) {
+      const isCanUpgrade = checkUpgrade(building.building_kind, nextlevel, props.resource)
+      if (isCanUpgrade) {
+        return `url(${LevelBg4})`
+      } else {
+        return `url(${LevelBg5})`
+      }
+    } else {
+      return `url(${LevelBg6})`
+    }
+  } else {
+    const nextlevel = building.level.level
+    if (Object.keys(props.resource).length && nextlevel < 20) {
+      const isCanUpgrade = checkUpgrade(building.building_kind, nextlevel, props.resource)
+      if (isCanUpgrade) {
+        return `url(${LevelBg1})`
+      } else {
+        return `url(${LevelBg2})`
+      }
+    } else {
+      return `url(${LevelBg3})`
+    }
+  }
 }
 
 const upgrade = (data) => {
@@ -52,7 +102,7 @@ watch(() => store.state.menuIndex, (newData) => {
       <img src="../assets/images/out_bg.jpg" class="out-bg" alt="">
       <div class="out-building-list">
         <div v-for="item in outBuildingList" :key="item.buildId" class="out-building-item flex-center-center"
-          :style="{ left: item.left, top: item.top }" @click="upgrade(item)">{{ getLevel(item.buildingId) }}</div>
+          :style="{ left: item.left, top: item.top, backgroundImage: getBg(item.buildingId) }" @click="upgrade(item)">{{ getLevel(item.buildingId) }}</div>
       </div>
     </div>
   </div>
@@ -99,14 +149,17 @@ watch(() => store.state.menuIndex, (newData) => {
 
       .out-building-item {
         position: absolute;
-        width: 30px;
-        height: 30px;
-        background: rgba($color: #000000, $alpha: 1);
+        width: 36px;
+        height: 36px;
+        // background: rgba($color: #000000, $alpha: 1);
+        background-size: 100% 100%;
+        color: #000;
         border-radius: 50%;
         cursor: pointer;
-        color: #fff;
         font-size: 14px;
         z-index: 99;
+        padding-bottom: 2px;
+        box-sizing: border-box;
       }
     }
   }

@@ -1,11 +1,29 @@
 <script setup>
 import { innerBuildingOptions, outBuildingList } from '../libs/building.js'
 import { useGlobalStore } from '../hooks/globalStore.js'
-import { formatTime, getProof, getUpgradeData } from '../utils/index'
+import { formatTime, checkUpgrade, getUpgradeData } from '../utils/index'
 import { useMessage } from 'naive-ui'
+
+import LevelBg1 from '../assets/images/level_btn_1.svg'
+import LevelBg2 from '../assets/images/level_btn_2.svg'
+import LevelBg3 from '../assets/images/level_btn_3.svg'
+import LevelBg4 from '../assets/images/level_btn_4.svg'
+import LevelBg5 from '../assets/images/level_btn_5.svg'
+import LevelBg6 from '../assets/images/level_btn_6.svg'
 
 
 const emit = defineEmits(['upgradeBuilding', 'createBuilding'])
+const props = defineProps({
+  resource: {
+    type: Object,
+    default: {
+      "wood": 0,
+      "steel": 0,
+      "brick": 0,
+      "food": 0
+    }
+  }
+})
 
 const message = useMessage()
 const { store } = useGlobalStore()
@@ -36,6 +54,38 @@ const getTime = (buildingKind, level) => {
   return (getUpgradeData(buildingKind)[level][7] * 2)
 }
 
+const getBg = (buildingId) => {
+  const building = store.state.innerBuildingList.find(item => item.building_id === buildingId)
+  if (!building) return ''
+  const isUpgrading = store.dojoComponents.underUpgrading.some(item => item.building_id === buildingId && !item.is_finished)
+  if (isUpgrading) {
+    const nextlevel = building?.level?.level ? building?.level?.level + 1 : 1
+
+    if (Object.keys(props.resource).length && nextlevel < 20) {
+      const isCanUpgrade = checkUpgrade(building.building_kind, nextlevel, props.resource)
+      if (isCanUpgrade) {
+        return `url(${LevelBg4})`
+      } else {
+        return `url(${LevelBg5})`
+      }
+    } else {
+      return `url(${LevelBg6})`
+    }
+  } else {
+    const nextlevel = building?.level?.level || 0
+    if (Object.keys(props.resource).length && nextlevel < 20) {
+      const isCanUpgrade = checkUpgrade(building.buildingKind, nextlevel, props.resource)
+      if (isCanUpgrade) {
+        return `url(${LevelBg1})`
+      } else {
+        return `url(${LevelBg2})`
+      }
+    } else {
+      return `url(${LevelBg3})`
+    }
+  }
+}
+
 </script>
 <template>
   <div class="inner-building">
@@ -45,7 +95,10 @@ const getTime = (buildingKind, level) => {
       <div v-for="item in store.state.innerBuildingList" :key="item.buildingId" class="city-item"
         :style="{ left: item.left, top: item.top }">
         <div v-if="!item.img" class="subgrade" @click="createBuilding(item.buildingId)"></div>
-        <img v-else :src="item.img" alt="" @click="upgradeBuilding(item)">
+        <div v-else class="building-item" @click="upgradeBuilding(item)">
+          <img :src="item.img" alt="">
+          <div class="level flex-center-center" :style="{backgroundImage: getBg(item.buildingId)}">{{ item?.level?.level || 0 }}</div>
+        </div>
         <div v-if="item.img && item.level" class="upgrade-info">
           <div class="info-hd flex-center">
             <p class="flex-end">{{ item.name }}<span> - Level {{ item?.level?.level }}</span></p>
@@ -92,6 +145,28 @@ const getTime = (buildingKind, level) => {
       .subgrade {
         width: 6.6vh !important;
         height: 3.3vh !important;
+      }
+      .building-item {
+        position: relative;
+        display: inner-block;
+        cursor: pointer;
+
+        .level {
+          position: absolute;
+          width: 24px;
+          height: 24px;
+          bottom: 0;
+          left: 0;
+          top: 0;
+          right: 0;
+          border-radius: 50%;
+          z-index: 10;
+          margin: auto;
+          background-size: 100% 100%;
+          font-size: 12px;
+          color: #000;
+          padding-bottom: 2px;
+        }
       }
     }
   }

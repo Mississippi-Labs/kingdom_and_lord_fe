@@ -73,3 +73,13 @@ export const getUpgradeData = (buildingKind) => {
     return upgradeData.food
   }
 }
+
+// 验证是否可升级
+export const checkUpgrade = (buildingKind, level, resource = {} ) => {
+  let data = getUpgradeData(buildingKind)[level]
+  let flag = false
+  if (Object.keys(resource).length && resource.wood >= data[2] && resource.brick >= data[3] && resource.steel >= data[4] && resource.food >= data[5]) {
+    flag = true
+  }
+  return flag
+}
