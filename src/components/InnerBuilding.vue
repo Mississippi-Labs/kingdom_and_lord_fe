@@ -4,12 +4,12 @@ import { useGlobalStore } from '../hooks/globalStore.js'
 import { formatTime, checkUpgrade, getUpgradeData } from '../utils/index'
 import { useMessage } from 'naive-ui'
 
-import LevelBg1 from '../assets/images/level_btn_1.svg'
-import LevelBg2 from '../assets/images/level_btn_2.svg'
-import LevelBg3 from '../assets/images/level_btn_3.svg'
-import LevelBg4 from '../assets/images/level_btn_4.svg'
-import LevelBg5 from '../assets/images/level_btn_5.svg'
-import LevelBg6 from '../assets/images/level_btn_6.svg'
+import LevelBg1 from '/images/level_btn_1.svg'
+import LevelBg2 from '/images/level_btn_2.svg'
+import LevelBg3 from '/images/level_btn_3.svg'
+import LevelBg4 from '/images/level_btn_4.svg'
+import LevelBg5 from '/images/level_btn_5.svg'
+import LevelBg6 from '/images/level_btn_6.svg'
 
 
 const emit = defineEmits(['upgradeBuilding', 'createBuilding'])
@@ -55,7 +55,35 @@ const getTime = (buildingKind, level) => {
 }
 
 const getBg = (buildingId) => {
-  return `url(${LevelBg1})`
+  const building = store.state.innerBuildingList.find(item => item.building_id === buildingId)
+  if (!building) return ''
+  const isUpgrading = store.dojoComponents.underUpgrading.some(item => item.building_id === buildingId && !item.is_finished)
+  if (isUpgrading) {
+    const nextlevel = building?.level?.level ? building?.level?.level + 1 : 1
+
+    if (Object.keys(props.resource).length && nextlevel < 20) {
+      const isCanUpgrade = checkUpgrade(building.building_kind, nextlevel, props.resource)
+      if (isCanUpgrade) {
+        return `url(${LevelBg4})`
+      } else {
+        return `url(${LevelBg5})`
+      }
+    } else {
+      return `url(${LevelBg6})`
+    }
+  } else {
+    const nextlevel = building?.level?.level || 0
+    if (Object.keys(props.resource).length && nextlevel < 20) {
+      const isCanUpgrade = checkUpgrade(building.buildingKind, nextlevel, props.resource)
+      if (isCanUpgrade) {
+        return `url(${LevelBg1})`
+      } else {
+        return `url(${LevelBg2})`
+      }
+    } else {
+      return `url(${LevelBg3})`
+    }
+  }
 }
 
 </script>
@@ -122,23 +150,6 @@ const getBg = (buildingId) => {
         position: relative;
         display: inline-block;
         cursor: pointer;
-
-        .level {
-          position: absolute;
-          width: 24px;
-          height: 24px;
-          bottom: 0;
-          left: 0;
-          top: 0;
-          right: 0;
-          border-radius: 50%;
-          z-index: 10;
-          margin: auto;
-          background-size: 100% 100%;
-          font-size: 12px;
-          color: #000;
-          padding-bottom: 2px;
-        }
       }
     }
   }
@@ -185,6 +196,23 @@ const getBg = (buildingId) => {
         .upgrade-info {
           display: block;
         }
+      }
+
+      .level {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        bottom: 0;
+        left: 0;
+        top: 0;
+        right: 0;
+        border-radius: 50%;
+        z-index: 10;
+        margin: auto;
+        background-size: 100% 100%;
+        font-size: 12px;
+        color: #000;
+        padding-bottom: 2px;
       }
 
       .subgrade {
