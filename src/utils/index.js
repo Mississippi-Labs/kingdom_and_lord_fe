@@ -83,3 +83,39 @@ export const checkUpgrade = (buildingKind, level, resource = {} ) => {
   }
   return flag
 }
+
+import LevelBg1 from '/images/level_btn_1.svg'
+import LevelBg2 from '/images/level_btn_2.svg'
+import LevelBg3 from '/images/level_btn_3.svg'
+import LevelBg4 from '/images/level_btn_4.svg'
+import LevelBg5 from '/images/level_btn_5.svg'
+import LevelBg6 from '/images/level_btn_6.svg'
+
+export const getLevelBg = (isUpgrading, building, resource = {}) => {
+  if (isUpgrading) {
+    const nextlevel = building?.level?.level ? building?.level?.level + 1 : 1
+
+    if (Object.keys(resource).length && nextlevel < 20) {
+      const isCanUpgrade = checkUpgrade(building.buildingKind, nextlevel, resource)
+      if (isCanUpgrade) {
+        return `url(${LevelBg4})`
+      } else {
+        return `url(${LevelBg5})`
+      }
+    } else {
+      return `url(${LevelBg6})`
+    }
+  } else {
+    const nextlevel = building?.level?.level || 0
+    if (Object.keys(resource).length && nextlevel < 20) {
+      const isCanUpgrade = checkUpgrade(building.buildingKind, nextlevel, resource)
+      if (isCanUpgrade) {
+        return `url(${LevelBg1})`
+      } else {
+        return `url(${LevelBg2})`
+      }
+    } else {
+      return `url(${LevelBg3})`
+    }
+  }
+}

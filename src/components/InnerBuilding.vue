@@ -1,16 +1,7 @@
 <script setup>
-import { innerBuildingOptions, outBuildingList } from '../libs/building.js'
 import { useGlobalStore } from '../hooks/globalStore.js'
-import { formatTime, checkUpgrade, getUpgradeData } from '../utils/index'
+import { formatTime, getLevelBg, getUpgradeData } from '../utils/index'
 import { useMessage } from 'naive-ui'
-
-import LevelBg1 from '/images/level_btn_1.svg'
-import LevelBg2 from '/images/level_btn_2.svg'
-import LevelBg3 from '/images/level_btn_3.svg'
-import LevelBg4 from '/images/level_btn_4.svg'
-import LevelBg5 from '/images/level_btn_5.svg'
-import LevelBg6 from '/images/level_btn_6.svg'
-
 
 const emit = defineEmits(['upgradeBuilding', 'createBuilding'])
 const props = defineProps({
@@ -58,32 +49,7 @@ const getBg = (buildingId) => {
   const building = store.state.innerBuildingList.find(item => item.building_id === buildingId)
   if (!building) return ''
   const isUpgrading = store.dojoComponents.underUpgrading.some(item => item.building_id === buildingId && !item.is_finished)
-  if (isUpgrading) {
-    const nextlevel = building?.level?.level ? building?.level?.level + 1 : 1
-
-    if (Object.keys(props.resource).length && nextlevel < 20) {
-      const isCanUpgrade = checkUpgrade(building.building_kind, nextlevel, props.resource)
-      if (isCanUpgrade) {
-        return `url(${LevelBg4})`
-      } else {
-        return `url(${LevelBg5})`
-      }
-    } else {
-      return `url(${LevelBg6})`
-    }
-  } else {
-    const nextlevel = building?.level?.level || 0
-    if (Object.keys(props.resource).length && nextlevel < 20) {
-      const isCanUpgrade = checkUpgrade(building.buildingKind, nextlevel, props.resource)
-      if (isCanUpgrade) {
-        return `url(${LevelBg1})`
-      } else {
-        return `url(${LevelBg2})`
-      }
-    } else {
-      return `url(${LevelBg3})`
-    }
-  }
+  return getLevelBg(isUpgrading, building, props.resource)
 }
 
 </script>
