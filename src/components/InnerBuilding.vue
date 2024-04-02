@@ -55,35 +55,7 @@ const getTime = (buildingKind, level) => {
 }
 
 const getBg = (buildingId) => {
-  const building = store.state.innerBuildingList.find(item => item.building_id === buildingId)
-  if (!building) return ''
-  const isUpgrading = store.dojoComponents.underUpgrading.some(item => item.building_id === buildingId && !item.is_finished)
-  if (isUpgrading) {
-    const nextlevel = building?.level?.level ? building?.level?.level + 1 : 1
-
-    if (Object.keys(props.resource).length && nextlevel < 20) {
-      const isCanUpgrade = checkUpgrade(building.building_kind, nextlevel, props.resource)
-      if (isCanUpgrade) {
-        return `url(${LevelBg4})`
-      } else {
-        return `url(${LevelBg5})`
-      }
-    } else {
-      return `url(${LevelBg6})`
-    }
-  } else {
-    const nextlevel = building?.level?.level || 0
-    if (Object.keys(props.resource).length && nextlevel < 20) {
-      const isCanUpgrade = checkUpgrade(building.buildingKind, nextlevel, props.resource)
-      if (isCanUpgrade) {
-        return `url(${LevelBg1})`
-      } else {
-        return `url(${LevelBg2})`
-      }
-    } else {
-      return `url(${LevelBg3})`
-    }
-  }
+  return `url(${LevelBg1})`
 }
 
 </script>
@@ -148,7 +120,7 @@ const getBg = (buildingId) => {
       }
       .building-item {
         position: relative;
-        display: inner-block;
+        display: inline-block;
         cursor: pointer;
 
         .level {
