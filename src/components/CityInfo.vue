@@ -170,6 +170,8 @@ $panelMB: 40px;
   box-sizing: border-box;
   position: relative;
   z-index: 999;
+  max-width: 1440px;
+  margin: auto;
 
   .section {
     font-family: 'Chalkboard-Bold';
@@ -251,9 +253,9 @@ $panelMB: 40px;
     justify-content: flex-end;
     flex-direction: column;
     align-items: flex-end;
-    position: fixed;
+    position: absolute;
     top: 154px;
-    left: 48px;
+    left: 10px;
 
     .section-1 {
       background: url(../assets/images/panel_1.png) no-repeat;
@@ -275,9 +277,9 @@ $panelMB: 40px;
   .r {
     flex: 0 0 328px;
     width: 328px;
-    position: fixed;
+    position: absolute;
     top: 154px;
-    right: 48px;
+    right: 10px;
 
     .section {
       width: 100%;

@@ -67,22 +67,27 @@ watch(() => store.state.menuIndex, (newData) => {
 
 </script>
 <template>
-  <div class="out-building" ref="buildingRef">
+  <div class="out-building flex-center-center" ref="buildingRef">
     <div class="out-content" ref="contentRef">
       <img src="../assets/images/out_bg.jpg" class="out-bg" alt="">
       <div class="out-building-list">
         <div v-for="item in outBuildingList" :key="item.buildId" class="out-building-item flex-center-center"
-          :style="{ left: item.left, top: item.top, 'background-image': getBg(item.buildingId) }" @click="upgrade(item)">{{ getLevel(item.buildingId) }}</div>
+          :style="{ left: item.left, top: item.top, 'background-image': getBg(item.buildingId) }"
+          @click="upgrade(item)">{{ getLevel(item.buildingId) }}</div>
       </div>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
-@media screen and (max-aspect-ratio: 8/5) {
-  .out-content {
-    .out-bg {
-      height: 100vh !important;
-      width: auto !important;
+@media screen and (min-width: 1440px) {
+  .out-building {
+    position: relative;
+
+    .out-content {
+      .out-bg {
+        height: auto !important;
+        width: 1440px !important;
+      }
     }
   }
 }
@@ -97,17 +102,30 @@ watch(() => store.state.menuIndex, (newData) => {
   left: 0;
   right: 0;
   z-index: -1;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../assets/images/out_bg.jpg) no-repeat center center;
+    background-size: cover;
+    filter: blur(10px);
+    z-index: 1;
+  }
 
   .out-content {
     position: relative;
     display: inline-block;
+    z-index: 2;
     // opacity: 0;
     // transform: scale(6);
     // transform-origin: 45% 42%;
 
     .out-bg {
-      width: 100%;
-      height: auto;
+      height: 100vh;
+      width: auto;
     }
 
     .out-building-list {

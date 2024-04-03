@@ -29,8 +29,9 @@ const getProgress = (count, storage) => {
 
 </script>
 <template>
-  <div class="nav flex-end-sb">
-    <div class="l flex-center">
+  <div class="nav">
+    <div class="main flex-end-sb">
+      <div class="l flex-center">
       <img src="../assets/images/logo.png" alt="" class="logo">
       <div class="menu flex-center-center">DOCS</div>
       <div class="menu flex-center-center">TW</div>
@@ -135,6 +136,8 @@ const getProgress = (count, storage) => {
         <div class="address flex-center-center">0x33 .... f940</div>
       </div>
     </div>
+    </div>
+    
   </div>
 </template>
 <style lang="scss" scoped>
@@ -145,13 +148,22 @@ const getProgress = (count, storage) => {
   background-size: 100% 100%;
   padding: 0 10px;
   box-sizing: border-box;
-  padding-bottom: 12px;
   color: #fff;
   font-size: 12px;
   position: fixed;
   top: 0;
   z-index: 999;
   left: 0;
+
+  .main {
+    max-width: 1440px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 12px;
+    right: 0;
+    margin: auto;
+  }
 
   .m {
     flex: 1;

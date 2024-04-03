@@ -54,72 +54,95 @@ const getBg = (buildingId) => {
 
 </script>
 <template>
-  <div class="inner-building">
+  <div class="inner-building flex-center-center">
     <div class="content">
       <img src="../assets/images/map_bg.jpg" class="bg" alt="">
-    <div class="city">
-      <div v-for="item in store.state.innerBuildingList" :key="item.buildingId" class="city-item"
-        :style="{ left: item.left, top: item.top }">
-        <div v-if="!item.img" class="subgrade" @click="createBuilding(item.buildingId)"></div>
-        <div v-else class="building-item" @click="upgradeBuilding(item)">
-          <img :src="item.img" alt="">
-          <div class="level flex-center-center" :style="{'background-image': getBg(item.buildingId)}">{{ item?.level?.level || 0 }}</div>
-        </div>
-        <div v-if="item.img && item.level" class="upgrade-info">
-          <div class="info-hd flex-center">
-            <p class="flex-end">{{ item.name }}<span> - Level {{ item?.level?.level }}</span></p>
-            <p v-if="isUpgrading(item.buildingId)" style="margin-left: .25em;">(under upgrading)</p>
+      <div class="city">
+        <div v-for="item in store.state.innerBuildingList" :key="item.buildingId" class="city-item"
+          :style="{ left: item.left, top: item.top }">
+          <div v-if="!item.img" class="subgrade" @click="createBuilding(item.buildingId)"></div>
+          <div v-else class="building-item" @click="upgradeBuilding(item)">
+            <img :src="item.img" alt="">
+            <div class="level flex-center-center" :style="{ 'background-image': getBg(item.buildingId) }">{{
+          item?.level?.level || 0 }}</div>
           </div>
-          <div class="info-bd">
-            <p>Upgrading to level {{ item.level.level + 1 }} requires resources</p>
-            <div class="flex-center-sb consume">
-              <div v-for="(num, index) in getResourceArr(item.buildingKind, item.level.level)" class="flex-center">
-                <img v-if="index == 0" src="../assets/images/resource_icon_1.png" alt="">
-                <img v-else-if="index == 1" src="../assets/images/resource_icon_2.png" alt="">
-                <img v-else-if="index == 2" src="../assets/images/resource_icon_3.png" alt="">
-                <img v-else-if="index == 3" src="../assets/images/resource_icon_4.png" alt="">
-                <!-- <img v-else-if="index == 4" src="../assets/images/resource_icon_5.png" alt=""> -->
-                <span>{{ num }}</span>
-              </div>
+          <div v-if="item.img && item.level" class="upgrade-info">
+            <div class="info-hd flex-center">
+              <p class="flex-end">{{ item.name }}<span> - Level {{ item?.level?.level }}</span></p>
+              <p v-if="isUpgrading(item.buildingId)" style="margin-left: .25em;">(under upgrading)</p>
             </div>
-            <div class="flex-center time">
-              <img src="../assets/images/time.png" alt="">
-              <span>{{ formatTime(getTime(item.buildingKind, item.level.level)) }}</span>
+            <div class="info-bd">
+              <p>Upgrading to level {{ item.level.level + 1 }} requires resources</p>
+              <div class="flex-center-sb consume">
+                <div v-for="(num, index) in getResourceArr(item.buildingKind, item.level.level)" class="flex-center">
+                  <img v-if="index == 0" src="../assets/images/resource_icon_1.png" alt="">
+                  <img v-else-if="index == 1" src="../assets/images/resource_icon_2.png" alt="">
+                  <img v-else-if="index == 2" src="../assets/images/resource_icon_3.png" alt="">
+                  <img v-else-if="index == 3" src="../assets/images/resource_icon_4.png" alt="">
+                  <!-- <img v-else-if="index == 4" src="../assets/images/resource_icon_5.png" alt=""> -->
+                  <span>{{ num }}</span>
+                </div>
+              </div>
+              <div class="flex-center time">
+                <img src="../assets/images/time.png" alt="">
+                <span>{{ formatTime(getTime(item.buildingKind, item.level.level)) }}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    </div>
   </div>
 </template>
 <style lang="scss" scoped>
 //@media screen 长宽比例
-@media screen and (max-aspect-ratio: 8/5) {
+// @media screen and (max-aspect-ratio: 8/5) {
+//   .content {
+//     position: relative;
+
+//     .bg {
+//       height: 100vh !important;
+//       width: auto !important;
+//       // height: 100vh;
+//       // width: auto;
+//     }
+
+//     .city-item {
+//       width: 9vh !important;
+//       height: 9vh !important;
+
+//       .subgrade {
+//         width: 6.6vh !important;
+//         height: 3.3vh !important;
+//       }
+//     }
+//   }
+// }
+
+//@media screen 最大宽度
+@media screen and (min-width: 1440px) {
   .content {
     position: relative;
+
     .bg {
-      height: 100vh !important;
-      width: auto !important;
+      height: auto !important;
+      width: 1440px !important;
       // height: 100vh;
       // width: auto;
     }
+
     .city-item {
-      width: 9vh !important;
-      height: 9vh !important;
+      width: calc(1440px * 0.056) !important;
+      height: calc(1440px * 0.056) !important;
 
       .subgrade {
-        width: 6.6vh !important;
-        height: 3.3vh !important;
-      }
-      .building-item {
-        position: relative;
-        display: inline-block;
-        cursor: pointer;
+        width: calc(1440px * 0.04) !important;
+        height: calc(1440px * 0.02) !important;
       }
     }
   }
 }
+
 .inner-building {
   width: 100vw;
   height: 100vh;
@@ -132,15 +155,34 @@ const getBg = (buildingId) => {
   right: 0;
   z-index: 3;
 
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../assets/images/map_bg.jpg) no-repeat center center;
+    background-size: cover;
+    filter: blur(10px);
+    z-index: 1;
+  }
+  
+
   .content {
     position: relative;
     display: inline-block;
+    z-index: 2;
+    // max-width: 1440px;
+    // min-width: 100vw;
+    // background: #fff;
+    // margin: auto;
   }
 
   .bg {
-    width: 100%;
-    // height: 100vh;
-    // width: auto;
+    // width: 100%;
+    height: 100vh;
+    width: auto;
   }
 
   .city {
@@ -149,9 +191,12 @@ const getBg = (buildingId) => {
     position: absolute;
     top: 0;
     left: 0;
+
     .city-item {
-      width: 5.6vw;
-      height: 5.6vw;
+      // width: 5.6vw;
+      // height: 5.6vw;
+      width: 9vh;
+      height: 9vh;
       position: absolute;
       display: flex;
       align-items: flex-end;
@@ -183,8 +228,10 @@ const getBg = (buildingId) => {
 
       .subgrade {
         position: absolute;
-        width: 4vw;
-        height: 2vw;
+        // width: 4vw;
+        // height: 2vw;
+        width: 6.6vh;
+        height: 3.3vh;
         border-radius: 50%;
         background: rgba($color: #000000, $alpha: .15);
         cursor: pointer;
@@ -192,6 +239,12 @@ const getBg = (buildingId) => {
         &:hover {
           background: rgba($color: #ffffff, $alpha: .3);
         }
+      }
+
+      .building-item {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
       }
 
       img {
