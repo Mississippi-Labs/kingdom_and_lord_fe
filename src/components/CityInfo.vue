@@ -1,8 +1,8 @@
 <script setup>
 import { watch, ref } from 'vue'
-import { useGlobalStore } from '../hooks/globalStore.js'
-import { innerBuildingOptions, outBuildingOptions  } from '../libs/building.js'
+import { innerBuildingOptions, outBuildingOptions, cityWall } from '../libs/building.js'
 import { infantry, knights } from '../libs/barrack.js'
+import { getBuildingList, getTrainingList } from '../utils/data'
 
 const props = defineProps({
   troopsData: {
@@ -31,15 +31,7 @@ const props = defineProps({
   }
 })
 
-const { store, setInnerBuildingList } = useGlobalStore()
-
 const troopsRef = ref({})
-
-const getTrainingList = () => {
-  const { underTraining } = store.dojoComponents
-  if (!underTraining) return []
-  else return underTraining.filter(item => !item.is_finished).sort((a, b) => a.training_id - b.training_id)
-}
 
 const getTraining = (soldierKind) => {
   if (soldierKind > 2) {
@@ -49,13 +41,10 @@ const getTraining = (soldierKind) => {
   }
 }
 
-const getBuildingList = () => {
-  const { underUpgrading } = store.dojoComponents
-  if (!underUpgrading) return []
-  else return underUpgrading.filter(item => !item.is_finished)
-}
 const getBuilding = (buildingKind) => {
-  if (buildingKind >= 5) {
+  if (buildingKind == 12) {
+    return cityWall
+  } else if (buildingKind >= 5) {
     return innerBuildingOptions.filter(e => e.buildingKind == buildingKind)[0]
   } else {
     return outBuildingOptions.filter(e => e.buildingKind == buildingKind)[0]
@@ -137,7 +126,10 @@ watch(() => props.troopsData, (newData) => {
               <span>{{ getBuilding(item?.building_kind)?.name }}</span>
               <p class="lv">LV{{ item.target_level.level }}</p>
             </div>
-            <div>{{ item.end_time - blockHeight >= 0 ? item.end_time - blockHeight : 0 }}</div>
+            <div>
+              <span v-if="item.is_planned" style="color: #f17d00;">Waiting</span>
+              <span v-else>{{ item.end_time - blockHeight >= 0 ? item.end_time - blockHeight : 0 }}</span>
+            </div>
           </div>
         </div>
         <div v-else class="no-data flex-center-center"> No Building data</div>
@@ -155,7 +147,11 @@ watch(() => props.troopsData, (newData) => {
               <span>{{ getTraining(item?.soldier_kind)?.name }}</span>
               <!-- <p class="lv">LV{{ item.target_level.level }}</p> -->
             </div>
-            <div>{{ item.end_time - blockHeight >= 0 ? item.end_time - blockHeight : 0 }}</div>
+            <div>
+              <span v-if="item.is_planned" style="color: #f17d00;">Waiting</span>
+              <span v-else>{{ item.end_time - blockHeight >= 0 ? item.end_time - blockHeight : 0 }}</span>
+              <!-- {{ item.is_planned ? 'waiting' : item.end_time - blockHeight >= 0 ? item.end_time - blockHeight : 0 }} -->
+            </div>
           </div>
         </div>
         <div v-else class="no-data flex-center-center"> No training data</div>

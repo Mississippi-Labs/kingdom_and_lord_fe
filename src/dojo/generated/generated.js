@@ -101,13 +101,14 @@ export async function setupWorld(provider) {
       }
     };
 
-    const finishUpgrade = async ({ account, id }) => {
+    const finishUpgrade = async ({ account }) => {
+      console.log("finishUpgrade")
       try {
         const { transaction_hash } = await provider.execute(
           account,
           contract_name,
           "finish_upgrade",
-          [id]
+          []
         );
         setLogsFun({
           hash: transaction_hash,
@@ -176,13 +177,13 @@ export async function setupWorld(provider) {
       }
     };
 
-    const finishTraining = async ({ account, trainingId }) => {
+    const finishTraining = async ({ account, isBarrack }) => {
       try {
         const { transaction_hash } = await provider.execute(
           account,
           contract_name,
           "finish_training",
-          [trainingId]
+          [isBarrack]
         );
         setLogsFun({
           hash: transaction_hash,

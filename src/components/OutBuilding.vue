@@ -32,13 +32,12 @@ const getBg = (buildingId) => {
   const building = store.dojoComponents.cityBuilding.find(item => item.building_id === buildingId)
   if (!building) return ''
   building.buildingKind = building.building_kind
-  const isUpgrading = store.dojoComponents.underUpgrading.some(item => item.building_id === buildingId && !item.is_finished)
-  return getLevelBg(isUpgrading, building, props.resource)
+  return getLevelBg(buildingId, building, props.resource)
 }
 
 const upgrade = (data) => {
   const building = store.dojoComponents.cityBuilding.find(item => item.building_id === data.buildingId)
-  let op = outBuildingOptions.find(item => item.buildingKind == data.buildingKind)
+  const op = outBuildingOptions.find(item => item.buildingKind == data.buildingKind)
   emit('upgradeBuilding', Object.assign(data, building, op))
 }
 

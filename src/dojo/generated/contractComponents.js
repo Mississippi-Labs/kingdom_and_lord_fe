@@ -56,6 +56,32 @@ export function defineContractComponents(world) {
         }
       );
     })(),
+    BarrackUnderTraining: (() => {
+      return defineComponent(
+        world,
+        { address: RecsType.BigInt, current_training_id: RecsType.Number, soldier_kind: RecsType.Number, start_time: RecsType.Number, end_time: RecsType.Number, is_finished: RecsType.Boolean },
+        {
+          metadata: {
+            name: "BarrackUnderTraining",
+            types: ["contractaddress","u64","u64","u64","u64","bool"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
+    BarrackWaitingToTrain: (() => {
+      return defineComponent(
+        world,
+        { address: RecsType.BigInt, training_id: RecsType.Number, soldier_kind: RecsType.Number, required_time: RecsType.Number, is_planned: RecsType.Boolean },
+        {
+          metadata: {
+            name: "BarrackWaitingToTrain",
+            types: ["contractaddress","u64","u64","u64","bool"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
     Troops: (() => {
       return defineComponent(
         world,
@@ -64,19 +90,6 @@ export function defineContractComponents(world) {
           metadata: {
             name: "Troops",
             types: ["contractaddress","u64","u64","u64","u64","u64","u64"],
-            customTypes: [],
-          },
-        }
-      );
-    })(),
-    UnderTraining: (() => {
-      return defineComponent(
-        world,
-        { address: RecsType.BigInt, training_id: RecsType.Number, soldier_kind: RecsType.Number, start_time: RecsType.Number, end_time: RecsType.Number, is_finished: RecsType.Boolean },
-        {
-          metadata: {
-            name: "UnderTraining",
-            types: ["contractaddress","u64","u64","u64","u64","bool"],
             customTypes: [],
           },
         }
@@ -111,11 +124,50 @@ export function defineContractComponents(world) {
     UnderUpgrading: (() => {
       return defineComponent(
         world,
-        { address: RecsType.BigInt, upgrade_id: RecsType.Number, building_id: RecsType.Number, building_kind: RecsType.Number, target_level: { level: RecsType.Number }, start_time: RecsType.Number, end_time: RecsType.Number, is_finished: RecsType.Boolean, is_new_building: RecsType.Boolean, value: RecsType.Number, population: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.Number, building_kind: RecsType.Number, target_level: { level: RecsType.Number }, start_time: RecsType.Number, end_time: RecsType.Number, is_new_building: RecsType.Boolean, is_finished: RecsType.Boolean, value: RecsType.Number, population: RecsType.Number, current_upgrade_id: RecsType.Number },
         {
           metadata: {
             name: "UnderUpgrading",
-            types: ["contractaddress","u64","u64","u64","u64","u64","u64","bool","bool","u64","u64"],
+            types: ["contractaddress","u64","u64","u64","u64","u64","bool","bool","u64","u64","u64"],
+            customTypes: ["Level"],
+          },
+        }
+      );
+    })(),
+    WaitingToUpgrade: (() => {
+      return defineComponent(
+        world,
+        { address: RecsType.BigInt, upgrade_id: RecsType.Number, building_id: RecsType.Number, building_kind: RecsType.Number, target_level: { level: RecsType.Number }, required_time: RecsType.Number, is_planned: RecsType.Boolean, is_new_building: RecsType.Boolean, value: RecsType.Number, population: RecsType.Number },
+        {
+          metadata: {
+            name: "WaitingToUpgrade",
+            types: ["contractaddress","u64","u64","u64","u64","u64","bool","bool","u64","u64"],
+            customTypes: ["Level"],
+          },
+        }
+      );
+    })(),
+    CityWall: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, population: RecsType.Number, attack_power: RecsType.Number, defense_power: RecsType.Number },
+        {
+          metadata: {
+            name: "CityWall",
+            types: ["contractaddress","u64","u64","u64","u64","u64"],
+            customTypes: ["Level"],
+          },
+        }
+      );
+    })(),
+    College: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, population: RecsType.Number },
+        {
+          metadata: {
+            name: "College",
+            types: ["contractaddress","u64","u64","u64"],
             customTypes: ["Level"],
           },
         }
@@ -134,6 +186,19 @@ export function defineContractComponents(world) {
         }
       );
     })(),
+    Embassy: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, population: RecsType.Number, ally_amount: RecsType.Number },
+        {
+          metadata: {
+            name: "Embassy",
+            types: ["contractaddress","u64","u64","u64","u64"],
+            customTypes: ["Level"],
+          },
+        }
+      );
+    })(),
     OuterCity: (() => {
       return defineComponent(
         world,
@@ -142,6 +207,45 @@ export function defineContractComponents(world) {
           metadata: {
             name: "OuterCity",
             types: ["contractaddress","u64"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
+    Stable: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, bonus: RecsType.Number, population: RecsType.Number },
+        {
+          metadata: {
+            name: "Stable",
+            types: ["contractaddress","u64","u64","u64","u64"],
+            customTypes: ["Level"],
+          },
+        }
+      );
+    })(),
+    StableUnderTraining: (() => {
+      return defineComponent(
+        world,
+        { address: RecsType.BigInt, current_training_id: RecsType.Number, soldier_kind: RecsType.Number, start_time: RecsType.Number, end_time: RecsType.Number, is_finished: RecsType.Boolean },
+        {
+          metadata: {
+            name: "StableUnderTraining",
+            types: ["contractaddress","u64","u64","u64","u64","bool"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
+    StableWaitingToTrain: (() => {
+      return defineComponent(
+        world,
+        { address: RecsType.BigInt, training_id: RecsType.Number, soldier_kind: RecsType.Number, required_time: RecsType.Number, is_planned: RecsType.Boolean },
+        {
+          metadata: {
+            name: "StableWaitingToTrain",
+            types: ["contractaddress","u64","u64","u64","bool"],
             customTypes: [],
           },
         }

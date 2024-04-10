@@ -21,9 +21,9 @@ export function createSystemCalls(
     }
   }
 
-  const finishUpgrade = async ({ account, id }) => {
+  const finishUpgrade = async ({ account }) => {
     try {
-      return await actions.finishUpgrade({ account, id });
+      return await actions.finishUpgrade({ account });
     } catch (error) {
       console.error("Error executing finishUpgrade:", error);
       throw error;
@@ -39,9 +39,9 @@ export function createSystemCalls(
     }
   }
 
-  const finishTraining = async ({ account, trainingId }) => {
+  const finishTraining = async ({ account, isBarrack }) => {
     try {
-      return await actions.finishTraining({ account, trainingId });
+      return await actions.finishTraining({ account, isBarrack });
     } catch (error) {
       console.error("Error executing finishTraining:", error);
       throw error;

@@ -2,6 +2,10 @@ import CityJ from '../assets/images/cityJ.png'
 import CityB from '../assets/images/cityB.png'
 import CityD from '../assets/images/cityD.png'
 import CityA from '../assets/images/cityA.png'
+import CityH from '../assets/images/cityH.png'
+import CityI from '../assets/images/cityI.png'
+import CityC from '../assets/images/cityC.png'
+import CityWall from '../assets/images/city_wall.png'
 
 export const innerBuildingOptions = [{
   name: 'Central Building',
@@ -23,12 +27,35 @@ export const innerBuildingOptions = [{
   desc: 'The Barracks is where infantry is trained, with higher levels resulting in faster training speeds for infantry units.',
   img: CityA,
   buildingKind: 8
+}, {
+  name: 'Cavalry Barracks',
+  desc: 'The Cavalry Barracks is where cavalry is trained, with higher levels resulting in faster training speeds for cavalry units.',
+  img: CityH,
+  buildingKind: 9
+}, {
+  name: 'Research Center',
+  desc: 'The Research Center is a place for researching new unit types, with higher levels allowing the development of more advanced units.',
+  img: CityI,
+  buildingKind: 10
+}, {
+  name: 'Embassy',
+  desc: 'The embassy is the residence of diplomats. When the embassy is at level 1, you can apply to join an alliance. When the embassy reaches level 3, you can create your own alliance.',
+  img: CityC,
+  buildingKind: 11
 }]
+
+export const cityWall = {
+  name: 'City Wall',
+  desc: `The city wall serves as the village's defensive structure, safeguarding villagers against external attacks and reducing resource plundering. The higher the level of the city wall, the better its defensive effectiveness.`,
+  img: CityWall,
+  buildingKind: 12,
+  buildingId: 18
+}
 
 export const innerBuildingList = [{
   left: '30%',
   top: '35%',
-  buildingId: 18,
+  buildingId: 39,
   img: null
 }, {
   left: '37%',
@@ -47,7 +74,7 @@ export const innerBuildingList = [{
   img: null
 }, {
   left: '48%',
-  top: '25.5%',
+  top: '26%',
   buildingId: 22,
   img: null
 }, {
