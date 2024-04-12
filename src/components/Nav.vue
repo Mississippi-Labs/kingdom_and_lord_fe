@@ -22,7 +22,7 @@ const props = defineProps({
 const { store, setMenuIndex } = useGlobalStore()
 
 const getProgress = (count, storage) => {
-  let progress = ((+count) / (+storage)) * 100
+  const progress = (Number(count) / Number(storage)) * 100
   if (progress >= 100) return '100%'
   else return progress + '%'
 }
@@ -62,7 +62,7 @@ const getProgress = (count, storage) => {
               <div class="icon flex-end-center">
                 <img src="../assets/images/cityB.png" alt="">
               </div>
-              <div class="total-amount">{{ (+storage.warehouse).toLocaleString() }}</div>
+              <div class="total-amount">{{ Number(storage.warehouse) }}</div>
             </div>
 
             <div class="item-detail flex-center-sb">
@@ -106,7 +106,7 @@ const getProgress = (count, storage) => {
               <div class="icon flex-end-center">
                 <img src="../assets/images/cityD.png" alt="">
               </div>
-              <div class="total-amount">{{ (+storage.barn).toLocaleString() }}</div>
+              <div class="total-amount">{{ Number(storage.barn) }}</div>
             </div>
             <div class="item-detail flex-center-sb">
               <div class="item flex-center">

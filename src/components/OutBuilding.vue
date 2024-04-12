@@ -24,27 +24,27 @@ const contentRef = ref(null)
 
 const getLevel = (buildingId) => {
   if (!store.dojoComponents.cityBuilding) return 0
-  const building = store.dojoComponents.cityBuilding.find(item => item.building_id === buildingId)
+  const building = store.dojoComponents.cityBuilding.find(item => item.building_id == buildingId)
   return building?.level?.level || 0
 }
 
 const getBg = (buildingId) => {
-  const building = store.dojoComponents.cityBuilding.find(item => item.building_id === buildingId)
+  const building = store.dojoComponents.cityBuilding.find(item => item.building_id == buildingId)
   if (!building) return ''
   building.buildingKind = building.building_kind
   return getLevelBg(buildingId, building, props.resource)
 }
 
 const upgrade = (data) => {
-  const building = store.dojoComponents.cityBuilding.find(item => item.building_id === data.buildingId)
+  const building = store.dojoComponents.cityBuilding.find(item => item.building_id == data.buildingId)
   const op = outBuildingOptions.find(item => item.buildingKind == data.buildingKind)
   emit('upgradeBuilding', Object.assign(data, building, op))
 }
 
 const setBuildingRef = (menuIndex) => {
-  if (menuIndex === 0) {
+  if (menuIndex == 0) {
     buildingRef.value.style.zIndex = '9'
-  } else if (menuIndex === 1) {
+  } else if (menuIndex == 1) {
     buildingRef.value.style.zIndex = '-1'
   } else {
     buildingRef.value.style.zIndex = '-1'

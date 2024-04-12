@@ -3,7 +3,7 @@ import { useGlobalStore } from '../hooks/globalStore.js'
 const { store } = useGlobalStore()
 
 export const isUpgrading = (buildingId) => {
-  return store.dojoComponents.underUpgrading.some(item => item.building_id === buildingId && !item.is_finished) || store.dojoComponents.waitingToUpgrade.some(item => (item.building_id === buildingId && item.is_planned))
+  return store.dojoComponents.underUpgrading.some(item => item.building_id == buildingId && !item.is_finished) || store.dojoComponents.waitingToUpgrade.some(item => (item.building_id == buildingId && item.is_planned))
 }
 
 export const getBuildingList = () => {

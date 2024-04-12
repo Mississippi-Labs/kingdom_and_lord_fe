@@ -14,6 +14,10 @@ export const delay = (duration) => {
   return new Promise(resolve => setTimeout(resolve, duration));
 }
 
+export const toObject = (obj) => {
+  return JSON.parse(JSON.stringify(obj, (key, value) => typeof value == 'bigint' ? value.toString() : value))
+}
+
 // formatDate
 export const formatDate = (date) => {
   const d = new Date(date);
@@ -62,21 +66,21 @@ export const getProof = (arr) => {
 }
 
 export const getUpgradeData = (buildingKind) => {
-  if (buildingKind === 5) {
+  if (buildingKind == 5) {
     return upgradeData.cityhall
-  } else if (buildingKind === 6) {
+  } else if (buildingKind == 6) {
     return upgradeData.warehouse
-  } else if (buildingKind === 7) {
+  } else if (buildingKind == 7) {
     return upgradeData.barn
-  } else if (buildingKind === 8) {
+  } else if (buildingKind == 8) {
     return upgradeData.barracks
-  } else if (buildingKind === 1) {
+  } else if (buildingKind == 1) {
     return upgradeData.wood
-  } else if (buildingKind === 2) {
+  } else if (buildingKind == 2) {
     return upgradeData.brick
-  } else if (buildingKind === 3) {
+  } else if (buildingKind == 3) {
     return upgradeData.steel
-  } else if (buildingKind === 4) {
+  } else if (buildingKind == 4) {
     return upgradeData.food
   } else if (buildingKind == 9) {
     return upgradeData.stable
@@ -114,7 +118,7 @@ export const checkUpgrade = (buildingKind, level, resourceData) => {
     return 4
   }
   
-  if (buildingList.some(item => item.building_kind === buildingKind)) {
+  if (buildingList.some(item => item.building_kind == buildingKind)) {
     return 1
   }
 

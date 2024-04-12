@@ -3,7 +3,7 @@ import { ref, watch, onBeforeMount, inject, onBeforeUnmount } from 'vue'
 import { resource } from '../libs/data'
 import Loading from '../components/Loading.vue'
 import { useMessage } from 'naive-ui'
-import { getProof, getUpgradeData } from '../utils/index'
+import { getProof, getUpgradeData, toObject } from '../utils/index'
 import { getBuildingList } from '../utils/data'
 import { useGlobalStore } from '../hooks/globalStore.js'
 import { RpcProvider } from "starknet";
@@ -42,10 +42,6 @@ const troopsData = ref({
   "Heavy Knights": 0
 })
 
-const toObject = (obj) => {
-  return JSON.parse(JSON.stringify(obj, (key, value) => typeof value === 'bigint' ? value.toString() : value))
-}
-
 const setInnerBuildingListFun = (cityHall, warehouse, barn, barrack, college, stable, embassy) => {
   const underUpgrading = getBuildingList()
   underUpgrading.forEach(item => {
@@ -56,7 +52,7 @@ const setInnerBuildingListFun = (cityHall, warehouse, barn, barrack, college, st
   list.forEach(item => {
     const itemData = innerBuildingOptions.filter(e => e.buildingKind == item.buildingKind)[0]
     innerBuildingList.forEach(e => {
-      if (e.buildingId === item.building_id) {
+      if (e.buildingId == item.building_id) {
         e = Object.assign(e, itemData, item)
       }
     })
@@ -131,7 +127,7 @@ const upgrade = async (data) => {
     if (event.length) {
       const innerBuildingList = store.state.innerBuildingList
       innerBuildingList.forEach(item => {
-        if (item.buildingId === data.id) {
+        if (item.buildingId == data.id) {
           item = Object.assign(item, data)
         }
       })
@@ -145,7 +141,7 @@ const upgrade = async (data) => {
 }
 
 const upgradeBuilding = async (data) => {
-  const isUpgrading = getBuildingList().some(item => item.building_id === data.buildingId)
+  const isUpgrading = getBuildingList().some(item => item.building_id == data.buildingId)
   if (isUpgrading) {
     message.error('Building is under upgrading')
     return

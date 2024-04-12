@@ -2,6 +2,7 @@
 
 import { defineComponent, Type as RecsType } from "@dojoengine/recs";
 
+
 export function defineContractComponents(world) {
   return {
     SpawnStatus: (() => {
@@ -20,7 +21,7 @@ export function defineContractComponents(world) {
     Barn: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, max_storage: RecsType.Number, population: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, level: { level: RecsType.BigInt }, max_storage: RecsType.BigInt, population: RecsType.BigInt },
         {
           metadata: {
             name: "Barn",
@@ -33,7 +34,7 @@ export function defineContractComponents(world) {
     BarnStorage: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, food: { amount: RecsType.Number }, max_storage: RecsType.Number },
+        { player: RecsType.BigInt, food: { amount: RecsType.BigInt }, max_storage: RecsType.BigInt },
         {
           metadata: {
             name: "BarnStorage",
@@ -46,7 +47,7 @@ export function defineContractComponents(world) {
     Barrack: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, bonus: RecsType.Number, population: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, level: { level: RecsType.BigInt }, bonus: RecsType.BigInt, population: RecsType.BigInt },
         {
           metadata: {
             name: "Barrack",
@@ -59,7 +60,7 @@ export function defineContractComponents(world) {
     BarrackUnderTraining: (() => {
       return defineComponent(
         world,
-        { address: RecsType.BigInt, current_training_id: RecsType.Number, soldier_kind: RecsType.Number, start_time: RecsType.Number, end_time: RecsType.Number, is_finished: RecsType.Boolean },
+        { address: RecsType.BigInt, current_training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, start_time: RecsType.BigInt, end_time: RecsType.BigInt, is_finished: RecsType.Boolean },
         {
           metadata: {
             name: "BarrackUnderTraining",
@@ -72,7 +73,7 @@ export function defineContractComponents(world) {
     BarrackWaitingToTrain: (() => {
       return defineComponent(
         world,
-        { address: RecsType.BigInt, training_id: RecsType.Number, soldier_kind: RecsType.Number, required_time: RecsType.Number, is_planned: RecsType.Boolean },
+        { address: RecsType.BigInt, training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, required_time: RecsType.BigInt, is_planned: RecsType.Boolean },
         {
           metadata: {
             name: "BarrackWaitingToTrain",
@@ -85,7 +86,7 @@ export function defineContractComponents(world) {
     Troops: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, millitia: RecsType.Number, guard: RecsType.Number, heavy_infantry: RecsType.Number, scouts: RecsType.Number, knights: RecsType.Number, heavy_knights: RecsType.Number },
+        { player: RecsType.BigInt, millitia: RecsType.BigInt, guard: RecsType.BigInt, heavy_infantry: RecsType.BigInt, scouts: RecsType.BigInt, knights: RecsType.BigInt, heavy_knights: RecsType.BigInt },
         {
           metadata: {
             name: "Troops",
@@ -95,10 +96,23 @@ export function defineContractComponents(world) {
         }
       );
     })(),
+    AmbushInfo: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, ambush_hash: RecsType.BigInt, millitia: RecsType.BigInt, guard: RecsType.BigInt, heavy_infantry: RecsType.BigInt, scouts: RecsType.BigInt, knights: RecsType.BigInt, heavy_knights: RecsType.BigInt },
+        {
+          metadata: {
+            name: "AmbushInfo",
+            types: ["contractaddress","felt252","u64","u64","u64","u64","u64","u64"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
     CityBuilding: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, building_id: RecsType.Number, building_kind: RecsType.Number, level: { level: RecsType.Number }, growth_rate: RecsType.Number, population: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, building_kind: RecsType.BigInt, level: { level: RecsType.BigInt }, growth_rate: RecsType.BigInt, population: RecsType.BigInt },
         {
           metadata: {
             name: "CityBuilding",
@@ -111,7 +125,7 @@ export function defineContractComponents(world) {
     CityHall: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, bonus: RecsType.Number, population: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, level: { level: RecsType.BigInt }, bonus: RecsType.BigInt, population: RecsType.BigInt },
         {
           metadata: {
             name: "CityHall",
@@ -124,7 +138,7 @@ export function defineContractComponents(world) {
     UnderUpgrading: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, building_id: RecsType.Number, building_kind: RecsType.Number, target_level: { level: RecsType.Number }, start_time: RecsType.Number, end_time: RecsType.Number, is_new_building: RecsType.Boolean, is_finished: RecsType.Boolean, value: RecsType.Number, population: RecsType.Number, current_upgrade_id: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, building_kind: RecsType.BigInt, target_level: { level: RecsType.BigInt }, start_time: RecsType.BigInt, end_time: RecsType.BigInt, is_new_building: RecsType.Boolean, is_finished: RecsType.Boolean, value: RecsType.BigInt, population: RecsType.BigInt, current_upgrade_id: RecsType.BigInt },
         {
           metadata: {
             name: "UnderUpgrading",
@@ -137,7 +151,7 @@ export function defineContractComponents(world) {
     WaitingToUpgrade: (() => {
       return defineComponent(
         world,
-        { address: RecsType.BigInt, upgrade_id: RecsType.Number, building_id: RecsType.Number, building_kind: RecsType.Number, target_level: { level: RecsType.Number }, required_time: RecsType.Number, is_planned: RecsType.Boolean, is_new_building: RecsType.Boolean, value: RecsType.Number, population: RecsType.Number },
+        { address: RecsType.BigInt, upgrade_id: RecsType.BigInt, building_id: RecsType.BigInt, building_kind: RecsType.BigInt, target_level: { level: RecsType.BigInt }, required_time: RecsType.BigInt, is_planned: RecsType.Boolean, is_new_building: RecsType.Boolean, value: RecsType.BigInt, population: RecsType.BigInt },
         {
           metadata: {
             name: "WaitingToUpgrade",
@@ -150,7 +164,7 @@ export function defineContractComponents(world) {
     CityWall: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, population: RecsType.Number, attack_power: RecsType.Number, defense_power: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, level: { level: RecsType.BigInt }, population: RecsType.BigInt, attack_power: RecsType.BigInt, defense_power: RecsType.BigInt },
         {
           metadata: {
             name: "CityWall",
@@ -163,7 +177,7 @@ export function defineContractComponents(world) {
     College: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, population: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, level: { level: RecsType.BigInt }, population: RecsType.BigInt },
         {
           metadata: {
             name: "College",
@@ -176,7 +190,7 @@ export function defineContractComponents(world) {
     Config: (() => {
       return defineComponent(
         world,
-        { id_config: RecsType.Number, erc20_addr: RecsType.BigInt, amount: RecsType.BigInt, receiver: RecsType.BigInt, merkle_root: RecsType.BigInt },
+        { id_config: RecsType.BigInt, erc20_addr: RecsType.BigInt, amount: RecsType.BigInt, receiver: RecsType.BigInt, merkle_root: RecsType.BigInt },
         {
           metadata: {
             name: "Config",
@@ -189,7 +203,7 @@ export function defineContractComponents(world) {
     Embassy: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, population: RecsType.Number, ally_amount: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, level: { level: RecsType.BigInt }, population: RecsType.BigInt, ally_amount: RecsType.BigInt },
         {
           metadata: {
             name: "Embassy",
@@ -199,10 +213,49 @@ export function defineContractComponents(world) {
         }
       );
     })(),
+    City: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, x: RecsType.BigInt, y: RecsType.BigInt },
+        {
+          metadata: {
+            name: "City",
+            types: ["contractaddress","u64","u64"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
+    CityConfirm: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, block: RecsType.BigInt },
+        {
+          metadata: {
+            name: "CityConfirm",
+            types: ["contractaddress","u64"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
+    CityLocation: (() => {
+      return defineComponent(
+        world,
+        { x: RecsType.BigInt, y: RecsType.BigInt, player: RecsType.BigInt },
+        {
+          metadata: {
+            name: "CityLocation",
+            types: ["u64","u64","contractaddress"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
     OuterCity: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, last_mined_time: RecsType.Number },
+        { player: RecsType.BigInt, last_mined_time: RecsType.BigInt },
         {
           metadata: {
             name: "OuterCity",
@@ -215,7 +268,7 @@ export function defineContractComponents(world) {
     Stable: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, bonus: RecsType.Number, population: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, level: { level: RecsType.BigInt }, bonus: RecsType.BigInt, population: RecsType.BigInt },
         {
           metadata: {
             name: "Stable",
@@ -228,7 +281,7 @@ export function defineContractComponents(world) {
     StableUnderTraining: (() => {
       return defineComponent(
         world,
-        { address: RecsType.BigInt, current_training_id: RecsType.Number, soldier_kind: RecsType.Number, start_time: RecsType.Number, end_time: RecsType.Number, is_finished: RecsType.Boolean },
+        { address: RecsType.BigInt, current_training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, start_time: RecsType.BigInt, end_time: RecsType.BigInt, is_finished: RecsType.Boolean },
         {
           metadata: {
             name: "StableUnderTraining",
@@ -241,7 +294,7 @@ export function defineContractComponents(world) {
     StableWaitingToTrain: (() => {
       return defineComponent(
         world,
-        { address: RecsType.BigInt, training_id: RecsType.Number, soldier_kind: RecsType.Number, required_time: RecsType.Number, is_planned: RecsType.Boolean },
+        { address: RecsType.BigInt, training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, required_time: RecsType.BigInt, is_planned: RecsType.Boolean },
         {
           metadata: {
             name: "StableWaitingToTrain",
@@ -254,7 +307,7 @@ export function defineContractComponents(world) {
     BuildingAreaInfo: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, building_id: RecsType.Number, building_kind: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, building_kind: RecsType.BigInt },
         {
           metadata: {
             name: "BuildingAreaInfo",
@@ -267,7 +320,7 @@ export function defineContractComponents(world) {
     Warehouse: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, building_id: RecsType.Number, level: { level: RecsType.Number }, max_storage: RecsType.Number, population: RecsType.Number },
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, level: { level: RecsType.BigInt }, max_storage: RecsType.BigInt, population: RecsType.BigInt },
         {
           metadata: {
             name: "Warehouse",
@@ -280,12 +333,129 @@ export function defineContractComponents(world) {
     WarehouseStorage: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, wood: { amount: RecsType.Number }, bricks: { amount: RecsType.Number }, steel: { amount: RecsType.Number }, max_storage: RecsType.Number },
+        { player: RecsType.BigInt, wood: { amount: RecsType.BigInt }, bricks: { amount: RecsType.BigInt }, steel: { amount: RecsType.BigInt }, max_storage: RecsType.BigInt },
         {
           metadata: {
             name: "WarehouseStorage",
             types: ["contractaddress","u64","u64","u64","u64"],
             customTypes: ["Resource","Resource","Resource"],
+          },
+        }
+      );
+    })(),
+    AlreadySpawnedEvent: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, block: RecsType.BigInt },
+        {
+          metadata: {
+            name: "AlreadySpawnedEvent",
+            types: ["contractaddress","u64"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
+    NewPlayerSpawnEvent: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, time: RecsType.BigInt },
+        {
+          metadata: {
+            name: "NewPlayerSpawnEvent",
+            types: ["contractaddress","u64"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
+    PayToFinishedUpgradeEvent: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, upgrade_id: RecsType.BigInt, building_id: RecsType.BigInt, level: { level: RecsType.BigInt } },
+        {
+          metadata: {
+            name: "PayToFinishedUpgradeEvent",
+            types: ["contractaddress","u64","u64","u64"],
+            customTypes: ["Level"],
+          },
+        }
+      );
+    })(),
+    StartTrainingEvent: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt },
+        {
+          metadata: {
+            name: "StartTrainingEvent",
+            types: ["contractaddress","u64","u64"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
+    StartUpgradeEvent: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, building_id: RecsType.BigInt, upgrade_id: RecsType.BigInt, level: { level: RecsType.BigInt } },
+        {
+          metadata: {
+            name: "StartUpgradeEvent",
+            types: ["contractaddress","u64","u64","u64"],
+            customTypes: ["Level"],
+          },
+        }
+      );
+    })(),
+    TrainingFinishedEvent: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, training_id: RecsType.BigInt },
+        {
+          metadata: {
+            name: "TrainingFinishedEvent",
+            types: ["contractaddress","u64"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
+    UpgradeCompleteEvent: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, upgrade_id: RecsType.BigInt, building_next: RecsType.Boolean },
+        {
+          metadata: {
+            name: "UpgradeCompleteEvent",
+            types: ["contractaddress","u64","bool"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
+    UpgradeNotEnoughResourceEvent: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, building_id: RecsType.BigInt },
+        {
+          metadata: {
+            name: "UpgradeNotEnoughResourceEvent",
+            types: ["contractaddress","u64"],
+            customTypes: [],
+          },
+        }
+      );
+    })(),
+    UpgradeNotFinishedEvent: (() => {
+      return defineComponent(
+        world,
+        { player: RecsType.BigInt, block: RecsType.BigInt },
+        {
+          metadata: {
+            name: "UpgradeNotFinishedEvent",
+            types: ["contractaddress","u64"],
+            customTypes: [],
           },
         }
       );

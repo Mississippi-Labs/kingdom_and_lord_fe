@@ -38,7 +38,7 @@ const upgradeFun = (city) => {
     <n-card v-for="city in cityList" hoverable :key="city.id"
       :title="`${getCityName(city?.building_id)} (${city?.building?.level?.level || city?.level?.level || 0})`"
       style="width: 220px;height: 94px;margin: 0 12px 12px 0;font-size: 0;">
-      <n-button v-if="!buildingList.find(item => item.building_id === city.building_id)" :disabled="buildingList.length >= 2" strong
+      <n-button v-if="!buildingList.find(item => item.building_id == city.building_id)" :disabled="buildingList.length >= 2" strong
         secondary @click="upgradeFun(city)">upgrade</n-button>
     </n-card>
   </div>

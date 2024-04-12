@@ -29,7 +29,7 @@ const style = ref({ left: 0, top: 0 })
 const show = ref(false)
 
 const hasCityWall = () => {
-  return store.dojoComponents.cityWall.length > 0 || getBuildingList().filter(item => item.building_id === 18).length > 0
+  return store.dojoComponents.cityWall.length > 0 || getBuildingList().filter(item => item.building_id == 18).length > 0
 }
 
 const upgradeBuilding = (item) => {
@@ -37,7 +37,7 @@ const upgradeBuilding = (item) => {
     message.error('Building is under upgrading')
     return
   }
-  if (item.buildingId === 18) {
+  if (item.buildingId == 18) {
     const cityWall = store.dojoComponents.cityWall[0]
     if (cityWall) {
       item = Object.assign(item, cityWall)
@@ -59,14 +59,14 @@ const getBg = (buildingId) => {
     building = store.dojoComponents.cityWall[0]
     building.buildingKind = 12
   } else {
-    building = store.state.innerBuildingList.find(item => item.building_id === buildingId)
+    building = store.state.innerBuildingList.find(item => item.building_id == buildingId)
   }
   if (!building) return ''
   return getLevelBg(buildingId, building, props.resource)
 }
 
 const showInfo = (e, item) => {
-  if (item.buildingId === 18) {
+  if (item.buildingId == 18) {
     item = Object.assign(item, store.dojoComponents.cityWall[0])
   }
   if (!item.level) item.level = { level: 0 }

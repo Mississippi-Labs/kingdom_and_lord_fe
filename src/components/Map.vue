@@ -27,13 +27,13 @@ const getBg = (col) => {
       <div class="row" v-for="(row, rowIndex) in mapData" :key="rowIndex">
         <div class="col" v-for="(col, colIndex) in row" :key="colIndex">
           <div class="item" :style="getBg(col)">
-            <n-popover v-if="col === -1" trigger="hover" :show-arrow="false">
+            <n-popover v-if="col == -1" trigger="hover" :show-arrow="false">
               <template #trigger>
                 <div style="background: rgba(255, 0, 0, .2);">🥷🏻</div>
               </template>
               <span>hidden soilder</span>
             </n-popover>
-            <n-popover v-if="col === -2" trigger="hover" :show-arrow="false">
+            <n-popover v-if="col == -2" trigger="hover" :show-arrow="false">
               <template #trigger>
                 <div>⛰️</div>
               </template>
@@ -41,7 +41,7 @@ const getBg = (col) => {
             </n-popover>
             <n-popover v-if="col > 0" trigger="hover" :show-arrow="false">
               <template #trigger>
-                <div v-if="villages.some(v => v.x === rowIndex && v.y === colIndex)">🏛️</div>
+                <div v-if="villages.some(v => v.x == rowIndex && v.y == colIndex)">🏛️</div>
                 <div v-else></div>
               </template>
               <div>alliance_{{ col }}</div>

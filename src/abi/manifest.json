@@ -1,8 +1,8 @@
 {
   "world": {
-    "name": "dojo::world::world",
-    "address": "0x46bf3ea75581f0620eaf804d96fb9b412214b27394134e458134ed92066ae3e",
-    "class_hash": "0x5ac623f0c96059936bd2d0904bdd31799e430fe08a0caff7a5f497260b16497",
+    "kind": "Contract",
+    "class_hash": "0x799bc4e9da10bfb3dd88e6f223c9cfbf7745435cd14f5d69675ea448e578cd",
+    "original_class_hash": "0x799bc4e9da10bfb3dd88e6f223c9cfbf7745435cd14f5d69675ea448e578cd",
     "abi": [
       {
         "type": "impl",
@@ -21,35 +21,25 @@
       },
       {
         "type": "struct",
-        "name": "core::array::Span::<core::integer::u8>",
+        "name": "dojo::resource_metadata::ResourceMetadata",
         "members": [
           {
-            "name": "snapshot",
-            "type": "@core::array::Array::<core::integer::u8>"
-          }
-        ]
-      },
-      {
-        "type": "enum",
-        "name": "core::option::Option::<core::felt252>",
-        "variants": [
-          {
-            "name": "Some",
+            "name": "resource_id",
             "type": "core::felt252"
           },
           {
-            "name": "None",
-            "type": "()"
+            "name": "metadata_uri",
+            "type": "core::array::Span::<core::felt252>"
           }
         ]
       },
       {
         "type": "struct",
-        "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+        "name": "core::array::Span::<core::integer::u8>",
         "members": [
           {
             "name": "snapshot",
-            "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            "type": "@core::array::Array::<core::integer::u8>"
           }
         ]
       },
@@ -73,31 +63,27 @@
         "items": [
           {
             "type": "function",
-            "name": "metadata_uri",
+            "name": "metadata",
             "inputs": [
               {
-                "name": "resource",
+                "name": "resource_id",
                 "type": "core::felt252"
               }
             ],
             "outputs": [
               {
-                "type": "core::array::Span::<core::felt252>"
+                "type": "dojo::resource_metadata::ResourceMetadata"
               }
             ],
             "state_mutability": "view"
           },
           {
             "type": "function",
-            "name": "set_metadata_uri",
+            "name": "set_metadata",
             "inputs": [
               {
-                "name": "resource",
-                "type": "core::felt252"
-              },
-              {
-                "name": "uri",
-                "type": "core::array::Span::<core::felt252>"
+                "name": "metadata",
+                "type": "dojo::resource_metadata::ResourceMetadata"
               }
             ],
             "outputs": [],
@@ -114,7 +100,7 @@
             ],
             "outputs": [
               {
-                "type": "core::starknet::class_hash::ClassHash"
+                "type": "(core::starknet::class_hash::ClassHash, core::starknet::contract_address::ContractAddress)"
               }
             ],
             "state_mutability": "view"
@@ -211,14 +197,6 @@
                 "type": "core::array::Span::<core::felt252>"
               },
               {
-                "name": "offset",
-                "type": "core::integer::u8"
-              },
-              {
-                "name": "length",
-                "type": "core::integer::u32"
-              },
-              {
                 "name": "layout",
                 "type": "core::array::Span::<core::integer::u8>"
               }
@@ -243,10 +221,6 @@
                 "type": "core::array::Span::<core::felt252>"
               },
               {
-                "name": "offset",
-                "type": "core::integer::u8"
-              },
-              {
                 "name": "values",
                 "type": "core::array::Span::<core::felt252>"
               },
@@ -257,77 +231,6 @@
             ],
             "outputs": [],
             "state_mutability": "external"
-          },
-          {
-            "type": "function",
-            "name": "entities",
-            "inputs": [
-              {
-                "name": "model",
-                "type": "core::felt252"
-              },
-              {
-                "name": "index",
-                "type": "core::option::Option::<core::felt252>"
-              },
-              {
-                "name": "values",
-                "type": "core::array::Span::<core::felt252>"
-              },
-              {
-                "name": "values_length",
-                "type": "core::integer::u32"
-              },
-              {
-                "name": "values_layout",
-                "type": "core::array::Span::<core::integer::u8>"
-              }
-            ],
-            "outputs": [
-              {
-                "type": "(core::array::Span::<core::felt252>, core::array::Span::<core::array::Span::<core::felt252>>)"
-              }
-            ],
-            "state_mutability": "view"
-          },
-          {
-            "type": "function",
-            "name": "entity_ids",
-            "inputs": [
-              {
-                "name": "model",
-                "type": "core::felt252"
-              }
-            ],
-            "outputs": [
-              {
-                "type": "core::array::Span::<core::felt252>"
-              }
-            ],
-            "state_mutability": "view"
-          },
-          {
-            "type": "function",
-            "name": "set_executor",
-            "inputs": [
-              {
-                "name": "contract_address",
-                "type": "core::starknet::contract_address::ContractAddress"
-              }
-            ],
-            "outputs": [],
-            "state_mutability": "external"
-          },
-          {
-            "type": "function",
-            "name": "executor",
-            "inputs": [],
-            "outputs": [
-              {
-                "type": "core::starknet::contract_address::ContractAddress"
-              }
-            ],
-            "state_mutability": "view"
           },
           {
             "type": "function",
@@ -494,10 +397,6 @@
         "name": "constructor",
         "inputs": [
           {
-            "name": "executor",
-            "type": "core::starknet::contract_address::ContractAddress"
-          },
-          {
             "name": "contract_base",
             "type": "core::starknet::class_hash::ClassHash"
           }
@@ -607,6 +506,16 @@
             "name": "prev_class_hash",
             "type": "core::starknet::class_hash::ClassHash",
             "kind": "data"
+          },
+          {
+            "name": "address",
+            "type": "core::starknet::contract_address::ContractAddress",
+            "kind": "data"
+          },
+          {
+            "name": "prev_address",
+            "type": "core::starknet::contract_address::ContractAddress",
+            "kind": "data"
           }
         ]
       },
@@ -623,11 +532,6 @@
           {
             "name": "keys",
             "type": "core::array::Span::<core::felt252>",
-            "kind": "data"
-          },
-          {
-            "name": "offset",
-            "type": "core::integer::u8",
             "kind": "data"
           },
           {
@@ -700,23 +604,6 @@
       },
       {
         "type": "event",
-        "name": "dojo::world::world::ExecutorUpdated",
-        "kind": "struct",
-        "members": [
-          {
-            "name": "address",
-            "type": "core::starknet::contract_address::ContractAddress",
-            "kind": "data"
-          },
-          {
-            "name": "prev_address",
-            "type": "core::starknet::contract_address::ContractAddress",
-            "kind": "data"
-          }
-        ]
-      },
-      {
-        "type": "event",
         "name": "dojo::world::world::Event",
         "kind": "enum",
         "variants": [
@@ -769,187 +656,30 @@
             "name": "OwnerUpdated",
             "type": "dojo::world::world::OwnerUpdated",
             "kind": "nested"
-          },
-          {
-            "name": "ExecutorUpdated",
-            "type": "dojo::world::world::ExecutorUpdated",
-            "kind": "nested"
           }
         ]
       }
     ],
-    "reads": [],
-    "writes": [],
-    "computed": []
-  },
-  "executor": {
-    "name": "dojo::executor::executor",
-    "address": null,
-    "class_hash": "0x585507fa2818fe78e66da6ea4c5915376739f4abf509d41153f60a16cb1f68d",
-    "abi": [
-      {
-        "type": "impl",
-        "name": "Executor",
-        "interface_name": "dojo::executor::IExecutor"
-      },
-      {
-        "type": "struct",
-        "name": "core::array::Span::<core::felt252>",
-        "members": [
-          {
-            "name": "snapshot",
-            "type": "@core::array::Array::<core::felt252>"
-          }
-        ]
-      },
-      {
-        "type": "interface",
-        "name": "dojo::executor::IExecutor",
-        "items": [
-          {
-            "type": "function",
-            "name": "call",
-            "inputs": [
-              {
-                "name": "class_hash",
-                "type": "core::starknet::class_hash::ClassHash"
-              },
-              {
-                "name": "entrypoint",
-                "type": "core::felt252"
-              },
-              {
-                "name": "calldata",
-                "type": "core::array::Span::<core::felt252>"
-              }
-            ],
-            "outputs": [
-              {
-                "type": "core::array::Span::<core::felt252>"
-              }
-            ],
-            "state_mutability": "view"
-          }
-        ]
-      },
-      {
-        "type": "event",
-        "name": "dojo::executor::executor::Event",
-        "kind": "enum",
-        "variants": []
-      }
-    ],
-    "reads": [],
-    "writes": [],
-    "computed": []
+    "address": "0x533fd2059bab1c37eef74dfb76b5ca8e4c7ddcfdfa84229c77eb060b9633ace",
+    "transaction_hash": null,
+    "block_number": null,
+    "seed": "kingdom_lord",
+    "name": "dojo::world::world"
   },
   "base": {
-    "name": "dojo::base::base",
-    "class_hash": "0x6c458453d35753703ad25632deec20a29faf8531942ec109e6eb0650316a2bc",
-    "abi": [
-      {
-        "type": "impl",
-        "name": "WorldProviderImpl",
-        "interface_name": "dojo::world::IWorldProvider"
-      },
-      {
-        "type": "struct",
-        "name": "dojo::world::IWorldDispatcher",
-        "members": [
-          {
-            "name": "contract_address",
-            "type": "core::starknet::contract_address::ContractAddress"
-          }
-        ]
-      },
-      {
-        "type": "interface",
-        "name": "dojo::world::IWorldProvider",
-        "items": [
-          {
-            "type": "function",
-            "name": "world",
-            "inputs": [],
-            "outputs": [
-              {
-                "type": "dojo::world::IWorldDispatcher"
-              }
-            ],
-            "state_mutability": "view"
-          }
-        ]
-      },
-      {
-        "type": "impl",
-        "name": "UpgradableImpl",
-        "interface_name": "dojo::components::upgradeable::IUpgradeable"
-      },
-      {
-        "type": "interface",
-        "name": "dojo::components::upgradeable::IUpgradeable",
-        "items": [
-          {
-            "type": "function",
-            "name": "upgrade",
-            "inputs": [
-              {
-                "name": "new_class_hash",
-                "type": "core::starknet::class_hash::ClassHash"
-              }
-            ],
-            "outputs": [],
-            "state_mutability": "external"
-          }
-        ]
-      },
-      {
-        "type": "constructor",
-        "name": "constructor",
-        "inputs": []
-      },
-      {
-        "type": "event",
-        "name": "dojo::components::upgradeable::upgradeable::Upgraded",
-        "kind": "struct",
-        "members": [
-          {
-            "name": "class_hash",
-            "type": "core::starknet::class_hash::ClassHash",
-            "kind": "data"
-          }
-        ]
-      },
-      {
-        "type": "event",
-        "name": "dojo::components::upgradeable::upgradeable::Event",
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Upgraded",
-            "type": "dojo::components::upgradeable::upgradeable::Upgraded",
-            "kind": "nested"
-          }
-        ]
-      },
-      {
-        "type": "event",
-        "name": "dojo::base::base::Event",
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "UpgradeableEvent",
-            "type": "dojo::components::upgradeable::upgradeable::Event",
-            "kind": "nested"
-          }
-        ]
-      }
-    ]
+    "kind": "Class",
+    "class_hash": "0x679177a2cb757694ac4f326d01052ff0963eac0bc2a17116a2b87badcdf6f76",
+    "original_class_hash": "0x679177a2cb757694ac4f326d01052ff0963eac0bc2a17116a2b87badcdf6f76",
+    "abi": null,
+    "name": "dojo::base::base"
   },
   "contracts": [
     {
-      "name": "kingdom_lord::actions::kingdom_lord_controller",
-      "address": "0x1c9c0eac696e8b998fd586792939e7d902312e08ec45b6795de12e52b723e10",
-      "class_hash": "0x1e479335d503d4528f22c5aad11ee67c3eff250e386b5a5a9a6e369b28b7a31",
+      "kind": "DojoContract",
+      "address": "0x5fb9263438e41b011ce81d6bb2c75000a5411ce11230188af7d9fb8ef667651",
+      "class_hash": "0x12b83257dcb8e802e109eeb120a10538d122ba4f444488b000eb7ac6759c6f9",
+      "original_class_hash": "0x12b83257dcb8e802e109eeb120a10538d122ba4f444488b000eb7ac6759c6f9",
+      "base_class_hash": "0x0",
       "abi": [
         {
           "type": "impl",
@@ -1371,6 +1101,18 @@
             {
               "name": "StorageBuildingNotMaxLevel",
               "type": "()"
+            },
+            {
+              "name": "CityConfirmAlreadyExist",
+              "type": "()"
+            },
+            {
+              "name": "CityConfirmNotStarted",
+              "type": "()"
+            },
+            {
+              "name": "CityAlreadyCreated",
+              "type": "()"
             }
           ]
         },
@@ -1591,7 +1333,7 @@
                   "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
                 }
               ],
-              "state_mutability": "external"
+              "state_mutability": "view"
             },
             {
               "type": "function",
@@ -1647,7 +1389,7 @@
                   "type": "core::result::Result::<core::integer::u64, kingdom_lord::interface::Error>"
                 }
               ],
-              "state_mutability": "external"
+              "state_mutability": "view"
             },
             {
               "type": "function",
@@ -1658,7 +1400,7 @@
                   "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
                 }
               ],
-              "state_mutability": "external"
+              "state_mutability": "view"
             },
             {
               "type": "function",
@@ -1674,7 +1416,7 @@
                   "type": "core::result::Result::<core::integer::u64, kingdom_lord::interface::Error>"
                 }
               ],
-              "state_mutability": "external"
+              "state_mutability": "view"
             },
             {
               "type": "function",
@@ -1690,7 +1432,7 @@
                   "type": "core::result::Result::<core::integer::u64, kingdom_lord::interface::Error>"
                 }
               ],
-              "state_mutability": "external"
+              "state_mutability": "view"
             }
           ]
         },
@@ -1712,7 +1454,7 @@
                   "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
                 }
               ],
-              "state_mutability": "external"
+              "state_mutability": "view"
             },
             {
               "type": "function",
@@ -1768,7 +1510,7 @@
                   "type": "core::result::Result::<core::integer::u64, kingdom_lord::interface::Error>"
                 }
               ],
-              "state_mutability": "external"
+              "state_mutability": "view"
             },
             {
               "type": "function",
@@ -1779,7 +1521,7 @@
                   "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
                 }
               ],
-              "state_mutability": "external"
+              "state_mutability": "view"
             },
             {
               "type": "function",
@@ -1795,7 +1537,7 @@
                   "type": "core::result::Result::<core::integer::u64, kingdom_lord::interface::Error>"
                 }
               ],
-              "state_mutability": "external"
+              "state_mutability": "view"
             },
             {
               "type": "function",
@@ -1811,7 +1553,7 @@
                   "type": "core::result::Result::<core::integer::u64, kingdom_lord::interface::Error>"
                 }
               ],
-              "state_mutability": "external"
+              "state_mutability": "view"
             }
           ]
         },
@@ -1912,179 +1654,6 @@
         },
         {
           "type": "event",
-          "name": "kingdom_lord::events::NewPlayerSpawnEvent",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            },
-            {
-              "name": "time",
-              "type": "core::integer::u64",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "kingdom_lord::events::StartUpgradeEvent",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            },
-            {
-              "name": "building_id",
-              "type": "core::integer::u64",
-              "kind": "key"
-            },
-            {
-              "name": "upgrade_id",
-              "type": "core::integer::u64",
-              "kind": "data"
-            },
-            {
-              "name": "level",
-              "type": "kingdom_lord::models::level::Level",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "kingdom_lord::events::UpgradeNotEnoughResourceEvent",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            },
-            {
-              "name": "building_id",
-              "type": "core::integer::u64",
-              "kind": "key"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "kingdom_lord::events::UpgradeCompleteEvent",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            },
-            {
-              "name": "upgrade_id",
-              "type": "core::integer::u64",
-              "kind": "data"
-            },
-            {
-              "name": "building_next",
-              "type": "core::bool",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "kingdom_lord::events::UpgradeNotFinishedEvent",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "kingdom_lord::events::AlreadySpawnedEvent",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "kingdom_lord::events::PayToFinishedUpgradeEvent",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            },
-            {
-              "name": "upgrade_id",
-              "type": "core::integer::u64",
-              "kind": "data"
-            },
-            {
-              "name": "building_id",
-              "type": "core::integer::u64",
-              "kind": "key"
-            },
-            {
-              "name": "level",
-              "type": "kingdom_lord::models::level::Level",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "kingdom_lord::events::StartTrainingEvent",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            },
-            {
-              "name": "training_id",
-              "type": "core::integer::u64",
-              "kind": "data"
-            },
-            {
-              "name": "soldier_kind",
-              "type": "core::integer::u64",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "kingdom_lord::events::TrainingFinishedEvent",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            },
-            {
-              "name": "training_id",
-              "type": "core::integer::u64",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
           "name": "kingdom_lord::actions::kingdom_lord_controller::Event",
           "kind": "enum",
           "variants": [
@@ -2132,63 +1701,21 @@
               "name": "StableEvent",
               "type": "kingdom_lord::components::stable::stable_component::Event",
               "kind": "nested"
-            },
-            {
-              "name": "NewPlayerSpawnEvent",
-              "type": "kingdom_lord::events::NewPlayerSpawnEvent",
-              "kind": "nested"
-            },
-            {
-              "name": "StartUpgradeEvent",
-              "type": "kingdom_lord::events::StartUpgradeEvent",
-              "kind": "nested"
-            },
-            {
-              "name": "UpgradeNotEnoughResourceEvent",
-              "type": "kingdom_lord::events::UpgradeNotEnoughResourceEvent",
-              "kind": "nested"
-            },
-            {
-              "name": "UpgradeCompleteEvent",
-              "type": "kingdom_lord::events::UpgradeCompleteEvent",
-              "kind": "nested"
-            },
-            {
-              "name": "UpgradeNotFinishedEvent",
-              "type": "kingdom_lord::events::UpgradeNotFinishedEvent",
-              "kind": "nested"
-            },
-            {
-              "name": "AlreadySpawnedEvent",
-              "type": "kingdom_lord::events::AlreadySpawnedEvent",
-              "kind": "nested"
-            },
-            {
-              "name": "PayToFinishedUpgradeEvent",
-              "type": "kingdom_lord::events::PayToFinishedUpgradeEvent",
-              "kind": "nested"
-            },
-            {
-              "name": "StartTrainingEvent",
-              "type": "kingdom_lord::events::StartTrainingEvent",
-              "kind": "nested"
-            },
-            {
-              "name": "TrainingFinisedEvent",
-              "type": "kingdom_lord::events::TrainingFinishedEvent",
-              "kind": "nested"
             }
           ]
         }
       ],
       "reads": [],
       "writes": [],
-      "computed": []
+      "computed": [],
+      "name": "kingdom_lord::actions::kingdom_lord_controller"
     },
     {
-      "name": "kingdom_lord::admin::kingdom_lord_admin",
-      "address": "0x17acb0793d3bfdf9b8058d6ba25215bed0df3949007d0b7676ad335736e444f",
-      "class_hash": "0x84b0adb22062b089d50f4e38f8739d25c2208e27a3dc03b08258e93a55f912",
+      "kind": "DojoContract",
+      "address": "0x4c2960427b0e808461bec1d0eab9e46beaa16c48c3f5adf798f68257e2a345a",
+      "class_hash": "0x2f596014fd657ecd2cb628d159e5b76120c41431639ac1b4ee5ef927f8bd558",
+      "original_class_hash": "0x2f596014fd657ecd2cb628d159e5b76120c41431639ac1b4ee5ef927f8bd558",
+      "base_class_hash": "0x0",
       "abi": [
         {
           "type": "impl",
@@ -2491,475 +2018,13 @@
       ],
       "reads": [],
       "writes": [],
-      "computed": []
-    },
-    {
-      "name": "openzeppelin::presets::erc20::ERC20",
-      "address": "0x5fd101f704793d608b24b0e4e1dcd792081361c4e52a210961c78dd5a4efb2b",
-      "class_hash": "0x5222866b8ffa76a748b5bc8c87c216ab100e732399646cf9076748b22500fd9",
-      "abi": [
-        {
-          "type": "impl",
-          "name": "ERC20Impl",
-          "interface_name": "openzeppelin::token::erc20::interface::IERC20"
-        },
-        {
-          "type": "struct",
-          "name": "core::integer::u256",
-          "members": [
-            {
-              "name": "low",
-              "type": "core::integer::u128"
-            },
-            {
-              "name": "high",
-              "type": "core::integer::u128"
-            }
-          ]
-        },
-        {
-          "type": "enum",
-          "name": "core::bool",
-          "variants": [
-            {
-              "name": "False",
-              "type": "()"
-            },
-            {
-              "name": "True",
-              "type": "()"
-            }
-          ]
-        },
-        {
-          "type": "interface",
-          "name": "openzeppelin::token::erc20::interface::IERC20",
-          "items": [
-            {
-              "type": "function",
-              "name": "total_supply",
-              "inputs": [],
-              "outputs": [
-                {
-                  "type": "core::integer::u256"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "balance_of",
-              "inputs": [
-                {
-                  "name": "account",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::integer::u256"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "allowance",
-              "inputs": [
-                {
-                  "name": "owner",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "spender",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::integer::u256"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "transfer",
-              "inputs": [
-                {
-                  "name": "recipient",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "amount",
-                  "type": "core::integer::u256"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::bool"
-                }
-              ],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "transfer_from",
-              "inputs": [
-                {
-                  "name": "sender",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "recipient",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "amount",
-                  "type": "core::integer::u256"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::bool"
-                }
-              ],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "approve",
-              "inputs": [
-                {
-                  "name": "spender",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "amount",
-                  "type": "core::integer::u256"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::bool"
-                }
-              ],
-              "state_mutability": "external"
-            }
-          ]
-        },
-        {
-          "type": "impl",
-          "name": "ERC20MetadataImpl",
-          "interface_name": "openzeppelin::token::erc20::interface::IERC20Metadata"
-        },
-        {
-          "type": "interface",
-          "name": "openzeppelin::token::erc20::interface::IERC20Metadata",
-          "items": [
-            {
-              "type": "function",
-              "name": "name",
-              "inputs": [],
-              "outputs": [
-                {
-                  "type": "core::felt252"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "symbol",
-              "inputs": [],
-              "outputs": [
-                {
-                  "type": "core::felt252"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "decimals",
-              "inputs": [],
-              "outputs": [
-                {
-                  "type": "core::integer::u8"
-                }
-              ],
-              "state_mutability": "view"
-            }
-          ]
-        },
-        {
-          "type": "impl",
-          "name": "SafeAllowanceImpl",
-          "interface_name": "openzeppelin::token::erc20::interface::ISafeAllowance"
-        },
-        {
-          "type": "interface",
-          "name": "openzeppelin::token::erc20::interface::ISafeAllowance",
-          "items": [
-            {
-              "type": "function",
-              "name": "increase_allowance",
-              "inputs": [
-                {
-                  "name": "spender",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "added_value",
-                  "type": "core::integer::u256"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::bool"
-                }
-              ],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "decrease_allowance",
-              "inputs": [
-                {
-                  "name": "spender",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "subtracted_value",
-                  "type": "core::integer::u256"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::bool"
-                }
-              ],
-              "state_mutability": "external"
-            }
-          ]
-        },
-        {
-          "type": "impl",
-          "name": "ERC20CamelOnlyImpl",
-          "interface_name": "openzeppelin::token::erc20::interface::IERC20CamelOnly"
-        },
-        {
-          "type": "interface",
-          "name": "openzeppelin::token::erc20::interface::IERC20CamelOnly",
-          "items": [
-            {
-              "type": "function",
-              "name": "totalSupply",
-              "inputs": [],
-              "outputs": [
-                {
-                  "type": "core::integer::u256"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "balanceOf",
-              "inputs": [
-                {
-                  "name": "account",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::integer::u256"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "transferFrom",
-              "inputs": [
-                {
-                  "name": "sender",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "recipient",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "amount",
-                  "type": "core::integer::u256"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::bool"
-                }
-              ],
-              "state_mutability": "external"
-            }
-          ]
-        },
-        {
-          "type": "impl",
-          "name": "SafeAllowanceCamelImpl",
-          "interface_name": "openzeppelin::token::erc20::interface::ISafeAllowanceCamel"
-        },
-        {
-          "type": "interface",
-          "name": "openzeppelin::token::erc20::interface::ISafeAllowanceCamel",
-          "items": [
-            {
-              "type": "function",
-              "name": "increaseAllowance",
-              "inputs": [
-                {
-                  "name": "spender",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "addedValue",
-                  "type": "core::integer::u256"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::bool"
-                }
-              ],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "decreaseAllowance",
-              "inputs": [
-                {
-                  "name": "spender",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "subtractedValue",
-                  "type": "core::integer::u256"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::bool"
-                }
-              ],
-              "state_mutability": "external"
-            }
-          ]
-        },
-        {
-          "type": "constructor",
-          "name": "constructor",
-          "inputs": [
-            {
-              "name": "name",
-              "type": "core::felt252"
-            },
-            {
-              "name": "symbol",
-              "type": "core::felt252"
-            },
-            {
-              "name": "fixed_supply",
-              "type": "core::integer::u256"
-            },
-            {
-              "name": "recipient",
-              "type": "core::starknet::contract_address::ContractAddress"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "openzeppelin::token::erc20::erc20::ERC20Component::Transfer",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "from",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            },
-            {
-              "name": "to",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            },
-            {
-              "name": "value",
-              "type": "core::integer::u256",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "openzeppelin::token::erc20::erc20::ERC20Component::Approval",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "owner",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            },
-            {
-              "name": "spender",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "key"
-            },
-            {
-              "name": "value",
-              "type": "core::integer::u256",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "openzeppelin::token::erc20::erc20::ERC20Component::Event",
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "Transfer",
-              "type": "openzeppelin::token::erc20::erc20::ERC20Component::Transfer",
-              "kind": "nested"
-            },
-            {
-              "name": "Approval",
-              "type": "openzeppelin::token::erc20::erc20::ERC20Component::Approval",
-              "kind": "nested"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "openzeppelin::presets::erc20::ERC20::Event",
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "ERC20Event",
-              "type": "openzeppelin::token::erc20::erc20::ERC20Component::Event",
-              "kind": "flat"
-            }
-          ]
-        }
-      ],
-      "reads": [],
-      "writes": [],
-      "computed": []
+      "computed": [],
+      "name": "kingdom_lord::admin::kingdom_lord_admin"
     }
   ],
   "models": [
     {
-      "name": "kingdom_lord::actions::kingdom_lord_controller::spawn_status",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -2972,7 +2037,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x8fc8012d8a714090958ff7267264b567a5a4a91655d3453077f668bcbb9827",
+      "class_hash": "0x1b817bd8d993c51fa9eb0ef6e70f349b4d7d17832e42b59aa97056b1db3360e",
+      "original_class_hash": "0x1b817bd8d993c51fa9eb0ef6e70f349b4d7d17832e42b59aa97056b1db3360e",
       "abi": [
         {
           "type": "impl",
@@ -3074,6 +2140,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -3195,10 +2265,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::actions::kingdom_lord_controller::spawn_status"
     },
     {
-      "name": "kingdom_lord::components::barn::barn",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -3226,7 +2297,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x6b43599043d20ddc01d2743feb54aff6f0ff512442b0df26823bb6853f3f6d4",
+      "class_hash": "0x4befe0ce70c486e051246d1ecdafc8867bdbfd2f84208315b7cb72823c8e568",
+      "original_class_hash": "0x4befe0ce70c486e051246d1ecdafc8867bdbfd2f84208315b7cb72823c8e568",
       "abi": [
         {
           "type": "impl",
@@ -3328,6 +2400,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -3457,10 +2533,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::barn::barn"
     },
     {
-      "name": "kingdom_lord::components::barn::barn_storage",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -3478,7 +2555,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x7855ba6668295483ed9d98d1e6f304fa662cd1ce8c2c88f1399c20f59194c5f",
+      "class_hash": "0x64657d7a4e4260ddd0b0568651ccf84e2d835e393af5010821a558207196ff8",
+      "original_class_hash": "0x64657d7a4e4260ddd0b0568651ccf84e2d835e393af5010821a558207196ff8",
       "abi": [
         {
           "type": "impl",
@@ -3580,6 +2658,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -3706,10 +2788,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::barn::barn_storage"
     },
     {
-      "name": "kingdom_lord::components::barrack::barrack",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -3737,7 +2820,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x3f1568a3dc2dcf17f449f78f164d03946bff437319de584670a54a0775dfdbd",
+      "class_hash": "0x10a3825722d3ef47b18f6104a42f4ad7a5ed19ce3617446d0f873e16bffa2e0",
+      "original_class_hash": "0x10a3825722d3ef47b18f6104a42f4ad7a5ed19ce3617446d0f873e16bffa2e0",
       "abi": [
         {
           "type": "impl",
@@ -3839,6 +2923,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -3968,10 +3056,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::barrack::barrack"
     },
     {
-      "name": "kingdom_lord::components::barrack::barrack_under_training",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "address",
@@ -4004,7 +3093,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x248e2e38a06ba2f2d63e96163016fe96e105e6129caa10d4ec0068479122e9c",
+      "class_hash": "0x7f03ee0850011429dc5051642bd39be79824c1a5f669055a311a940d8b64ccf",
+      "original_class_hash": "0x7f03ee0850011429dc5051642bd39be79824c1a5f669055a311a940d8b64ccf",
       "abi": [
         {
           "type": "impl",
@@ -4106,6 +3196,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -4243,10 +3337,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::barrack::barrack_under_training"
     },
     {
-      "name": "kingdom_lord::components::barrack::barrack_waiting_to_train",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "address",
@@ -4274,7 +3369,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x4c5f94733ea73b49947f2b419beb5ba9c7d47c56eba7964f4e95d7c3e3c3fb3",
+      "class_hash": "0x53279de68091d65cc1d7becf55d09bfb8615d6e627c5a2451dbc59b2de9f649",
+      "original_class_hash": "0x53279de68091d65cc1d7becf55d09bfb8615d6e627c5a2451dbc59b2de9f649",
       "abi": [
         {
           "type": "impl",
@@ -4376,6 +3472,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -4509,10 +3609,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::barrack::barrack_waiting_to_train"
     },
     {
-      "name": "kingdom_lord::components::barrack::troops",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -4550,7 +3651,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x1c5cad6df858fa78bb0adb446378ef9168e2cbb20ab93a9029603978e497ef0",
+      "class_hash": "0x53ca52986d57869f2c6f2d2b67732b028f40d672c40682196e741f70f4c9597",
+      "original_class_hash": "0x53ca52986d57869f2c6f2d2b67732b028f40d672c40682196e741f70f4c9597",
       "abi": [
         {
           "type": "impl",
@@ -4652,6 +3754,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -4779,10 +3885,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::barrack::troops"
     },
     {
-      "name": "kingdom_lord::components::city_building::city_building",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -4790,32 +3897,43 @@
           "key": true
         },
         {
-          "name": "building_id",
-          "type": "u64",
-          "key": true
-        },
-        {
-          "name": "building_kind",
-          "type": "u64",
+          "name": "ambush_hash",
+          "type": "felt252",
           "key": false
         },
         {
-          "name": "level",
-          "type": "Level",
-          "key": false
-        },
-        {
-          "name": "growth_rate",
+          "name": "millitia",
           "type": "u64",
           "key": false
         },
         {
-          "name": "population",
+          "name": "guard",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "heavy_infantry",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "scouts",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "knights",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "heavy_knights",
           "type": "u64",
           "key": false
         }
       ],
-      "class_hash": "0x3ae4d5eab602aa469235f185794870895d78ff9c38da4968f2ca1d4f024bcf9",
+      "class_hash": "0x1ec98ab8895a6db436d8e59586ccf82a843de37151148101b8716df9a4a2266",
+      "original_class_hash": "0x1ec98ab8895a6db436d8e59586ccf82a843de37151148101b8716df9a4a2266",
       "abi": [
         {
           "type": "impl",
@@ -4917,6 +4035,285 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "ambush_infoImpl",
+          "interface_name": "kingdom_lord::components::battle::Iambush_info"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::components::battle::AmbushInfo",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "ambush_hash",
+              "type": "core::felt252"
+            },
+            {
+              "name": "millitia",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "guard",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "heavy_infantry",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "scouts",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "knights",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "heavy_knights",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::components::battle::Iambush_info",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::components::battle::AmbushInfo"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::components::battle::ambush_info::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::components::battle::ambush_info"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "building_id",
+          "type": "u64",
+          "key": true
+        },
+        {
+          "name": "building_kind",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "level",
+          "type": "Level",
+          "key": false
+        },
+        {
+          "name": "growth_rate",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "population",
+          "type": "u64",
+          "key": false
+        }
+      ],
+      "class_hash": "0x49885b3039f8a11afb3fffff5996e0af5feb69e6fcaabfbe2c6a4c534899d06",
+      "original_class_hash": "0x49885b3039f8a11afb3fffff5996e0af5feb69e6fcaabfbe2c6a4c534899d06",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -5050,10 +4447,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::city_building::city_building"
     },
     {
-      "name": "kingdom_lord::components::city_hall::city_hall",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -5081,7 +4479,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x322685b1d86abbe8b7a488cf7e8391843613700e890d50f601e75ceb836ccac",
+      "class_hash": "0x751b2b39c2bed7d589853df455efc052cbc793d8cc506e9763dfce4f1bb8833",
+      "original_class_hash": "0x751b2b39c2bed7d589853df455efc052cbc793d8cc506e9763dfce4f1bb8833",
       "abi": [
         {
           "type": "impl",
@@ -5183,6 +4582,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -5312,10 +4715,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::city_hall::city_hall"
     },
     {
-      "name": "kingdom_lord::components::city_hall::under_upgrading",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -5373,7 +4777,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x427f64b02b5690fb511626f31648d9825bc1cad0073d61b2edf3f81a561c7ab",
+      "class_hash": "0x6ffdaf96dcb56ff73f7d79d1fbf54323f6b6e5ace39ac2c9ae2140cc28002a2",
+      "original_class_hash": "0x6ffdaf96dcb56ff73f7d79d1fbf54323f6b6e5ace39ac2c9ae2140cc28002a2",
       "abi": [
         {
           "type": "impl",
@@ -5475,6 +4880,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -5642,10 +5051,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::city_hall::under_upgrading"
     },
     {
-      "name": "kingdom_lord::components::city_hall::waiting_to_upgrade",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "address",
@@ -5698,7 +5108,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x39ebd6010c2421d40d00aa9e139f19695a9cb007db4469dc46b412b0911349c",
+      "class_hash": "0x2e93635d208eaba62ae9a69e642ebf4749655ddc29ba5b3e26015564e8e39f",
+      "original_class_hash": "0x2e93635d208eaba62ae9a69e642ebf4749655ddc29ba5b3e26015564e8e39f",
       "abi": [
         {
           "type": "impl",
@@ -5800,6 +5211,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -5963,10 +5378,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::city_hall::waiting_to_upgrade"
     },
     {
-      "name": "kingdom_lord::components::city_wall::city_wall",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -5999,7 +5415,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x13a4f397db3c0129f02dff6aef8cf51cfecd07307d13de4a39d47059c9d9e04",
+      "class_hash": "0x4fd528211ac8ddfad2635f3ab3badc1943c252ed467255c7a4db0143664e397",
+      "original_class_hash": "0x4fd528211ac8ddfad2635f3ab3badc1943c252ed467255c7a4db0143664e397",
       "abi": [
         {
           "type": "impl",
@@ -6101,6 +5518,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -6234,10 +5655,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::city_wall::city_wall"
     },
     {
-      "name": "kingdom_lord::components::college::college",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -6260,7 +5682,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x3cf97e774bb32fb6227d4560f2f726e0d802517b1f1470d780308023c584f46",
+      "class_hash": "0x1d7b66441e423be96047d33352a44e45ec282b71526e0617308939211a61991",
+      "original_class_hash": "0x1d7b66441e423be96047d33352a44e45ec282b71526e0617308939211a61991",
       "abi": [
         {
           "type": "impl",
@@ -6362,6 +5785,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -6487,10 +5914,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::college::college"
     },
     {
-      "name": "kingdom_lord::components::config::config",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "id_config",
@@ -6518,7 +5946,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x286c18a778559b80a7e9aafb0a5b0ec68c246745e103b994a74cbff103224ff",
+      "class_hash": "0x48473a6e0bbabf5f3c446ad51f84dbd77db90fff7655247153ee50fe9866d26",
+      "original_class_hash": "0x48473a6e0bbabf5f3c446ad51f84dbd77db90fff7655247153ee50fe9866d26",
       "abi": [
         {
           "type": "impl",
@@ -6620,6 +6049,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -6753,10 +6186,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::config::config"
     },
     {
-      "name": "kingdom_lord::components::embassy::embassy",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -6784,7 +6218,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x5cfe170e263311a622cfc12af8661cfb54d1798124815ecac7430af6932673b",
+      "class_hash": "0xd323f610720def571aabf16b0e727fc295ac0560c19087cccf5514a5359994",
+      "original_class_hash": "0xd323f610720def571aabf16b0e727fc295ac0560c19087cccf5514a5359994",
       "abi": [
         {
           "type": "impl",
@@ -6886,6 +6321,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -7015,10 +6454,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::embassy::embassy"
     },
     {
-      "name": "kingdom_lord::components::outer_city::outer_city",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -7026,12 +6466,18 @@
           "key": true
         },
         {
-          "name": "last_mined_time",
+          "name": "x",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "y",
           "type": "u64",
           "key": false
         }
       ],
-      "class_hash": "0x7877b718ed5b6151740d72fceef02038db7728993e6f736d07dec583e8f57f1",
+      "class_hash": "0x5f0c9d3aaf9f966db2d773043988809b43ca4b0b98f31fca4e718f6e2134578",
+      "original_class_hash": "0x5f0c9d3aaf9f966db2d773043988809b43ca4b0b98f31fca4e718f6e2134578",
       "abi": [
         {
           "type": "impl",
@@ -7133,6 +6579,716 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "cityImpl",
+          "interface_name": "kingdom_lord::components::globe::Icity"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::components::globe::City",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "x",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "y",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::components::globe::Icity",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::components::globe::City"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::components::globe::city::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::components::globe::city"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "block",
+          "type": "u64",
+          "key": false
+        }
+      ],
+      "class_hash": "0x791893cb273dc092d262196975a605686d9c12957e923c34b974cf98935a201",
+      "original_class_hash": "0x791893cb273dc092d262196975a605686d9c12957e923c34b974cf98935a201",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "city_confirmImpl",
+          "interface_name": "kingdom_lord::components::globe::Icity_confirm"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::components::globe::CityConfirm",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "block",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::components::globe::Icity_confirm",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::components::globe::CityConfirm"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::components::globe::city_confirm::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::components::globe::city_confirm"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "x",
+          "type": "u64",
+          "key": true
+        },
+        {
+          "name": "y",
+          "type": "u64",
+          "key": true
+        },
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": false
+        }
+      ],
+      "class_hash": "0x3af6fe65890e6e277605ad11358f117dd6260e15fbfe03cf4930ba05ed1e6f5",
+      "original_class_hash": "0x3af6fe65890e6e277605ad11358f117dd6260e15fbfe03cf4930ba05ed1e6f5",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "city_locationImpl",
+          "interface_name": "kingdom_lord::components::globe::Icity_location"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::components::globe::CityLocation",
+          "members": [
+            {
+              "name": "x",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "y",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::components::globe::Icity_location",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::components::globe::CityLocation"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::components::globe::city_location::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::components::globe::city_location"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "last_mined_time",
+          "type": "u64",
+          "key": false
+        }
+      ],
+      "class_hash": "0x4f675bce0c7dfe567062fd1494dddf4a82288216d9f8b37367ee9b4808c6c4c",
+      "original_class_hash": "0x4f675bce0c7dfe567062fd1494dddf4a82288216d9f8b37367ee9b4808c6c4c",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -7240,10 +7396,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::outer_city::outer_city"
     },
     {
-      "name": "kingdom_lord::components::stable::stable",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -7271,7 +7428,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x5db4ccd620729036bd4ca3aaa44387d6f82adb40328931b80d13476b16e8b4a",
+      "class_hash": "0x4ecfd449867e0c5670ee3fad243f1793e9ed4874e47b71541069443bf373d63",
+      "original_class_hash": "0x4ecfd449867e0c5670ee3fad243f1793e9ed4874e47b71541069443bf373d63",
       "abi": [
         {
           "type": "impl",
@@ -7373,6 +7531,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -7502,10 +7664,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::stable::stable"
     },
     {
-      "name": "kingdom_lord::components::stable::stable_under_training",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "address",
@@ -7538,7 +7701,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x790120a3b8c72b67e38a7ea246d4c1461ed09d122d10c23be32e766113750fb",
+      "class_hash": "0x7b4d5e22d42a3a6614227f5b5fa87b027ce0f7576b727816382865b37ede17b",
+      "original_class_hash": "0x7b4d5e22d42a3a6614227f5b5fa87b027ce0f7576b727816382865b37ede17b",
       "abi": [
         {
           "type": "impl",
@@ -7640,6 +7804,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -7777,10 +7945,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::stable::stable_under_training"
     },
     {
-      "name": "kingdom_lord::components::stable::stable_waiting_to_train",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "address",
@@ -7808,7 +7977,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x4d3f1189d2c92a8f1cc99abe4971fd41849de9805eb71cd6157a31d54bfb844",
+      "class_hash": "0x196b8493cd3bb314ec0ccb0f1c3817fde42643a5fe364cf0c763ee2a9b6a558",
+      "original_class_hash": "0x196b8493cd3bb314ec0ccb0f1c3817fde42643a5fe364cf0c763ee2a9b6a558",
       "abi": [
         {
           "type": "impl",
@@ -7910,6 +8080,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -8043,10 +8217,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::stable::stable_waiting_to_train"
     },
     {
-      "name": "kingdom_lord::components::universal::building_area_info",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -8064,7 +8239,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x7535d5b8f8e34d343ade2aef8d342d659ca87dc7e77850ec33a2ad53c54c3c2",
+      "class_hash": "0x18f701a7dee8d95eaa4aaf6c75648ddc1645619ec3227c13ebfd6d299295f5c",
+      "original_class_hash": "0x18f701a7dee8d95eaa4aaf6c75648ddc1645619ec3227c13ebfd6d299295f5c",
       "abi": [
         {
           "type": "impl",
@@ -8166,6 +8342,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -8277,10 +8457,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::universal::building_area_info"
     },
     {
-      "name": "kingdom_lord::components::warehouse::warehouse",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -8308,7 +8489,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x1f3a56f088d7550841ddbbc2f25cf679aa515f54167f36127a25966d29a2f8c",
+      "class_hash": "0x71f2e5d935544aa0ca8e3dc7833dc0c7d69cc447e6bd5df9d0958219889c118",
+      "original_class_hash": "0x71f2e5d935544aa0ca8e3dc7833dc0c7d69cc447e6bd5df9d0958219889c118",
       "abi": [
         {
           "type": "impl",
@@ -8410,6 +8592,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -8539,10 +8725,11 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::warehouse::warehouse"
     },
     {
-      "name": "kingdom_lord::components::warehouse::warehouse_storage",
+      "kind": "DojoModel",
       "members": [
         {
           "name": "player",
@@ -8570,7 +8757,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x4510b35b60bf112653078c143ec9ef5836fc7f1266cc6ccf7e14d1000ac7905",
+      "class_hash": "0x5263da641c811e7f59ab25535ef45abf9694b87712e98ff2354c8f8270adb9c",
+      "original_class_hash": "0x5263da641c811e7f59ab25535ef45abf9694b87712e98ff2354c8f8270adb9c",
       "abi": [
         {
           "type": "impl",
@@ -8672,6 +8860,10 @@
             {
               "name": "Tuple",
               "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
             }
           ]
         },
@@ -8836,7 +9028,2175 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "name": "kingdom_lord::components::warehouse::warehouse_storage"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "block",
+          "type": "u64",
+          "key": false
+        }
+      ],
+      "class_hash": "0x4c667bf10b94047d754b48ad8e837879e5e2f97d1aaf7056d03aff25f981510",
+      "original_class_hash": "0x4c667bf10b94047d754b48ad8e837879e5e2f97d1aaf7056d03aff25f981510",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "already_spawned_eventImpl",
+          "interface_name": "kingdom_lord::events::Ialready_spawned_event"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::events::AlreadySpawnedEvent",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "block",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::events::Ialready_spawned_event",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::events::AlreadySpawnedEvent"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::events::already_spawned_event::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::events::already_spawned_event"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "time",
+          "type": "u64",
+          "key": false
+        }
+      ],
+      "class_hash": "0x4a2c921d5524fe4edd72204c47d98b57e69de6d631083e1be807b0c84b61b5d",
+      "original_class_hash": "0x4a2c921d5524fe4edd72204c47d98b57e69de6d631083e1be807b0c84b61b5d",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "new_player_spawn_eventImpl",
+          "interface_name": "kingdom_lord::events::Inew_player_spawn_event"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::events::NewPlayerSpawnEvent",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "time",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::events::Inew_player_spawn_event",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::events::NewPlayerSpawnEvent"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::events::new_player_spawn_event::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::events::new_player_spawn_event"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "upgrade_id",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "building_id",
+          "type": "u64",
+          "key": true
+        },
+        {
+          "name": "level",
+          "type": "Level",
+          "key": false
+        }
+      ],
+      "class_hash": "0x96301399156dcd0c2900d8faf3ab325fd8b99a251c0c284c3c326358691662",
+      "original_class_hash": "0x96301399156dcd0c2900d8faf3ab325fd8b99a251c0c284c3c326358691662",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "pay_to_finished_upgrade_eventImpl",
+          "interface_name": "kingdom_lord::events::Ipay_to_finished_upgrade_event"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::models::level::Level",
+          "members": [
+            {
+              "name": "level",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::events::PayToFinishedUpgradeEvent",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "upgrade_id",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "building_id",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "level",
+              "type": "kingdom_lord::models::level::Level"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::events::Ipay_to_finished_upgrade_event",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::events::PayToFinishedUpgradeEvent"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::events::pay_to_finished_upgrade_event::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::events::pay_to_finished_upgrade_event"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "training_id",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "soldier_kind",
+          "type": "u64",
+          "key": false
+        }
+      ],
+      "class_hash": "0x2ad2738d8b116775b14f6110ad956746d66c50c0b0955904f2690e2c77a9fa0",
+      "original_class_hash": "0x2ad2738d8b116775b14f6110ad956746d66c50c0b0955904f2690e2c77a9fa0",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "start_training_eventImpl",
+          "interface_name": "kingdom_lord::events::Istart_training_event"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::events::StartTrainingEvent",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "training_id",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "soldier_kind",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::events::Istart_training_event",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::events::StartTrainingEvent"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::events::start_training_event::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::events::start_training_event"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "building_id",
+          "type": "u64",
+          "key": true
+        },
+        {
+          "name": "upgrade_id",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "level",
+          "type": "Level",
+          "key": false
+        }
+      ],
+      "class_hash": "0x25decf6a232f44f1fd7f97ea5c38a5416c73f2b602e9f448e439f238c75870c",
+      "original_class_hash": "0x25decf6a232f44f1fd7f97ea5c38a5416c73f2b602e9f448e439f238c75870c",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "start_upgrade_eventImpl",
+          "interface_name": "kingdom_lord::events::Istart_upgrade_event"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::models::level::Level",
+          "members": [
+            {
+              "name": "level",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::events::StartUpgradeEvent",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "building_id",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "upgrade_id",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "level",
+              "type": "kingdom_lord::models::level::Level"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::events::Istart_upgrade_event",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::events::StartUpgradeEvent"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::events::start_upgrade_event::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::events::start_upgrade_event"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "training_id",
+          "type": "u64",
+          "key": false
+        }
+      ],
+      "class_hash": "0xe2ab43942736373e56979aaf38d47fee53a558d0dd8bd4b241769a8076eda5",
+      "original_class_hash": "0xe2ab43942736373e56979aaf38d47fee53a558d0dd8bd4b241769a8076eda5",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "training_finished_eventImpl",
+          "interface_name": "kingdom_lord::events::Itraining_finished_event"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::events::TrainingFinishedEvent",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "training_id",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::events::Itraining_finished_event",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::events::TrainingFinishedEvent"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::events::training_finished_event::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::events::training_finished_event"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "upgrade_id",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "building_next",
+          "type": "bool",
+          "key": false
+        }
+      ],
+      "class_hash": "0x4e29dc101e8691a5afdb7b6986e72a4c0dc675df52ee2b3b2e48cba442c0873",
+      "original_class_hash": "0x4e29dc101e8691a5afdb7b6986e72a4c0dc675df52ee2b3b2e48cba442c0873",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "upgrade_complete_eventImpl",
+          "interface_name": "kingdom_lord::events::Iupgrade_complete_event"
+        },
+        {
+          "type": "enum",
+          "name": "core::bool",
+          "variants": [
+            {
+              "name": "False",
+              "type": "()"
+            },
+            {
+              "name": "True",
+              "type": "()"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::events::UpgradeCompleteEvent",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "upgrade_id",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "building_next",
+              "type": "core::bool"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::events::Iupgrade_complete_event",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::events::UpgradeCompleteEvent"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::events::upgrade_complete_event::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::events::upgrade_complete_event"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "building_id",
+          "type": "u64",
+          "key": false
+        }
+      ],
+      "class_hash": "0x1e3d7c0a646e88d137b144bb200e886ae855da327e4d40acd4fc91d3b92a466",
+      "original_class_hash": "0x1e3d7c0a646e88d137b144bb200e886ae855da327e4d40acd4fc91d3b92a466",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "upgrade_not_enough_resource_eventImpl",
+          "interface_name": "kingdom_lord::events::Iupgrade_not_enough_resource_event"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::events::UpgradeNotEnoughResourceEvent",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "building_id",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::events::Iupgrade_not_enough_resource_event",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::events::UpgradeNotEnoughResourceEvent"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::events::upgrade_not_enough_resource_event::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::events::upgrade_not_enough_resource_event"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "block",
+          "type": "u64",
+          "key": false
+        }
+      ],
+      "class_hash": "0x4c5796f5ff1eb0d90d1d27c692550246446bab4805d14f240fa4b711112e1f2",
+      "original_class_hash": "0x4c5796f5ff1eb0d90d1d27c692550246446bab4805d14f240fa4b711112e1f2",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "upgrade_not_finished_eventImpl",
+          "interface_name": "kingdom_lord::events::Iupgrade_not_finished_event"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::events::UpgradeNotFinishedEvent",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "block",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::events::Iupgrade_not_finished_event",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::events::UpgradeNotFinishedEvent"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::events::upgrade_not_finished_event::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::events::upgrade_not_finished_event"
     }
   ]
 }

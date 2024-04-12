@@ -46,10 +46,10 @@ export function useComponentValue(
   if (entity == null) return;
   const queryResult = defineQuery([Has(component)], { runOnInit: false });
   const subscription = queryResult.update$.subscribe((update) => {
-    console.log(update, update.entity, entity, update.entity === entity)
+    console.log(update, update.entity, entity, update.entity == entity)
     if (
       isComponentUpdate(update, component) &&
-      update.entity === entity
+      update.entity == entity
     ) {
       const [nextValue] = update.value;
       value.value = nextValue

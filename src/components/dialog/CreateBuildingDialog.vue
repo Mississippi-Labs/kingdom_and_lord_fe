@@ -33,11 +33,11 @@ const checkCreate = (buildingKind) => {
     return res
   } else {
     const { warehouse, barn } = store.dojoComponents
-    if (buildingKind === 6 && warehouse.length) {
+    if (buildingKind == 6 && warehouse.length) {
       if (warehouse.some(item => item.level.level < 20)) {
         return 2
       }
-    } else if (buildingKind === 7 && barn.length) {
+    } else if (buildingKind == 7 && barn.length) {
       if (barn.some(item => item.level.level < 20)) {
         return 2
       }
@@ -52,19 +52,19 @@ const getInnerBuildingOptions = () => {
   const { cityHall, stable, barrack, college, embassy } = store.dojoComponents
   const list = JSON.parse(JSON.stringify(innerBuildingOptions))
   if (cityHall.length) {
-    list.splice(list.findIndex(item => item.buildingKind === 5), 1)
+    list.splice(list.findIndex(item => item.buildingKind == 5), 1)
   }
   if (stable.length) {
-    list.splice(list.findIndex(item => item.buildingKind === 9), 1)
+    list.splice(list.findIndex(item => item.buildingKind == 9), 1)
   }
   if (barrack.length) {
-    list.splice(list.findIndex(item => item.buildingKind === 8), 1)
+    list.splice(list.findIndex(item => item.buildingKind == 8), 1)
   }
   if (college.length) {
-    list.splice(list.findIndex(item => item.buildingKind === 10), 1)
+    list.splice(list.findIndex(item => item.buildingKind == 10), 1)
   }
   if (embassy.length) {
-    list.splice(list.findIndex(item => item.buildingKind === 11), 1)
+    list.splice(list.findIndex(item => item.buildingKind == 11), 1)
   }
   return list
 }

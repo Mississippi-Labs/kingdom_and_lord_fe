@@ -8,6 +8,7 @@ import { useEntityQuery } from './utils/dojoUtils'
 import { Has, getComponentValue } from "@dojoengine/recs";
 import { useGlobalStore } from './hooks/globalStore.js'
 import Loading from './components/Loading.vue'
+import { toObject } from './utils/index.js'
 
 const { setDojoComponents } = useGlobalStore()
 
@@ -23,7 +24,7 @@ const getHexAddress = (address) => {
 
 const getData = async () => {
   try {
-    const setupResult = await setup(dojoConfig())
+    const setupResult = await setup(dojoConfig)
     console.log('setupResult', setupResult)
     const config = setupResult.config
     let account = null
@@ -60,140 +61,140 @@ const getData = async () => {
 
     watch(() => [barn, cityBuilding, cityHall, cityWall, underUpgrading, spawnStatus, warehouse, outerCity, barnStorage, barrack, buildingAreaInfo, configData, troops, waitingToUpgrade, warehouseStorage, barrackUnderTraining, barrackWaitingToTrain, stable, stableUnderTraining, stableWaitingToTrain, college, embassy], ([newBarnData, newCityBuildingData, newCityHallData, newCityWallData, newUnderUpgradingData, newSpawnStatusData, newWarehouseData, newOuterCityData, newBarnStorageData, newBarrackData, newBuildingAreaInfoData, newConfigData, newTroopsData, newWaitingToUpgradeData, newWarehouseStorageData, newBarrackUnderTrainingData, newBarrackWaitingToTrainData, newStableData, newStableUnderTrainingData, newStableWaitingToTrainData, newCollegeData, newEmbassyData]) => {
       const barnData = newBarnData.value.map((entity) => {
-        let data = getComponentValue(Barn, entity)
+        let data = toObject(getComponentValue(Barn, entity))
         data.player = getHexAddress(data.player)
         data.buildingKind = 7
         return data
-      }).filter((barn) => barn.player === account.address)
+      }).filter((barn) => barn.player == account.address)
       const cityBuildingData = newCityBuildingData.value.map((entity) => {
-        let data = getComponentValue(CityBuilding, entity)
+        let data = toObject(getComponentValue(CityBuilding, entity))
         data.player = getHexAddress(data.player)
         return data
-      }).filter((cityBuilding) => cityBuilding.player === account.address)
+      }).filter((cityBuilding) => cityBuilding.player == account.address)
       const cityHallData = newCityHallData.value.map((entity) => {
-        let data = getComponentValue(CityHall, entity)
+        let data = toObject(getComponentValue(CityHall, entity))
         data.player = getHexAddress(data.player)
         data.buildingKind = 5
         return data
-      }).filter((cityHall) => cityHall.player === account.address)
+      }).filter((cityHall) => cityHall.player == account.address)
       const cityWallData = newCityWallData.value.map((entity) => {
-        let data = getComponentValue(CityWall, entity)
+        let data = toObject(getComponentValue(CityWall, entity))
         data.player = getHexAddress(data.player)
         data.buildingKind = 12
         return data
-      }).filter((cityWall) => cityWall.player === account.address)
+      }).filter((cityWall) => cityWall.player == account.address)
 
       const underUpgradingData = newUnderUpgradingData.value.map((entity) => {
-        let data = getComponentValue(UnderUpgrading, entity)
+        let data = toObject(getComponentValue(UnderUpgrading, entity))
         data.player = getHexAddress(data?.player)
         return data
-      }).filter((underUpgrading) => underUpgrading.player === account.address)
+      }).filter((underUpgrading) => underUpgrading.player == account.address)
 
       const spawnStatusData = newSpawnStatusData.value.map((entity) => {
-        let data = getComponentValue(SpawnStatus, entity)
+        let data = toObject(getComponentValue(SpawnStatus, entity))
         data.player = getHexAddress(data.player)
         return data
-      }).filter((spawnStatus) => spawnStatus.player === account.address)
+      }).filter((spawnStatus) => spawnStatus.player == account.address)
 
       const warehouseData = newWarehouseData.value.map((entity) => {
-        let data = getComponentValue(Warehouse, entity)
+        let data = toObject(getComponentValue(Warehouse, entity))
         data.player = getHexAddress(data.player)
         data.buildingKind = 6
         return data
-      }).filter((warehouse) => warehouse.player === account.address)
+      }).filter((warehouse) => warehouse.player == account.address)
 
       const outerCityData = newOuterCityData.value.map((entity) => {
-        let data = getComponentValue(OuterCity, entity)
+        let data = toObject(getComponentValue(OuterCity, entity))
         data.player = getHexAddress(data.player)
         return data
-      }).filter((outerCity) => outerCity.player === account.address)
+      }).filter((outerCity) => outerCity.player == account.address)
 
       const barnStorageData = newBarnStorageData.value.map((entity) => {
-        let data = getComponentValue(BarnStorage, entity)
+        let data = toObject(getComponentValue(BarnStorage, entity))
         data.player = getHexAddress(data.player)
         return data
-      }).filter((barnStorage) => barnStorage.player === account.address)
+      }).filter((barnStorage) => barnStorage.player == account.address)
 
       const barrackData = newBarrackData.value.map((entity) => {
-        let data = getComponentValue(Barrack, entity)
+        let data = toObject(getComponentValue(Barrack, entity))
         data.player = getHexAddress(data.player)
         data.buildingKind = 8
         return data
-      }).filter((barrack) => barrack.player === account.address)
+      }).filter((barrack) => barrack.player == account.address)
 
       const buildingAreaInfoData = newBuildingAreaInfoData.value.map((entity) => {
-        let data = getComponentValue(BuildingAreaInfo, entity)
+        let data = toObject(getComponentValue(BuildingAreaInfo, entity))
         data.player = getHexAddress(data.player)
         return data
-      }).filter((buildingAreaInfo) => buildingAreaInfo.player === account.address)
+      }).filter((buildingAreaInfo) => buildingAreaInfo.player == account.address)
 
       const configDataData = newConfigData.value.map((entity) => {
-        let data = getComponentValue(Config, entity)
+        let data = toObject(getComponentValue(Config, entity))
         return data
       })
 
       const troopsData = newTroopsData.value.map((entity) => {
-        let data = getComponentValue(Troops, entity)
+        let data = toObject(getComponentValue(Troops, entity))
         data.player = getHexAddress(data.player)
         return data
-      }).filter((troops) => troops.player === account.address)
+      }).filter((troops) => troops.player == account.address)
 
       const waitingToUpgradeData = newWaitingToUpgradeData.value.map((entity) => {
-        let data = getComponentValue(WaitingToUpgrade, entity)
+        let data = toObject(getComponentValue(WaitingToUpgrade, entity))
         data.player = getHexAddress(data.address)
         return data
-      }).filter((barrack) => barrack.player === account.address)
+      }).filter((barrack) => barrack.player == account.address)
 
       const warehouseStorageData = newWarehouseStorageData.value.map((entity) => {
-        let data = getComponentValue(WarehouseStorage, entity)
+        let data = toObject(getComponentValue(WarehouseStorage, entity))
         data.player = getHexAddress(data.player)
         return data
-      }).filter((warehouseStorage) => warehouseStorage.player === account.address)
+      }).filter((warehouseStorage) => warehouseStorage.player == account.address)
 
       const barrackUnderTrainingData = newBarrackUnderTrainingData.value.map((entity) => {
-        let data = getComponentValue(BarrackUnderTraining, entity)
+        let data = toObject(getComponentValue(BarrackUnderTraining, entity))
         data.player = getHexAddress(data.address)
         return data
-      }).filter((barrackUnderTraining) => barrackUnderTraining.player === account.address)
+      }).filter((barrackUnderTraining) => barrackUnderTraining.player == account.address)
 
       const barrackWaitingToTrainData = newBarrackWaitingToTrainData.value.map((entity) => {
-        let data = getComponentValue(BarrackWaitingToTrain, entity)
+        let data = toObject(getComponentValue(BarrackWaitingToTrain, entity))
         data.player = getHexAddress(data.address)
         return data
-      }).filter((barrackWaitingToTrain) => barrackWaitingToTrain.player === account.address)
+      }).filter((barrackWaitingToTrain) => barrackWaitingToTrain.player == account.address)
 
       const stableData = newStableData.value.map((entity) => {
-        let data = getComponentValue(Stable, entity)
+        let data = toObject(getComponentValue(Stable, entity))
         data.player = getHexAddress(data.player)
         data.buildingKind = 9
         return data
-      }).filter((stable) => stable.player === account.address)
+      }).filter((stable) => stable.player == account.address)
 
       const stableUnderTrainingData = newStableUnderTrainingData.value.map((entity) => {
-        let data = getComponentValue(StableUnderTraining, entity)
+        let data = toObject(getComponentValue(StableUnderTraining, entity))
         data.player = getHexAddress(data.address)
         return data
-      }).filter((stableUnderTraining) => stableUnderTraining.player === account.address)
+      }).filter((stableUnderTraining) => stableUnderTraining.player == account.address)
 
       const stableWaitingToTrainData = newStableWaitingToTrainData.value.map((entity) => {
-        let data = getComponentValue(StableWaitingToTrain, entity)
+        let data = toObject(getComponentValue(StableWaitingToTrain, entity))
         data.player = getHexAddress(data.address)
         return data
-      }).filter((stableWaitingToTrain) => stableWaitingToTrain.player === account.address)
+      }).filter((stableWaitingToTrain) => stableWaitingToTrain.player == account.address)
 
       const collegeData = newCollegeData.value.map((entity) => {
-        let data = getComponentValue(College, entity)
+        let data = toObject(getComponentValue(College, entity))
         data.player = getHexAddress(data.player)
         data.buildingKind = 10
         return data
-      }).filter((college) => college.player === account.address)
+      }).filter((college) => college.player == account.address)
 
       const embassyData = newEmbassyData.value.map((entity) => {
-        let data = getComponentValue(Embassy, entity)
+        let data = toObject(getComponentValue(Embassy, entity))
         data.player = getHexAddress(data.player)
         data.buildingKind = 11
         return data
-      }).filter((embassy) => embassy.player === account.address)
+      }).filter((embassy) => embassy.player == account.address)
 
       const dojoComponents = {
         barn: barnData,

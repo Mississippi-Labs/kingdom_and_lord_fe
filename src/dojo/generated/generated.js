@@ -16,7 +16,7 @@ function setLogsFun(log) {
 function updateLogsFun(hash, status) {
   const logs = store.state.logs
   logs.forEach((log) => {
-    if (log.hash === hash) {
+    if (log.hash == hash) {
       log.status = status
     }
   })

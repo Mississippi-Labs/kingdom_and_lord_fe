@@ -25,6 +25,7 @@ const setMenuIndex = (index) => {
 }
 
 const setDojoComponents = (components) => {
+  console.log(components)
   store.dojoComponents = toRaw(components)
   if (components.spawnStatus.length) {
     store.state.isSpawn = true

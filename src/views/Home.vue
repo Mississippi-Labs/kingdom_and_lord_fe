@@ -106,7 +106,7 @@ const getStorage = (key, value) => {
   const { warehouse, barn } = store.dojoComponents
   const warehouseAmount = warehouse?.[0]?.max_storage
   const barnAmount = barn?.[0]?.max_storage
-  if (key === 'food') {
+  if (key == 'food') {
     return barnAmount
   } else {
     return warehouseAmount
@@ -117,7 +117,7 @@ const getPercentage = (key, value) => {
   const { warehouse, barn } = store.dojoComponents
   const warehouseAmount = warehouse?.[0]?.max_storage
   const barnAmount = barn?.[0]?.max_storage
-  if (key === 'food') {
+  if (key == 'food') {
     return (value / barnAmount) * 100
   } else {
     return (value / warehouseAmount) * 100
