@@ -78,7 +78,7 @@ const close = () => {
             <div class="amount">{{ resource }}</div>
           </div>
         </div>
-        <div class="btn flex-center-center" :class="{ 'btn-disabled': checkUpgrade(underUpgradingData.buildingKind, underUpgradingData?.level?.level, props.resourceData) }" @click="upgrade(underUpgradingData)">Upgrade To Level {{ underUpgradingData.level.level + 1 }}</div>
+        <div class="btn flex-center-center" :class="{ 'btn-disabled': checkUpgrade(underUpgradingData.buildingKind, underUpgradingData?.level?.level, props.resourceData) }" @click="upgrade(underUpgradingData)">Upgrade To Level {{ (+underUpgradingData.level.level) + 1 }}</div>
         <div class="building-item-time flex-center-center">
           <svg width="11" height="11" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path

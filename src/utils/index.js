@@ -129,7 +129,7 @@ export const checkUpgrade = (buildingKind, level, resourceData) => {
 
 export const getLevelBg = (buildingId, building, resource = {}) => {
   if (isUpgrading(buildingId)) {
-    const nextlevel = building?.level?.level ? building?.level?.level + 1 : 1
+    const nextlevel = Number(building?.level?.level) ? Number(building?.level?.level) + 1 : 1
 
     if (Object.keys(resource).length && nextlevel < 20) {
       const isCanUpgrade = checkResource(building.buildingKind, nextlevel, resource)
