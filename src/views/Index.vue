@@ -102,9 +102,11 @@ const spawnFun = async () => {
   const { spawn } = dojoContext.setup.systemCalls
   try {
     await spawn({ account: dojoContext.account })
+    showLoading.value = false
   } catch (error) {
     console.error('Failed to spawn:', error)
     message.error('Failed to spawn:' + error)
+    showLoading.value = false
   }
 }
 
