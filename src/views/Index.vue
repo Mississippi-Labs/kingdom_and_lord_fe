@@ -234,7 +234,7 @@ watch(() => blockHeight.value, (newVal) => {
 
 <template>
   <div v-if="store.state.isSpawn" class="wrap">
-    <Nav :resource="resourceData" :storage="storage" />
+    <Nav :resource="resourceData" :storage="storage" :address="dojoContext?.account?.address || ''" />
     <InnerBuilding @createBuilding="showCreateBuilding" @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
     <OutBuilding @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
     <CityInfo :growthRateData="growthRateData" :blockHeight="blockHeight" :troopsData="troopsData" />

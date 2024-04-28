@@ -18,6 +18,19 @@ export const toObject = (obj) => {
   return JSON.parse(JSON.stringify(obj, (key, value) => typeof value == 'bigint' ? value.toString() : value))
 }
 
+export const copy = async (text) => {
+  if (!navigator.clipboard || window.top != window.self) {
+    const input = document.createElement('input')
+    input.value = text
+    document.body.appendChild(input)
+    input.select()
+    document.execCommand('copy')
+    document.body.removeChild(input)
+  } else {
+    navigator.clipboard.writeText(text)
+  }
+}
+
 // formatDate
 export const formatDate = (date) => {
   const d = new Date(date);

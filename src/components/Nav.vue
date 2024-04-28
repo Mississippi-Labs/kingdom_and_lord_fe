@@ -1,5 +1,7 @@
 <script setup>
 import { useGlobalStore } from '../hooks/globalStore.js'
+import { copy } from '../utils/index.js'
+import { useMessage } from 'naive-ui';
 const props = defineProps({
   resource: {
     type: Object,
@@ -16,10 +18,15 @@ const props = defineProps({
       barn: 0,
       warehouse: 0
     }
+  },
+  address: {
+    type: String,
+    default: ''
   }
 })
 
 const { store, setMenuIndex, setShowMap } = useGlobalStore()
+const message = useMessage()
 
 const showMap = () => {
   setShowMap(true)
@@ -29,6 +36,16 @@ const getProgress = (count, storage) => {
   const progress = (Number(count) / Number(storage)) * 100
   if (progress >= 100) return '100%'
   else return progress + '%'
+}
+
+const formatAddress = () => {
+  if (!props.address) return ''
+  return props.address.slice(0, 4) + '...' + props.address.slice(-4)
+}
+
+const copyFun = async () => {
+  await copy(props.address)
+  message.success('Copied')
 }
 
 </script>
@@ -137,7 +154,7 @@ const getProgress = (count, storage) => {
       <div class="wallet flex-center-sb">
         <img src="../assets/images/icon_l.png" alt="" class="icon">
         <p>20 LORDS</p>
-        <div class="address flex-center-center">0x33 .... f940</div>
+        <div class="address flex-center-center" @click="copyFun">{{ formatAddress() }}</div>
       </div>
     </div>
     </div>
@@ -362,6 +379,7 @@ const getProgress = (count, storage) => {
         height: 24px;
         background-color: #231a1a;
         border-radius: 5px;
+        cursor: pointer;
       }
     }
   }
