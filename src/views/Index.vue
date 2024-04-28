@@ -233,7 +233,7 @@ watch(() => blockHeight.value, (newVal) => {
 </script>
 
 <template>
-  <div v-if="store.state.isSpawn" class="wrap">
+  <div v-if="!store.state.isSpawn" class="wrap">
     <Nav :resource="resourceData" :storage="storage" :address="dojoContext?.account?.address || ''" />
     <InnerBuilding @createBuilding="showCreateBuilding" @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
     <OutBuilding @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
@@ -241,7 +241,8 @@ watch(() => blockHeight.value, (newVal) => {
     <MapModal />
   </div>
   <div v-else class="flex-center spawn-wrap">
-    <n-button type="primary" @click="spawnFun">Spawn</n-button>
+    <p>create account</p>
+    <n-button type="primary" size="large" @click="spawnFun">Spawn</n-button>
   </div>
   <UnderUpgradingDialog :underUpgradingData="underUpgradingData" :resourceData="resourceData" @startTrainingFun="startTrainingFun" @upgrade="upgrade" @close="closeDialog" />
   <CreateBuildingDialog :buildingData="buildingData" :resourceData="resourceData"  @createBuilding="createBuilding" @close="closeDialog" />
@@ -253,5 +254,16 @@ watch(() => blockHeight.value, (newVal) => {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+}
+.spawn-wrap {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  justify-content: center;
+  font-size: 24px;
+  flex-direction: column;
+  p {
+    margin-bottom: 40px;
+  }
 }
 </style>
