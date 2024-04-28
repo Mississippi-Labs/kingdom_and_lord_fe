@@ -16,12 +16,17 @@ const store = reactive({
     logs: localStorage.getItem('logs') ? JSON.parse(localStorage.getItem('logs')) : [],
     lastBlock: 0,
     innerBuildingList: innerBuildingList,
-    menuIndex: 1
+    menuIndex: 1,
+    showMap: false
   }
 });
 
 const setMenuIndex = (index) => {
   store.state.menuIndex = index
+}
+
+const setShowMap = (status) => {
+  store.state.showMap = status
 }
 
 const setDojoComponents = (components) => {
@@ -52,5 +57,6 @@ export const useGlobalStore = () => ({
   setLogs,
   setLastBlock,
   setInnerBuildingList,
-  setMenuIndex
+  setMenuIndex,
+  setShowMap
 });

@@ -19,7 +19,11 @@ const props = defineProps({
   }
 })
 
-const { store, setMenuIndex } = useGlobalStore()
+const { store, setMenuIndex, setShowMap } = useGlobalStore()
+
+const showMap = () => {
+  setShowMap(true)
+}
 
 const getProgress = (count, storage) => {
   const progress = (Number(count) / Number(storage)) * 100
@@ -46,7 +50,7 @@ const getProgress = (count, storage) => {
           <div class="section-item flex-center-center">
             <img src="../assets/images/city_2.png" alt="" @click="setMenuIndex(1)">
           </div>
-          <div class="section-item flex-center-center">
+          <div class="section-item flex-center-center" @click="showMap">
             <img src="../assets/images/city_3.png" alt="">
           </div>
           <div class="section-item flex-center-center">
@@ -146,7 +150,6 @@ const getProgress = (count, storage) => {
   height: 74px;
   background: url('../assets/images/top_bg.png') repeat;
   background-size: 100% 100%;
-  padding: 0 10px;
   box-sizing: border-box;
   color: #fff;
   font-size: 12px;
@@ -157,6 +160,8 @@ const getProgress = (count, storage) => {
 
   .main {
     max-width: 1440px;
+    padding: 0 10px;
+    box-sizing: border-box;
     position: absolute;
     left: 0;
     top: 0;
@@ -307,6 +312,8 @@ const getProgress = (count, storage) => {
   }
 
   .l {
+    flex: 0 0 350px;
+    width: 350px;
     .logo {
       height: 36px;
       width: auto;
@@ -325,6 +332,8 @@ const getProgress = (count, storage) => {
   }
 
   .r {
+    flex: 0 0 350px;
+    width: 350px;
     .icon {
       width: 25px;
       height: 25px;

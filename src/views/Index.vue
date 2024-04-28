@@ -14,6 +14,7 @@ import InnerBuilding from '../components/InnerBuilding.vue'
 import CityInfo from '../components/CityInfo.vue'
 import UnderUpgradingDialog from '../components/dialog/UnderUpgradingDialog.vue'
 import CreateBuildingDialog from '../components/dialog/CreateBuildingDialog.vue'
+import MapModal from '../components/MapModal.vue'
 
 let interval = null
 
@@ -236,6 +237,7 @@ watch(() => blockHeight.value, (newVal) => {
     <InnerBuilding @createBuilding="showCreateBuilding" @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
     <OutBuilding @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
     <CityInfo :growthRateData="growthRateData" :blockHeight="blockHeight" :troopsData="troopsData" />
+    <MapModal />
   </div>
   <div v-else class="flex-center spawn-wrap">
     <n-button type="primary" @click="spawnFun">Spawn</n-button>
