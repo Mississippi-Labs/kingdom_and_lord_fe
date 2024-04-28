@@ -107,7 +107,7 @@ export const getUpgradeData = (buildingKind) => {
 }
 
 export const getTime = (buildingKind, level = 0) => {
-  return (getUpgradeData(buildingKind)[level][7] * 2)
+  return (getUpgradeData(buildingKind)[level][7]) + ' blocks'
 }
 
 export const getResourceArr = (buildingKind, level = 0) => {
@@ -122,6 +122,14 @@ export const checkResource = (buildingKind, level, resource = {} ) => {
     flag = true
   }
   return flag
+}
+
+// 升级后产量变化
+export const getRateToCount = (buildingKind, level) => {
+  const data = getUpgradeData(buildingKind)
+  const nowRate = level == 0 ? 4 : data[level - 1][data[level - 1].length - 1]
+  const nextRate = data[level][data[level].length - 1]
+  return `Production Rate: ${nowRate} -> ${nextRate}`
 }
 
 // 判断是否可以升级

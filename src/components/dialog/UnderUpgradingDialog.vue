@@ -1,7 +1,7 @@
 <script setup>
 import Modal from '../Modal.vue'
 import { useMessage } from 'naive-ui'
-import { formatTime, getResourceArr, getTime, checkUpgrade } from '../../utils/index'
+import { formatTime, getResourceArr, getTime, checkUpgrade, getRateToCount } from '../../utils/index'
 import { infantry, knights } from '../../libs/barrack'
 import "../../assets/styles/dialog.scss"
 
@@ -78,6 +78,9 @@ const close = () => {
             <div class="amount">{{ resource }}</div>
           </div>
         </div>
+        <div class="building-item-hint" v-if="underUpgradingData.buildingKind >= 1 && underUpgradingData.buildingKind <= 4">
+          <span>{{ getRateToCount(underUpgradingData.buildingKind, underUpgradingData?.level?.level) }}</span>
+        </div>
         <div class="btn flex-center-center" :class="{ 'btn-disabled': checkUpgrade(underUpgradingData.buildingKind, underUpgradingData?.level?.level, props.resourceData) }" @click="upgrade(underUpgradingData)">Upgrade To Level {{ (+underUpgradingData.level.level) + 1 }}</div>
         <div class="building-item-time flex-center-center">
           <svg width="11" height="11" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -85,7 +88,7 @@ const close = () => {
               d="M11 5V11L15 13M21 11C21 16.5228 16.5228 21 11 21C5.47715 21 1 16.5228 1 11C1 5.47715 5.47715 1 11 1C16.5228 1 21 5.47715 21 11Z"
               stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          <span>{{ formatTime(getTime(underUpgradingData.buildingKind, underUpgradingData?.level?.level)) }}</span>
+          <span>{{ (getTime(underUpgradingData.buildingKind, underUpgradingData?.level?.level)) }}</span>
         </div>
       </div>
       <div v-if="underUpgradingData.buildingKind == 8 || underUpgradingData.buildingKind == 9">

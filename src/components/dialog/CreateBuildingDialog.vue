@@ -123,7 +123,7 @@ const close = () => {
               d="M11 5V11L15 13M21 11C21 16.5228 16.5228 21 11 21C5.47715 21 1 16.5228 1 11C1 5.47715 5.47715 1 11 1C16.5228 1 21 5.47715 21 11Z"
               stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          <span>{{ formatTime(getTime(item.buildingKind, 0)) }}</span>
+          <span>{{ (getTime(item.buildingKind, 0)) }}</span>
         </div>
         <div class="btn flex-center-center" :class="{ 'btn-disabled': checkCreate(item.buildingKind) }"
           @click="createBuilding(item)">Build</div>

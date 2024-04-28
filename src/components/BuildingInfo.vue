@@ -33,7 +33,7 @@ const props = defineProps({
       </div>
       <div class="flex-center time">
         <img src="../assets/images/time.png" alt="">
-        <span>{{ formatTime(getTime(building?.buildingKind, building?.level?.level)) }}</span>
+        <span>{{ (getTime(building?.buildingKind, building?.level?.level)) }}</span>
       </div>
     </div>
   </div>
