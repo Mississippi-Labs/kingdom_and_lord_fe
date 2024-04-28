@@ -96,7 +96,7 @@ const getData = async () => {
     steel: Number(growthRate?.[2]?.amount),
     brick: Number(growthRate?.[1]?.amount),
   }
-  console.log('growthRateData', growthRate)
+  // console.log('growthRateData', growthRate)
 }
 
 const spawnFun = async () => {
