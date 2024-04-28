@@ -16,7 +16,7 @@ const store = reactive({
     logs: localStorage.getItem('logs') ? JSON.parse(localStorage.getItem('logs')) : [],
     lastBlock: 0,
     innerBuildingList: innerBuildingList,
-    menuIndex: 1,
+    menuIndex: 0,
     showMap: false
   }
 });

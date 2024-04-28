@@ -87,15 +87,16 @@ const getData = async () => {
   resourceData.value = {
     food: Number(resource?.[3]?.amount),
     wood: Number(resource?.[0]?.amount),
-    steel: Number(resource?.[1]?.amount),
-    brick: Number(resource?.[2]?.amount),
+    steel: Number(resource?.[2]?.amount),
+    brick: Number(resource?.[1]?.amount),
   }
   growthRateData.value = {
     food: Number(growthRate?.[3]?.amount),
     wood: Number(growthRate?.[0]?.amount),
-    steel: Number(growthRate?.[1]?.amount),
-    brick: Number(growthRate?.[2]?.amount),
+    steel: Number(growthRate?.[2]?.amount),
+    brick: Number(growthRate?.[1]?.amount),
   }
+  console.log('growthRateData', growthRate)
 }
 
 const spawnFun = async () => {

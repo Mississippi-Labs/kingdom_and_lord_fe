@@ -128,7 +128,7 @@ watch(() => props.troopsData, (newData) => {
             </div>
             <div>
               <span v-if="item.is_planned" style="color: #f17d00;">Waiting</span>
-              <span v-else>{{ Number(item.end_time) - blockHeight >= 0 ? Number(item.end_time) - blockHeight : 0 }}</span>
+              <span v-else>{{ Number(item.end_time) - blockHeight >= 0 ? Number(item.end_time) - blockHeight : 0 }} blocks</span>
             </div>
           </div>
         </div>
@@ -149,7 +149,7 @@ watch(() => props.troopsData, (newData) => {
             </div>
             <div>
               <span v-if="item.is_planned" style="color: #f17d00;">Waiting</span>
-              <span v-else>{{ Number(item.end_time) - blockHeight >= 0 ? Number(item.end_time) - blockHeight : 0 }}</span>
+              <span v-else>{{ Number(item.end_time) - blockHeight >= 0 ? Number(item.end_time) - blockHeight : 0 }} blocks</span>
               <!-- {{ item.is_planned ? 'waiting' : item.end_time - blockHeight >= 0 ? item.end_time - blockHeight : 0 }} -->
             </div>
           </div>
