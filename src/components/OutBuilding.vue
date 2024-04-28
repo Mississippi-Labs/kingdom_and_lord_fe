@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 
-const { store } = useGlobalStore()
+const { store, setMenuIndex } = useGlobalStore()
 
 const buildingRef = ref(null)
 const contentRef = ref(null)
@@ -72,7 +72,9 @@ watch(() => store.state.menuIndex, (newData) => {
       <div class="out-building-list">
         <div v-for="item in outBuildingList" :key="item.buildId" class="out-building-item flex-center-center"
           :style="{ left: item.left, top: item.top, 'background-image': getBg(item.buildingId) }"
-          @click="upgrade(item)">{{ getLevel(item.buildingId) }}</div>
+          @click="upgrade(item)">{{ getLevel(item.buildingId) }}
+        </div>
+        <div class="center" @click="setMenuIndex(1)"></div>
       </div>
     </div>
   </div>
@@ -147,6 +149,19 @@ watch(() => store.state.menuIndex, (newData) => {
         z-index: 99;
         padding-bottom: 2px;
         box-sizing: border-box;
+      }
+
+      .center {
+        position: absolute;
+        width: 126px;
+        height: 66px;
+        background: rgba($color: #000000, $alpha: 0);
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 99;
+        box-sizing: border-box;
+        left: 41.5%;
+        top: 40%;
       }
     }
   }
