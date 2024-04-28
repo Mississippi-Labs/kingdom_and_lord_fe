@@ -233,7 +233,7 @@ watch(() => blockHeight.value, (newVal) => {
 </script>
 
 <template>
-  <div v-if="!store.state.isSpawn" class="wrap">
+  <div v-if="store.state.isSpawn" class="wrap">
     <Nav :resource="resourceData" :storage="storage" :address="dojoContext?.account?.address || ''" />
     <InnerBuilding @createBuilding="showCreateBuilding" @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
     <OutBuilding @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
