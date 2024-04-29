@@ -35,7 +35,7 @@ const buildingData = ref({})
 const underUpgradingData = ref({})
 const storage = ref({})
 const troopsData = ref({
-  "Millita": 0,
+  "Militia": 0,
   "Guard": 0,
   "Heavy Infantry": 0,
   "Light Cavalry": 0,
@@ -77,7 +77,7 @@ const getData = async () => {
   // const totalPopulation = await getTotalPopulation(account.address)
   // console.log('totalPopulation', totalPopulation)
   troopsData.value = {
-    "Millita": Number(troops?.millitia),
+    "Militia": Number(troops?.millitia),
     "Guard": Number(troops?.guard),
     "Heavy Infantry": Number(troops?.heavy_infantry),
     "Light Cavalry": Number(troops?.scouts),

@@ -100,7 +100,7 @@ watch(() => props.troopsData, (newData) => {
           <div class="bd-item flex-center-sb" v-for="(value, key) in troopsRef">
             <div class="flex-center">
               <div class="img flex-center-center training-img">
-                <img v-if="key == 'Millita'" src="../assets/images/millita.png" alt="">
+                <img v-if="key == 'Militia'" src="../assets/images/millita.png" alt="">
                 <img v-else-if="key == 'Guard'" src="../assets/images/guard.png" alt="">
                 <img v-else-if="key == 'Heavy Infantry'" src="../assets/images/heavy_infantry.png" alt="">
                 <img v-else-if="key == 'Light Cavalry'" src="../assets/images/scout.png" alt="">

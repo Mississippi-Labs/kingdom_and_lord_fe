@@ -1,7 +1,7 @@
 import Guard from '../assets/images/guard.png';
 import HeavyInfantry from '../assets/images/heavy_infantry.png';
 import Scout from '../assets/images/scout.png';
-import Millita from '../assets/images/millita.png';
+import Militia from '../assets/images/millita.png';
 import Knights from '../assets/images/knights.png';
 import HeavyKnights from '../assets/images/heavy_knights.png';
 
@@ -11,9 +11,9 @@ import Steel from '../assets/images/resource_icon_3.png';
 import Food from '../assets/images/resource_icon_4.png';
 
 export const infantry = [{
-  name: 'Millita',
+  name: 'Militia',
   desc: 'A basic unit with short training time and low cost, but relatively weak attack and defense attributes. It is suitable for early-game coordination with defenders.',
-  img: Millita,
+  img: Militia,
   barrackKind: 0,
   resource: [{
     img: Wood,
