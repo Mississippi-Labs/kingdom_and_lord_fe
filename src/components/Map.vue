@@ -1,5 +1,9 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, watch, nextTick } from 'vue'
+import { useGlobalStore } from '../hooks/globalStore.js'
+
+const { store } = useGlobalStore()
+
 
 const colors = []
 const dragging = {
@@ -22,6 +26,29 @@ const getBg = (col) => {
   }
 }
 
+const centerOnPower = (powerId) => {
+  // Find the position of the 200th power and adjust scrolling
+  let centerRow, centerCol;
+  for (let row = 0; row < mapData.value.length; row++) {
+    for (let col = 0; col < mapData.value[row].length; col++) {
+      if (mapData.value[row][col] === powerId) {
+        centerRow = row;
+        centerCol = col;
+        break;
+      }
+    }
+    if (centerRow !== undefined) break;
+  }
+
+  if (centerRow !== undefined && centerCol !== undefined) {
+    console.log(viewport.value.offsetHeight )
+    const left = centerRow * 64 - viewport.value.offsetWidth / 2 + 96;
+    const top = centerCol * 64 - viewport.value.offsetHeight / 2 + 32;
+    mapRef.value.style.left = `-${left}px`;
+    mapRef.value.style.top = `-${top}px`;
+  }
+}
+
 const createMap = (size, numberOfVillages, numberOfMountains) => {
   // 创建一个size * size的数组，初始化为0
   let map = new Array(size).fill(0).map(() => new Array(size).fill(0));
@@ -39,10 +66,10 @@ const createMap = (size, numberOfVillages, numberOfMountains) => {
       if (map[row][col] === 0) {
         map[row][col] = villageId;
         // 设置村庄的势力范围
-        if (row > 0 && map[row-1][col] === 0) map[row-1][col] = villageId; // 上
-        if (row < size - 1 && map[row+1][col] === 0) map[row+1][col] = villageId; // 下
-        if (col > 0 && map[row][col-1] === 0) map[row][col-1] = villageId; // 左
-        if (col < size - 1 && map[row][col+1] === 0) map[row][col+1] = villageId; // 右
+        if (row > 0 && map[row - 1][col] === 0) map[row - 1][col] = villageId; // 上
+        if (row < size - 1 && map[row + 1][col] === 0) map[row + 1][col] = villageId; // 下
+        if (col > 0 && map[row][col - 1] === 0) map[row][col - 1] = villageId; // 左
+        if (col < size - 1 && map[row][col + 1] === 0) map[row][col + 1] = villageId; // 右
         villageId++;
         placed = true;
       }
@@ -73,13 +100,13 @@ const createMap = (size, numberOfVillages, numberOfMountains) => {
         for (let row = 0; row < size; row++) {
           for (let col = 0; col < size; col++) {
             // 忍者必须放在村庄的周围空闲格子上
-            if (map[row][col] === k && ((map[row-1]?.[col] === 0) || (map[row+1]?.[col] === 0) ||
-                (map[row]?.[col-1] === 0) || (map[row]?.[col+1] === 0))) {
+            if (map[row][col] === k && ((map[row - 1]?.[col] === 0) || (map[row + 1]?.[col] === 0) ||
+              (map[row]?.[col - 1] === 0) || (map[row]?.[col + 1] === 0))) {
               // 收集所有可能的位置
-              if (row > 0 && map[row-1][col] === 0) possiblePositions.push([row-1, col]);
-              if (row < size - 1 && map[row+1][col] === 0) possiblePositions.push([row+1, col]);
-              if (col > 0 && map[row][col-1] === 0) possiblePositions.push([row, col-1]);
-              if (col < size - 1 && map[row][col+1] === 0) possiblePositions.push([row, col+1]);
+              if (row > 0 && map[row - 1][col] === 0) possiblePositions.push([row - 1, col]);
+              if (row < size - 1 && map[row + 1][col] === 0) possiblePositions.push([row + 1, col]);
+              if (col > 0 && map[row][col - 1] === 0) possiblePositions.push([row, col - 1]);
+              if (col < size - 1 && map[row][col + 1] === 0) possiblePositions.push([row, col + 1]);
             }
           }
         }
@@ -150,6 +177,14 @@ onBeforeMount(() => {
     localStorage.setItem('colors', JSON.stringify(colors));
   }
 })
+
+watch(() => store.state.showMap, (newData) => {
+  if (newData) {
+    nextTick(() => {
+      centerOnPower(201)
+    })
+  }
+})
 </script>
 
 <template>
@@ -175,7 +210,7 @@ onBeforeMount(() => {
                 <div v-if="villages.some(v => v.x == rowIndex && v.y == colIndex)">🏛️</div>
                 <div v-else></div>
               </template>
-              <div>alliance_{{ col }}</div>
+              <div>{{col == 201 ? 'Home' : `alliance_${col}`}}</div>
             </n-popover>
           </div>
         </div>
