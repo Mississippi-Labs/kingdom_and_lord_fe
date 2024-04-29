@@ -105,7 +105,7 @@ const copyFun = async () => {
                 <div class="item-info">
                   <p>{{ (+resource.steel).toLocaleString() }}</p>
                   <div class="progress-wrap">
-                    <div class="progress" :style="{ width: getProgress(resource.steel, storage.warehouse), background:  getProgress(resource.wood, storage.warehouse) == '100%' ? 'red' : '#8AA147' }"></div>
+                    <div class="progress" :style="{ width: getProgress(resource.steel, storage.warehouse), background:  getProgress(resource.steel, storage.warehouse) == '100%' ? 'red' : '#8AA147' }"></div>
                   </div>
                 </div>
               </div>
@@ -116,7 +116,7 @@ const copyFun = async () => {
                 <div class="item-info">
                   <p>{{ (+resource.brick).toLocaleString() }}</p>
                   <div class="progress-wrap">
-                    <div class="progress" :style="{ width: getProgress(resource.brick, storage.warehouse), background:  getProgress(resource.wood, storage.warehouse) == '100%' ? 'red' : '#8AA147' }"></div>
+                    <div class="progress" :style="{ width: getProgress(resource.brick, storage.warehouse), background:  getProgress(resource.brick, storage.warehouse) == '100%' ? 'red' : '#8AA147' }"></div>
                   </div>
                 </div>
               </div>
@@ -137,7 +137,7 @@ const copyFun = async () => {
                 <div class="item-info">
                   <p>{{ (+resource.food).toLocaleString() }}</p>
                   <div class="progress-wrap">
-                    <div class="progress" :style="{ width: getProgress(resource.food, storage.barn), background:  getProgress(resource.wood, storage.warehouse) == '100%' ? 'red' : '#8AA147' }"></div>
+                    <div class="progress" :style="{ width: getProgress(resource.food, storage.barn), background:  getProgress(resource.food, storage.barn) == '100%' ? 'red' : '#8AA147' }"></div>
                   </div>
                 </div>
               </div>
