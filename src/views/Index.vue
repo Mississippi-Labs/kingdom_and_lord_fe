@@ -241,8 +241,7 @@ watch(() => blockHeight.value, (newVal) => {
     <MapModal />
   </div>
   <div v-else class="flex-center spawn-wrap">
-    <p>create account</p>
-    <n-button type="primary" size="large" @click="spawnFun">Spawn</n-button>
+    <n-button type="primary" size="large" @click="spawnFun">Create Account</n-button>
   </div>
   <UnderUpgradingDialog :underUpgradingData="underUpgradingData" :resourceData="resourceData" @startTrainingFun="startTrainingFun" @upgrade="upgrade" @close="closeDialog" />
   <CreateBuildingDialog :buildingData="buildingData" :resourceData="resourceData"  @createBuilding="createBuilding" @close="closeDialog" />
