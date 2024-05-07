@@ -76,13 +76,14 @@ const getData = async () => {
   const troops = await getTroops(account.address)
   // const totalPopulation = await getTotalPopulation(account.address)
   // console.log('totalPopulation', totalPopulation)
+  const { army } = troops
   troopsData.value = {
-    "Militia": Number(troops?.millitia),
-    "Guard": Number(troops?.guard),
-    "Heavy Infantry": Number(troops?.heavy_infantry),
-    "Light Cavalry": Number(troops?.scouts),
-    "Knights": Number(troops?.knights),
-    "Heavy Knights": Number(troops?.heavy_knights)
+    "Militia": Number(army?.millitia),
+    "Guard": Number(army?.guard),
+    "Heavy Infantry": Number(army?.heavy_infantry),
+    "Light Cavalry": Number(army?.scouts),
+    "Knights": Number(army?.knights),
+    "Heavy Knights": Number(army?.heavy_knights)
   }
   resourceData.value = {
     food: Number(resource?.[3]?.amount),
@@ -101,9 +102,11 @@ const getData = async () => {
 
 const spawnFun = async () => {
   showLoading.value = true
-  const { spawn } = dojoContext.setup.systemCalls
+  const { spawn, createVillageConfirm, createVillageReveal } = dojoContext.setup.systemCalls
   try {
+    await createVillageConfirm({account: dojoContext.account})
     await spawn({ account: dojoContext.account })
+    await createVillageReveal({account: dojoContext.account})
     showLoading.value = false
   } catch (error) {
     console.error('Failed to spawn:', error)

@@ -215,6 +215,196 @@ export async function setupWorld(provider) {
       }
     };
 
+    const createVillageConfirm = async ({ account }) => {
+      try {
+        const { transaction_hash } = await provider.execute(
+          account,
+          contract_name,
+          "create_village_confirm",
+          []
+        );
+        setLogsFun({
+          hash: transaction_hash,
+          status: "pending",
+          message: "create village confirm",
+          time: new Date().getTime()
+        })
+        try {
+          const event = getEvents(
+            await account.waitForTransaction(transaction_hash, {
+              retryInterval: 300,
+            })
+          )
+          updateLogsFun(transaction_hash, "success")
+          return event
+        } catch (error) {
+          updateLogsFun(transaction_hash, "error")
+        }
+      }
+      catch (error) {
+        setLogsFun({
+          hash: '',
+          status: "error",
+          message: "create village confirm",
+          time: new Date().getTime()
+        })
+        console.error("Error executing create village confirm:", error);
+        throw error;
+      }
+    }
+
+    const createVillageReveal = async ({ account }) => {
+      try {
+        const { transaction_hash } = await provider.execute(
+          account,
+          contract_name,
+          "create_village_reveal",
+          []
+        );
+        setLogsFun({
+          hash: transaction_hash,
+          status: "pending",
+          message: "create village reveal",
+          time: new Date().getTime()
+        })
+        try {
+          const event = getEvents(
+            await account.waitForTransaction(transaction_hash, {
+              retryInterval: 300,
+            })
+          )
+          updateLogsFun(transaction_hash, "success")
+          return event
+        } catch (error) {
+          updateLogsFun(transaction_hash, "error")
+        }
+      }
+      catch (error) {
+        setLogsFun({
+          hash: '',
+          status: "error",
+          message: "create village reveal",
+          time: new Date().getTime()
+        })
+        console.error("Error executing create village reveal:", error);
+        throw error;
+      }
+    }
+
+    const createAmbush = async ({ account }) => {
+      try {
+        const { transaction_hash } = await provider.execute(
+          account,
+          contract_name,
+          "create_ambush",
+          []
+        );
+        setLogsFun({
+          hash: transaction_hash,
+          status: "pending",
+          message: "create ambush",
+          time: new Date().getTime()
+        })
+        try {
+          const event = getEvents(
+            await account.waitForTransaction(transaction_hash, {
+              retryInterval: 300,
+            })
+          )
+          updateLogsFun(transaction_hash, "success")
+          return event
+        } catch (error) {
+          updateLogsFun(transaction_hash, "error")
+        }
+      }
+      catch (error) {
+        setLogsFun({
+          hash: '',
+          status: "error",
+          message: "create ambush",
+          time: new Date().getTime()
+        })
+        console.error("Error executing create ambush:", error);
+        throw error;
+      }
+    }
+
+    const revealAttack = async ({ account }) => {
+      try {
+        const { transaction_hash } = await provider.execute(
+          account,
+          contract_name,
+          "reveal_attack",
+          []
+        );
+        setLogsFun({
+          hash: transaction_hash,
+          status: "pending",
+          message: "reveal attack",
+          time: new Date().getTime()
+        })
+        try {
+          const event = getEvents(
+            await account.waitForTransaction(transaction_hash, {
+              retryInterval: 300,
+            })
+          )
+          updateLogsFun(transaction_hash, "success")
+          return event
+        } catch (error) {
+          updateLogsFun(transaction_hash, "error")
+        }
+      }
+      catch (error) {
+        setLogsFun({
+          hash: '',
+          status: "error",
+          message: "reveal attack",
+          time: new Date().getTime()
+        })
+        console.error("Error executing reveal attack:", error);
+        throw error;
+      }
+    }
+
+    const revealHide = async ({ account }) => {
+      try {
+        const { transaction_hash } = await provider.execute(
+          account,
+          contract_name,
+          "reveal_hide",
+          []
+        );
+        setLogsFun({
+          hash: transaction_hash,
+          status: "pending",
+          message: "reveal hide",
+          time: new Date().getTime()
+        })
+        try {
+          const event = getEvents(
+            await account.waitForTransaction(transaction_hash, {
+              retryInterval: 300,
+            })
+          )
+          updateLogsFun(transaction_hash, "success")
+          return event
+        } catch (error) {
+          updateLogsFun(transaction_hash, "error")
+        }
+      }
+      catch (error) {
+        setLogsFun({
+          hash: '',
+          status: "error",
+          message: "reveal hide",
+          time: new Date().getTime()
+        })
+        console.error("Error executing reveal hide:", error);
+        throw error;
+      }
+    }
+
     const getBuildingsLevels = async (player) => {
       try {
         let data = await provider.callContract(
@@ -327,7 +517,39 @@ export async function setupWorld(provider) {
       }
     }
 
-    return { spawn, startUpgrade, getBuildingsLevels, getUnderUpgrading, getGrowthRate, getUpgradeInfo, finishUpgrade, getResource, getCompleteUpgrading, startTraining, finishTraining, getTroops, getTotalPopulation };
+    const getAllyAmount = async (player) => {
+      try {
+        let data = await provider.callContract(
+          contract_name,
+          "get_ally_amount",
+          [player]
+        );
+        return data
+      } catch (error) {
+        console.error("Error executing spawn:", error);
+        throw error;
+      }
+    }
+
+    const getVillageLocation = async (player) => {
+      try {
+        let data = await provider.callContract(
+          contract_name,
+          "get_village_location",
+          [player]
+        );
+        return data
+      } catch (error) {
+        console.error("Error executing spawn:", error);
+        throw error;
+      }
+    }
+
+    return { spawn, startUpgrade, getBuildingsLevels, getUnderUpgrading, getGrowthRate,
+      getUpgradeInfo, finishUpgrade, getResource, getCompleteUpgrading, startTraining, 
+      finishTraining, getTroops, getTotalPopulation, getAllyAmount, getVillageLocation,
+      createVillageConfirm, createVillageReveal, createAmbush, revealAttack, revealHide
+    };
   }
   return {
     actions: actions(),

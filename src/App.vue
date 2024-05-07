@@ -35,7 +35,11 @@ const getData = async () => {
     }
     console.log('account', account)
     dojoContext.value = { account, setup: setupResult }
-    const { Barn, BarnStorage, Barrack, BarrackUnderTraining, BarrackWaitingToTrain, BuildingAreaInfo, CityBuilding, CityHall, College, Config, UnderUpgrading, SpawnStatus, Warehouse, OuterCity, Troops, WaitingToUpgrade, WarehouseStorage, Stable, StableUnderTraining, StableWaitingToTrain, CityWall, Embassy } = setupResult.clientComponents
+    const { AlreadySpawnedEvent, AmbushInfo, Barn, BarnStorage, Barrack, BarrackUnderTraining, BarrackWaitingToTrain, BuildingAreaInfo, CityBuilding, CityHall, College, CityWall, Config, 
+      Embassy, GlobeLocation, NewPlayerSpawnEvent, OuterCity, PayToFinishedUpgradeEvent, PlayerVillage, SpawnStatus, Stable, StableUnderTraining, StableWaitingToTrain, StartTrainingEvent,
+      StartUpgradeEvent, TrainingFinishedEvent, Troops, UnderUpgrading, UpgradeCompleteEvent, UpgradeNotEnoughResourceEvent, UpgradeNotFinishedEvent, VillageConfirm, Warehouse, 
+      WaitingToUpgrade, WarehouseStorage,  
+    } = setupResult.clientComponents
     const barn = useEntityQuery([Has(Barn)]);
     const cityBuilding = useEntityQuery([Has(CityBuilding)]);
     const cityHall = useEntityQuery([Has(CityHall)]);
@@ -58,8 +62,13 @@ const getData = async () => {
     const stableUnderTraining = useEntityQuery([Has(StableUnderTraining)]);
     const stableWaitingToTrain = useEntityQuery([Has(StableWaitingToTrain)]);
     const college = useEntityQuery([Has(College)]);
+    const ambushInfo = useEntityQuery([Has(AmbushInfo)]);
+    const globeLocation = useEntityQuery([Has(GlobeLocation)]);
+    const playerVillage = useEntityQuery([Has(PlayerVillage)]);
+    const villageConfirm = useEntityQuery([Has(VillageConfirm)]);
+    const startUpgradeEvent = useEntityQuery([Has(StartUpgradeEvent)]);
 
-    watch(() => [barn, cityBuilding, cityHall, cityWall, underUpgrading, spawnStatus, warehouse, outerCity, barnStorage, barrack, buildingAreaInfo, configData, troops, waitingToUpgrade, warehouseStorage, barrackUnderTraining, barrackWaitingToTrain, stable, stableUnderTraining, stableWaitingToTrain, college, embassy], ([newBarnData, newCityBuildingData, newCityHallData, newCityWallData, newUnderUpgradingData, newSpawnStatusData, newWarehouseData, newOuterCityData, newBarnStorageData, newBarrackData, newBuildingAreaInfoData, newConfigData, newTroopsData, newWaitingToUpgradeData, newWarehouseStorageData, newBarrackUnderTrainingData, newBarrackWaitingToTrainData, newStableData, newStableUnderTrainingData, newStableWaitingToTrainData, newCollegeData, newEmbassyData]) => {
+    watch(() => [barn, cityBuilding, cityHall, cityWall, underUpgrading, spawnStatus, warehouse, outerCity, barnStorage, barrack, buildingAreaInfo, configData, troops, waitingToUpgrade, warehouseStorage, barrackUnderTraining, barrackWaitingToTrain, stable, stableUnderTraining, stableWaitingToTrain, college, embassy, ambushInfo, globeLocation, playerVillage, villageConfirm, startUpgradeEvent], ([newBarnData, newCityBuildingData, newCityHallData, newCityWallData, newUnderUpgradingData, newSpawnStatusData, newWarehouseData, newOuterCityData, newBarnStorageData, newBarrackData, newBuildingAreaInfoData, newConfigData, newTroopsData, newWaitingToUpgradeData, newWarehouseStorageData, newBarrackUnderTrainingData, newBarrackWaitingToTrainData, newStableData, newStableUnderTrainingData, newStableWaitingToTrainData, newCollegeData, newEmbassyData, newAmbushInfo, newGlobeLocation, newPlayerVillage, newVillageConfirm, newStartUpgradeEvent]) => {
       const barnData = newBarnData.value.map((entity) => {
         let data = toObject(getComponentValue(Barn, entity))
         data.player = getHexAddress(data.player)
@@ -134,6 +143,7 @@ const getData = async () => {
       })
 
       const troopsData = newTroopsData.value.map((entity) => {
+        console.log(getComponentValue(Troops, entity))
         let data = toObject(getComponentValue(Troops, entity))
         data.player = getHexAddress(data.player)
         return data
@@ -196,6 +206,36 @@ const getData = async () => {
         return data
       }).filter((embassy) => embassy.player == account.address)
 
+      const ambushInfoData = newAmbushInfo.value.map((entity) => {
+        let data = toObject(getComponentValue(AmbushInfo, entity))
+        data.player = getHexAddress(data.player)
+        return data
+      }).filter((ambushInfo) => ambushInfo.player == account.address)
+
+      const globeLocationData = newGlobeLocation.value.map((entity) => {
+        let data = toObject(getComponentValue(GlobeLocation, entity))
+        data.player = getHexAddress(data.player)
+        return data
+      }).filter((globeLocation) => globeLocation.player == account.address)
+
+      const playerVillageData = newPlayerVillage.value.map((entity) => {
+        let data = toObject(getComponentValue(PlayerVillage, entity))
+        data.player = getHexAddress(data.player)
+        return data
+      }).filter((playerVillage) => playerVillage.player == account.address)
+
+      const villageConfirmData = newVillageConfirm.value.map((entity) => {
+        let data = toObject(getComponentValue(VillageConfirm, entity))
+        data.player = getHexAddress(data.player)
+        return data
+      }).filter((villageConfirm) => villageConfirm.player == account.address)
+
+      const startUpgradeEventData = newStartUpgradeEvent.value.map((entity) => {
+        let data = toObject(getComponentValue(StartUpgradeEvent, entity))
+        data.player = getHexAddress(data.player)
+        return data
+      }).filter((startUpgradeEvent) => startUpgradeEvent.player == account.address)
+
       const dojoComponents = {
         barn: barnData,
         cityBuilding: cityBuildingData,
@@ -218,7 +258,12 @@ const getData = async () => {
         stableUnderTraining: stableUnderTrainingData,
         stableWaitingToTrain: stableWaitingToTrainData,
         college: collegeData,
-        embassy: embassyData
+        embassy: embassyData,
+        ambushInfo: ambushInfoData,
+        globeLocation: globeLocationData,
+        playerVillage: playerVillageData,
+        villageConfirm: villageConfirmData,
+        startUpgradeEvent: startUpgradeEventData
       }
       setDojoComponents(dojoComponents)
     }, { deep: true, immediate: true})
@@ -229,9 +274,9 @@ const getData = async () => {
 onBeforeMount(() => {
   getData()
   const last = localStorage.getItem('last') || ''
-  if (last != '4.30') {
+  if (last != '5.7') {
     localStorage.clear()
-    localStorage.setItem('last', '4.30')
+    localStorage.setItem('last', '5.7')
   }
 })
 

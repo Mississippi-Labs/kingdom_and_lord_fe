@@ -48,6 +48,69 @@ export function createSystemCalls(
     }
   }
 
+  const createVillageConfirm = async ({ account }) => {
+    try {
+      return await actions.createVillageConfirm({ account });
+    } catch (error) {
+      console.error("Error executing createVillageConfirm:", error);
+      throw error;
+    }
+  }
+
+  const createVillageReveal = async ({ account }) => {
+    try {
+      return await actions.createVillageReveal({ account });
+    } catch (error) {
+      console.error("Error executing createVillageReveal:", error);
+      throw error;
+    }
+  }
+
+  const createAmbush = async ({ account }) => {
+    try {
+      return await actions.createAmbush({ account });
+    } catch (error) {
+      console.error("Error executing createAmbush:", error);
+      throw error;
+    }
+  }
+
+  const revealAttack = async ({ account }) => {
+    try {
+      return await actions.revealAttack({ account });
+    } catch (error) {
+      console.error("Error executing revealAttack:", error);
+      throw error;
+    }
+  }
+
+  const revealHide = async ({ account }) => {
+    try {
+      return await actions.revealHide({ account });
+    } catch (error) {
+      console.error("Error executing revealHide:", error);
+      throw error;
+    }
+  }
+
+  const getAllyAmount = async (player) => {
+    try {
+      return await actions.getAllyAmount(player);
+    } catch (error) {
+      console.error("Error executing getAllyAmount:", error);
+      throw error;
+    }
+  }
+
+  const getVillageLocation = async (player) => {
+    try {
+      return await actions.getVillageLocation(player);
+    } catch (error) {
+      console.error("Error executing getVillageLocation:", error);
+      throw error;
+    }
+  }
+
   const getBuildingsLevels = async (player) => {
     try {
       return await actions.getBuildingsLevels(player);
@@ -133,6 +196,13 @@ export function createSystemCalls(
     finishTraining,
     startTraining,
     getTroops,
-    getTotalPopulation
+    getTotalPopulation,
+    getVillageLocation,
+    createVillageConfirm,
+    createVillageReveal,
+    createAmbush,
+    revealAttack,
+    revealHide,
+    getAllyAmount
   };
 }

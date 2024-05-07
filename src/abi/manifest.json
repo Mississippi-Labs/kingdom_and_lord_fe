@@ -661,8 +661,8 @@
       }
     ],
     "address": "0x533fd2059bab1c37eef74dfb76b5ca8e4c7ddcfdfa84229c77eb060b9633ace",
-    "transaction_hash": null,
-    "block_number": null,
+    "transaction_hash": "0x115149649c72759d68a0cee3b5e9565048d304dbeaf56b477ef4c20bea6ad94",
+    "block_number": 3,
     "seed": "kingdom_lord",
     "name": "dojo::world::world"
   },
@@ -677,9 +677,9 @@
     {
       "kind": "DojoContract",
       "address": "0x5fb9263438e41b011ce81d6bb2c75000a5411ce11230188af7d9fb8ef667651",
-      "class_hash": "0x12b83257dcb8e802e109eeb120a10538d122ba4f444488b000eb7ac6759c6f9",
-      "original_class_hash": "0x12b83257dcb8e802e109eeb120a10538d122ba4f444488b000eb7ac6759c6f9",
-      "base_class_hash": "0x0",
+      "class_hash": "0x3a89bf4c3231078b7895139683711c33a6715593f2d2b4e59791553a531a2ee",
+      "original_class_hash": "0x3a89bf4c3231078b7895139683711c33a6715593f2d2b4e59791553a531a2ee",
+      "base_class_hash": "0x679177a2cb757694ac4f326d01052ff0963eac0bc2a17116a2b87badcdf6f76",
       "abi": [
         {
           "type": "impl",
@@ -1018,12 +1018,8 @@
         },
         {
           "type": "struct",
-          "name": "kingdom_lord::components::barrack::Troops",
+          "name": "kingdom_lord::models::army::ArmyGroup",
           "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress"
-            },
             {
               "name": "millitia",
               "type": "core::integer::u64"
@@ -1047,6 +1043,20 @@
             {
               "name": "heavy_knights",
               "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::components::barrack::Troops",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "army",
+              "type": "kingdom_lord::models::army::ArmyGroup"
             }
           ]
         },
@@ -1103,15 +1113,35 @@
               "type": "()"
             },
             {
-              "name": "CityConfirmAlreadyExist",
+              "name": "VillageConfirmAlreadyExist",
               "type": "()"
             },
             {
-              "name": "CityConfirmNotStarted",
+              "name": "VillageConfirmNotStarted",
               "type": "()"
             },
             {
-              "name": "CityAlreadyCreated",
+              "name": "VillageAlreadyCreated",
+              "type": "()"
+            },
+            {
+              "name": "VillagePositionAlreadyTaken",
+              "type": "()"
+            },
+            {
+              "name": "LocationNotVillage",
+              "type": "()"
+            },
+            {
+              "name": "NotEnoughSoldier",
+              "type": "()"
+            },
+            {
+              "name": "InvalidReveal",
+              "type": "()"
+            },
+            {
+              "name": "InvalidMove",
               "type": "()"
             }
           ]
@@ -1137,6 +1167,34 @@
             {
               "name": "Ok",
               "type": "core::integer::u64"
+            },
+            {
+              "name": "Err",
+              "type": "kingdom_lord::interface::Error"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::components::globe::VillageConfirm",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "block",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "core::result::Result::<kingdom_lord::components::globe::VillageConfirm, kingdom_lord::interface::Error>",
+          "variants": [
+            {
+              "name": "Ok",
+              "type": "kingdom_lord::components::globe::VillageConfirm"
             },
             {
               "name": "Err",
@@ -1326,6 +1384,22 @@
             },
             {
               "type": "function",
+              "name": "get_village_location",
+              "inputs": [
+                {
+                  "name": "player",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "(core::integer::u64, core::integer::u64)"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
               "name": "spawn",
               "inputs": [],
               "outputs": [
@@ -1430,6 +1504,148 @@
               "outputs": [
                 {
                   "type": "core::result::Result::<core::integer::u64, kingdom_lord::interface::Error>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "create_village_confirm",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::result::Result::<kingdom_lord::components::globe::VillageConfirm, kingdom_lord::interface::Error>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "create_village_reveal",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "create_ambush",
+              "inputs": [
+                {
+                  "name": "ambush_hash",
+                  "type": "core::felt252"
+                },
+                {
+                  "name": "millitia",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "guard",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "heavy_infantry",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "scouts",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "knights",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "heavy_knights",
+                  "type": "core::integer::u64"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "reveal_attack",
+              "inputs": [
+                {
+                  "name": "hash",
+                  "type": "core::felt252"
+                },
+                {
+                  "name": "x",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "y",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "time",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "nonce",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "target_x",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "target_y",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "is_robbed",
+                  "type": "core::bool"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "reveal_hide",
+              "inputs": [
+                {
+                  "name": "origin_hash",
+                  "type": "core::felt252"
+                },
+                {
+                  "name": "origin_x",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "origin_y",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "origin_time",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "origin_nonce",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "new_hash",
+                  "type": "core::felt252"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
                 }
               ],
               "state_mutability": "view"
@@ -1554,6 +1770,148 @@
                 }
               ],
               "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "create_village_confirm_test",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::result::Result::<kingdom_lord::components::globe::VillageConfirm, kingdom_lord::interface::Error>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "create_village_reveal_test",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "create_ambush_test",
+              "inputs": [
+                {
+                  "name": "ambush_hash",
+                  "type": "core::felt252"
+                },
+                {
+                  "name": "millitia",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "guard",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "heavy_infantry",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "scouts",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "knights",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "heavy_knights",
+                  "type": "core::integer::u64"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "reveal_attack_test",
+              "inputs": [
+                {
+                  "name": "hash",
+                  "type": "core::felt252"
+                },
+                {
+                  "name": "x",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "y",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "time",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "nonce",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "target_x",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "target_y",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "is_robbed",
+                  "type": "core::bool"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "reveal_hide_test",
+              "inputs": [
+                {
+                  "name": "origin_hash",
+                  "type": "core::felt252"
+                },
+                {
+                  "name": "origin_x",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "origin_y",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "origin_time",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "origin_nonce",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "new_hash",
+                  "type": "core::felt252"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::result::Result::<(), kingdom_lord::interface::Error>"
+                }
+              ],
+              "state_mutability": "view"
             }
           ]
         },
@@ -1654,6 +2012,18 @@
         },
         {
           "type": "event",
+          "name": "kingdom_lord::components::globe::globe_component::Event",
+          "kind": "enum",
+          "variants": []
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::components::battle::battle_component::Event",
+          "kind": "enum",
+          "variants": []
+        },
+        {
+          "type": "event",
           "name": "kingdom_lord::actions::kingdom_lord_controller::Event",
           "kind": "enum",
           "variants": [
@@ -1701,6 +2071,16 @@
               "name": "StableEvent",
               "type": "kingdom_lord::components::stable::stable_component::Event",
               "kind": "nested"
+            },
+            {
+              "name": "GlobeEvent",
+              "type": "kingdom_lord::components::globe::globe_component::Event",
+              "kind": "nested"
+            },
+            {
+              "name": "BattleEvent",
+              "type": "kingdom_lord::components::battle::battle_component::Event",
+              "kind": "nested"
             }
           ]
         }
@@ -1715,7 +2095,7 @@
       "address": "0x4c2960427b0e808461bec1d0eab9e46beaa16c48c3f5adf798f68257e2a345a",
       "class_hash": "0x2f596014fd657ecd2cb628d159e5b76120c41431639ac1b4ee5ef927f8bd558",
       "original_class_hash": "0x2f596014fd657ecd2cb628d159e5b76120c41431639ac1b4ee5ef927f8bd558",
-      "base_class_hash": "0x0",
+      "base_class_hash": "0x679177a2cb757694ac4f326d01052ff0963eac0bc2a17116a2b87badcdf6f76",
       "abi": [
         {
           "type": "impl",
@@ -3621,38 +4001,13 @@
           "key": true
         },
         {
-          "name": "millitia",
-          "type": "u64",
-          "key": false
-        },
-        {
-          "name": "guard",
-          "type": "u64",
-          "key": false
-        },
-        {
-          "name": "heavy_infantry",
-          "type": "u64",
-          "key": false
-        },
-        {
-          "name": "scouts",
-          "type": "u64",
-          "key": false
-        },
-        {
-          "name": "knights",
-          "type": "u64",
-          "key": false
-        },
-        {
-          "name": "heavy_knights",
-          "type": "u64",
+          "name": "army",
+          "type": "ArmyGroup",
           "key": false
         }
       ],
-      "class_hash": "0x53ca52986d57869f2c6f2d2b67732b028f40d672c40682196e741f70f4c9597",
-      "original_class_hash": "0x53ca52986d57869f2c6f2d2b67732b028f40d672c40682196e741f70f4c9597",
+      "class_hash": "0x65d2d3b3ea600f1f05ed063b4b6f36f58648173ed25d9fc6381c2fc0d1463ce",
+      "original_class_hash": "0x65d2d3b3ea600f1f05ed063b4b6f36f58648173ed25d9fc6381c2fc0d1463ce",
       "abi": [
         {
           "type": "impl",
@@ -3829,12 +4184,8 @@
         },
         {
           "type": "struct",
-          "name": "kingdom_lord::components::barrack::Troops",
+          "name": "kingdom_lord::models::army::ArmyGroup",
           "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress"
-            },
             {
               "name": "millitia",
               "type": "core::integer::u64"
@@ -3858,6 +4209,20 @@
             {
               "name": "heavy_knights",
               "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::components::barrack::Troops",
+          "members": [
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "army",
+              "type": "kingdom_lord::models::army::ArmyGroup"
             }
           ]
         },
@@ -3892,48 +4257,43 @@
       "kind": "DojoModel",
       "members": [
         {
-          "name": "player",
-          "type": "ContractAddress",
+          "name": "ambush_hash",
+          "type": "felt252",
           "key": true
         },
         {
-          "name": "ambush_hash",
-          "type": "felt252",
+          "name": "player",
+          "type": "ContractAddress",
           "key": false
         },
         {
-          "name": "millitia",
+          "name": "army",
+          "type": "ArmyGroup",
+          "key": false
+        },
+        {
+          "name": "created_time",
           "type": "u64",
           "key": false
         },
         {
-          "name": "guard",
+          "name": "start_x",
           "type": "u64",
           "key": false
         },
         {
-          "name": "heavy_infantry",
+          "name": "start_y",
           "type": "u64",
           "key": false
         },
         {
-          "name": "scouts",
-          "type": "u64",
-          "key": false
-        },
-        {
-          "name": "knights",
-          "type": "u64",
-          "key": false
-        },
-        {
-          "name": "heavy_knights",
-          "type": "u64",
+          "name": "is_revealed",
+          "type": "bool",
           "key": false
         }
       ],
-      "class_hash": "0x1ec98ab8895a6db436d8e59586ccf82a843de37151148101b8716df9a4a2266",
-      "original_class_hash": "0x1ec98ab8895a6db436d8e59586ccf82a843de37151148101b8716df9a4a2266",
+      "class_hash": "0x245b12c6fa5a2d01f9ad32908b40a7aaa33215fac2a3b7583d33e5f42ea224",
+      "original_class_hash": "0x245b12c6fa5a2d01f9ad32908b40a7aaa33215fac2a3b7583d33e5f42ea224",
       "abi": [
         {
           "type": "impl",
@@ -4110,16 +4470,8 @@
         },
         {
           "type": "struct",
-          "name": "kingdom_lord::components::battle::AmbushInfo",
+          "name": "kingdom_lord::models::army::ArmyGroup",
           "members": [
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress"
-            },
-            {
-              "name": "ambush_hash",
-              "type": "core::felt252"
-            },
             {
               "name": "millitia",
               "type": "core::integer::u64"
@@ -4143,6 +4495,54 @@
             {
               "name": "heavy_knights",
               "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "core::bool",
+          "variants": [
+            {
+              "name": "False",
+              "type": "()"
+            },
+            {
+              "name": "True",
+              "type": "()"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::components::battle::AmbushInfo",
+          "members": [
+            {
+              "name": "ambush_hash",
+              "type": "core::felt252"
+            },
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "army",
+              "type": "kingdom_lord::models::army::ArmyGroup"
+            },
+            {
+              "name": "created_time",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "start_x",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "start_y",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "is_revealed",
+              "type": "core::bool"
             }
           ]
         },
@@ -6461,23 +6861,28 @@
       "kind": "DojoModel",
       "members": [
         {
-          "name": "player",
-          "type": "ContractAddress",
-          "key": true
-        },
-        {
           "name": "x",
           "type": "u64",
-          "key": false
+          "key": true
         },
         {
           "name": "y",
           "type": "u64",
+          "key": true
+        },
+        {
+          "name": "kind",
+          "type": "LocationKind",
+          "key": false
+        },
+        {
+          "name": "player",
+          "type": "ContractAddress",
           "key": false
         }
       ],
-      "class_hash": "0x5f0c9d3aaf9f966db2d773043988809b43ca4b0b98f31fca4e718f6e2134578",
-      "original_class_hash": "0x5f0c9d3aaf9f966db2d773043988809b43ca4b0b98f31fca4e718f6e2134578",
+      "class_hash": "0x5e2c4344723e5e4e898c3530fe757e69107f1cadb261aa64a85949604493304",
+      "original_class_hash": "0x5e2c4344723e5e4e898c3530fe757e69107f1cadb261aa64a85949604493304",
       "abi": [
         {
           "type": "impl",
@@ -6649,12 +7054,278 @@
         },
         {
           "type": "impl",
-          "name": "cityImpl",
-          "interface_name": "kingdom_lord::components::globe::Icity"
+          "name": "globe_locationImpl",
+          "interface_name": "kingdom_lord::components::globe::Iglobe_location"
+        },
+        {
+          "type": "enum",
+          "name": "kingdom_lord::components::globe::LocationKind",
+          "variants": [
+            {
+              "name": "Nothing",
+              "type": "()"
+            },
+            {
+              "name": "Village",
+              "type": "()"
+            },
+            {
+              "name": "Army",
+              "type": "()"
+            },
+            {
+              "name": "Block",
+              "type": "()"
+            }
+          ]
         },
         {
           "type": "struct",
-          "name": "kingdom_lord::components::globe::City",
+          "name": "kingdom_lord::components::globe::GlobeLocation",
+          "members": [
+            {
+              "name": "x",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "y",
+              "type": "core::integer::u64"
+            },
+            {
+              "name": "kind",
+              "type": "kingdom_lord::components::globe::LocationKind"
+            },
+            {
+              "name": "player",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "kingdom_lord::components::globe::Iglobe_location",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "kingdom_lord::components::globe::GlobeLocation"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "kingdom_lord::components::globe::globe_location::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "name": "kingdom_lord::components::globe::globe_location"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "player",
+          "type": "ContractAddress",
+          "key": true
+        },
+        {
+          "name": "x",
+          "type": "u64",
+          "key": false
+        },
+        {
+          "name": "y",
+          "type": "u64",
+          "key": false
+        }
+      ],
+      "class_hash": "0x4d6ef98b80760b11af4eae4ba215eed2de56e95c3e3db0fe6cd2891042a4d92",
+      "original_class_hash": "0x4d6ef98b80760b11af4eae4ba215eed2de56e95c3e3db0fe6cd2891042a4d92",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            },
+            {
+              "name": "Array",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "player_villageImpl",
+          "interface_name": "kingdom_lord::components::globe::Iplayer_village"
+        },
+        {
+          "type": "struct",
+          "name": "kingdom_lord::components::globe::PlayerVillage",
           "members": [
             {
               "name": "player",
@@ -6672,7 +7343,7 @@
         },
         {
           "type": "interface",
-          "name": "kingdom_lord::components::globe::Icity",
+          "name": "kingdom_lord::components::globe::Iplayer_village",
           "items": [
             {
               "type": "function",
@@ -6680,7 +7351,7 @@
               "inputs": [
                 {
                   "name": "model",
-                  "type": "kingdom_lord::components::globe::City"
+                  "type": "kingdom_lord::components::globe::PlayerVillage"
                 }
               ],
               "outputs": [],
@@ -6690,12 +7361,12 @@
         },
         {
           "type": "event",
-          "name": "kingdom_lord::components::globe::city::Event",
+          "name": "kingdom_lord::components::globe::player_village::Event",
           "kind": "enum",
           "variants": []
         }
       ],
-      "name": "kingdom_lord::components::globe::city"
+      "name": "kingdom_lord::components::globe::player_village"
     },
     {
       "kind": "DojoModel",
@@ -6711,8 +7382,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x791893cb273dc092d262196975a605686d9c12957e923c34b974cf98935a201",
-      "original_class_hash": "0x791893cb273dc092d262196975a605686d9c12957e923c34b974cf98935a201",
+      "class_hash": "0x356f4afaf0e263764b15cc80ceea551519be17ef794c42d5483aae9909f57f7",
+      "original_class_hash": "0x356f4afaf0e263764b15cc80ceea551519be17ef794c42d5483aae9909f57f7",
       "abi": [
         {
           "type": "impl",
@@ -6884,12 +7555,12 @@
         },
         {
           "type": "impl",
-          "name": "city_confirmImpl",
-          "interface_name": "kingdom_lord::components::globe::Icity_confirm"
+          "name": "village_confirmImpl",
+          "interface_name": "kingdom_lord::components::globe::Ivillage_confirm"
         },
         {
           "type": "struct",
-          "name": "kingdom_lord::components::globe::CityConfirm",
+          "name": "kingdom_lord::components::globe::VillageConfirm",
           "members": [
             {
               "name": "player",
@@ -6903,7 +7574,7 @@
         },
         {
           "type": "interface",
-          "name": "kingdom_lord::components::globe::Icity_confirm",
+          "name": "kingdom_lord::components::globe::Ivillage_confirm",
           "items": [
             {
               "type": "function",
@@ -6911,7 +7582,7 @@
               "inputs": [
                 {
                   "name": "model",
-                  "type": "kingdom_lord::components::globe::CityConfirm"
+                  "type": "kingdom_lord::components::globe::VillageConfirm"
                 }
               ],
               "outputs": [],
@@ -6921,252 +7592,12 @@
         },
         {
           "type": "event",
-          "name": "kingdom_lord::components::globe::city_confirm::Event",
+          "name": "kingdom_lord::components::globe::village_confirm::Event",
           "kind": "enum",
           "variants": []
         }
       ],
-      "name": "kingdom_lord::components::globe::city_confirm"
-    },
-    {
-      "kind": "DojoModel",
-      "members": [
-        {
-          "name": "x",
-          "type": "u64",
-          "key": true
-        },
-        {
-          "name": "y",
-          "type": "u64",
-          "key": true
-        },
-        {
-          "name": "player",
-          "type": "ContractAddress",
-          "key": false
-        }
-      ],
-      "class_hash": "0x3af6fe65890e6e277605ad11358f117dd6260e15fbfe03cf4930ba05ed1e6f5",
-      "original_class_hash": "0x3af6fe65890e6e277605ad11358f117dd6260e15fbfe03cf4930ba05ed1e6f5",
-      "abi": [
-        {
-          "type": "impl",
-          "name": "DojoModelImpl",
-          "interface_name": "dojo::model::IDojoModel"
-        },
-        {
-          "type": "struct",
-          "name": "core::array::Span::<core::integer::u8>",
-          "members": [
-            {
-              "name": "snapshot",
-              "type": "@core::array::Array::<core::integer::u8>"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "core::array::Span::<core::felt252>",
-          "members": [
-            {
-              "name": "snapshot",
-              "type": "@core::array::Array::<core::felt252>"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
-          "members": [
-            {
-              "name": "snapshot",
-              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "dojo::database::introspect::Struct",
-          "members": [
-            {
-              "name": "name",
-              "type": "core::felt252"
-            },
-            {
-              "name": "attrs",
-              "type": "core::array::Span::<core::felt252>"
-            },
-            {
-              "name": "children",
-              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
-          "members": [
-            {
-              "name": "snapshot",
-              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "dojo::database::introspect::Enum",
-          "members": [
-            {
-              "name": "name",
-              "type": "core::felt252"
-            },
-            {
-              "name": "attrs",
-              "type": "core::array::Span::<core::felt252>"
-            },
-            {
-              "name": "children",
-              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
-            }
-          ]
-        },
-        {
-          "type": "enum",
-          "name": "dojo::database::introspect::Ty",
-          "variants": [
-            {
-              "name": "Primitive",
-              "type": "core::felt252"
-            },
-            {
-              "name": "Struct",
-              "type": "dojo::database::introspect::Struct"
-            },
-            {
-              "name": "Enum",
-              "type": "dojo::database::introspect::Enum"
-            },
-            {
-              "name": "Tuple",
-              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
-            },
-            {
-              "name": "Array",
-              "type": "core::integer::u32"
-            }
-          ]
-        },
-        {
-          "type": "interface",
-          "name": "dojo::model::IDojoModel",
-          "items": [
-            {
-              "type": "function",
-              "name": "name",
-              "inputs": [],
-              "outputs": [
-                {
-                  "type": "core::felt252"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "unpacked_size",
-              "inputs": [],
-              "outputs": [
-                {
-                  "type": "core::integer::u32"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "packed_size",
-              "inputs": [],
-              "outputs": [
-                {
-                  "type": "core::integer::u32"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "layout",
-              "inputs": [],
-              "outputs": [
-                {
-                  "type": "core::array::Span::<core::integer::u8>"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "schema",
-              "inputs": [],
-              "outputs": [
-                {
-                  "type": "dojo::database::introspect::Ty"
-                }
-              ],
-              "state_mutability": "view"
-            }
-          ]
-        },
-        {
-          "type": "impl",
-          "name": "city_locationImpl",
-          "interface_name": "kingdom_lord::components::globe::Icity_location"
-        },
-        {
-          "type": "struct",
-          "name": "kingdom_lord::components::globe::CityLocation",
-          "members": [
-            {
-              "name": "x",
-              "type": "core::integer::u64"
-            },
-            {
-              "name": "y",
-              "type": "core::integer::u64"
-            },
-            {
-              "name": "player",
-              "type": "core::starknet::contract_address::ContractAddress"
-            }
-          ]
-        },
-        {
-          "type": "interface",
-          "name": "kingdom_lord::components::globe::Icity_location",
-          "items": [
-            {
-              "type": "function",
-              "name": "ensure_abi",
-              "inputs": [
-                {
-                  "name": "model",
-                  "type": "kingdom_lord::components::globe::CityLocation"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "view"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "kingdom_lord::components::globe::city_location::Event",
-          "kind": "enum",
-          "variants": []
-        }
-      ],
-      "name": "kingdom_lord::components::globe::city_location"
+      "name": "kingdom_lord::components::globe::village_confirm"
     },
     {
       "kind": "DojoModel",

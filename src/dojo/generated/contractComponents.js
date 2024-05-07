@@ -86,12 +86,12 @@ export function defineContractComponents(world) {
     Troops: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, millitia: RecsType.BigInt, guard: RecsType.BigInt, heavy_infantry: RecsType.BigInt, scouts: RecsType.BigInt, knights: RecsType.BigInt, heavy_knights: RecsType.BigInt },
+        { player: RecsType.BigInt, army: { millitia: RecsType.BigInt, guard: RecsType.BigInt, heavy_infantry: RecsType.BigInt, scouts: RecsType.BigInt, knights: RecsType.BigInt, heavy_knights: RecsType.BigInt } },
         {
           metadata: {
             name: "Troops",
             types: ["contractaddress","u64","u64","u64","u64","u64","u64"],
-            customTypes: [],
+            customTypes: ["ArmyGroup"],
           },
         }
       );
@@ -99,12 +99,12 @@ export function defineContractComponents(world) {
     AmbushInfo: (() => {
       return defineComponent(
         world,
-        { player: RecsType.BigInt, ambush_hash: RecsType.BigInt, millitia: RecsType.BigInt, guard: RecsType.BigInt, heavy_infantry: RecsType.BigInt, scouts: RecsType.BigInt, knights: RecsType.BigInt, heavy_knights: RecsType.BigInt },
+        { ambush_hash: RecsType.BigInt, player: RecsType.BigInt, army: { millitia: RecsType.BigInt, guard: RecsType.BigInt, heavy_infantry: RecsType.BigInt, scouts: RecsType.BigInt, knights: RecsType.BigInt, heavy_knights: RecsType.BigInt }, created_time: RecsType.BigInt, start_x: RecsType.BigInt, start_y: RecsType.BigInt, is_revealed: RecsType.Boolean },
         {
           metadata: {
             name: "AmbushInfo",
-            types: ["contractaddress","felt252","u64","u64","u64","u64","u64","u64"],
-            customTypes: [],
+            types: ["felt252","contractaddress","u64","u64","u64","u64","u64","u64","u64","u64","u64","bool"],
+            customTypes: ["ArmyGroup"],
           },
         }
       );
@@ -213,40 +213,40 @@ export function defineContractComponents(world) {
         }
       );
     })(),
-    City: (() => {
+    GlobeLocation: (() => {
+      return defineComponent(
+        world,
+        { x: RecsType.BigInt, y: RecsType.BigInt, kind: RecsType.Number, player: RecsType.BigInt },
+        {
+          metadata: {
+            name: "GlobeLocation",
+            types: ["u64","u64","enum","contractaddress"],
+            customTypes: ["LocationKind"],
+          },
+        }
+      );
+    })(),
+    PlayerVillage: (() => {
       return defineComponent(
         world,
         { player: RecsType.BigInt, x: RecsType.BigInt, y: RecsType.BigInt },
         {
           metadata: {
-            name: "City",
+            name: "PlayerVillage",
             types: ["contractaddress","u64","u64"],
             customTypes: [],
           },
         }
       );
     })(),
-    CityConfirm: (() => {
+    VillageConfirm: (() => {
       return defineComponent(
         world,
         { player: RecsType.BigInt, block: RecsType.BigInt },
         {
           metadata: {
-            name: "CityConfirm",
+            name: "VillageConfirm",
             types: ["contractaddress","u64"],
-            customTypes: [],
-          },
-        }
-      );
-    })(),
-    CityLocation: (() => {
-      return defineComponent(
-        world,
-        { x: RecsType.BigInt, y: RecsType.BigInt, player: RecsType.BigInt },
-        {
-          metadata: {
-            name: "CityLocation",
-            types: ["u64","u64","contractaddress"],
             customTypes: [],
           },
         }
