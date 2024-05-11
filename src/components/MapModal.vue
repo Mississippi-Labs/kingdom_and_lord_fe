@@ -10,7 +10,7 @@ const close = () => {
 }
 </script>
 <template>
-  <div class="modal-wrap flex-center-center" v-show="store.state.showMap" @click="close">
+  <div class="modal-wrap flex-center-center" v-show="store.state.showMap">
     <div class="modal flex-center-center" @click.stop>
       <div class="header">
         <div class="header-content flex-center-sb">

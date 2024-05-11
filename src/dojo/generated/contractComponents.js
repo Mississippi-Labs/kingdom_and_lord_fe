@@ -2,7 +2,6 @@
 
 import { defineComponent, Type as RecsType } from "@dojoengine/recs";
 
-
 export function defineContractComponents(world) {
   return {
     SpawnStatus: (() => {
@@ -216,12 +215,12 @@ export function defineContractComponents(world) {
     GlobeLocation: (() => {
       return defineComponent(
         world,
-        { x: RecsType.BigInt, y: RecsType.BigInt, kind: RecsType.Number, player: RecsType.BigInt },
+        { x: RecsType.BigInt, y: RecsType.BigInt, location_kind: RecsType.BigInt, player: RecsType.BigInt },
         {
           metadata: {
             name: "GlobeLocation",
-            types: ["u64","u64","enum","contractaddress"],
-            customTypes: ["LocationKind"],
+            types: ["u64","u64","u64","contractaddress"],
+            customTypes: [],
           },
         }
       );

@@ -216,7 +216,7 @@ const getData = async () => {
         let data = toObject(getComponentValue(GlobeLocation, entity))
         data.player = getHexAddress(data.player)
         return data
-      }).filter((globeLocation) => globeLocation.player == account.address)
+      })
 
       const playerVillageData = newPlayerVillage.value.map((entity) => {
         let data = toObject(getComponentValue(PlayerVillage, entity))

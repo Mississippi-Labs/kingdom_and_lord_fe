@@ -104,6 +104,7 @@ const spawnFun = async () => {
   showLoading.value = true
   const { spawn, createVillageConfirm, createVillageReveal } = dojoContext.setup.systemCalls
   try {
+    // console.log('spawn', dojoContext.account)
     await createVillageConfirm({account: dojoContext.account})
     await spawn({ account: dojoContext.account })
     await createVillageReveal({account: dojoContext.account})

@@ -1,11 +1,12 @@
 <script setup>
-import { ref, onBeforeMount, watch, nextTick } from 'vue'
+import { ref, onBeforeMount, watch, nextTick, inject } from 'vue'
 import { useGlobalStore } from '../hooks/globalStore.js'
+import { map } from '../libs/map.js'
+
+const dojoContext = inject('DojoContext');
 
 const { store } = useGlobalStore()
 
-
-const colors = []
 const dragging = {
   isDragging: false,
   startX: 0,
@@ -14,114 +15,22 @@ const dragging = {
   originalY: 0
 }
 
-const villages = ref([])
-const mapData = ref([])
+const mapData = ref(map)
 const mapRef = ref(null)
 const viewport = ref(null)
-const getBg = (col) => {
-  if (col > 0) {
-    return { background: `rgba(${colors[col - 1]}, 0.2)` }
-  } else {
-    return ''
+
+const centerOnPower = (x, y) => {
+  if (y !== undefined && x !== undefined) {
+    const left = -(x * 32 - viewport.value.offsetWidth / 2 + 48);
+    const top = -(y * 32 - viewport.value.offsetHeight / 2 + 16);
+
+    // 计算边界，禁止拖动出视窗
+    const minLeft = -(mapRef.value.offsetWidth - viewport.value.offsetWidth);
+    const minTop = -(mapRef.value.offsetHeight - viewport.value.offsetHeight);
+
+    mapRef.value.style.left = `${Math.min(0, Math.max(minLeft, left))}px`;
+    mapRef.value.style.top = `${Math.min(0, Math.max(minTop, top))}px`;
   }
-}
-
-const centerOnPower = (powerId) => {
-  // Find the position of the 200th power and adjust scrolling
-  let centerRow, centerCol;
-  for (let row = 0; row < mapData.value.length; row++) {
-    for (let col = 0; col < mapData.value[row].length; col++) {
-      if (mapData.value[row][col] === powerId) {
-        centerRow = row;
-        centerCol = col;
-        break;
-      }
-    }
-    if (centerRow !== undefined) break;
-  }
-
-  if (centerRow !== undefined && centerCol !== undefined) {
-    console.log(viewport.value.offsetHeight )
-    const left = centerRow * 64 - viewport.value.offsetWidth / 2 + 96;
-    const top = centerCol * 64 - viewport.value.offsetHeight / 2 + 32;
-    mapRef.value.style.left = `-${left}px`;
-    mapRef.value.style.top = `-${top}px`;
-  }
-}
-
-const createMap = (size, numberOfVillages, numberOfMountains) => {
-  // 创建一个size * size的数组，初始化为0
-  let map = new Array(size).fill(0).map(() => new Array(size).fill(0));
-  let villageId = 1; // 村庄的初始ID
-
-  // 随机放置村庄
-  for (let i = 0; i < numberOfVillages; i++) {
-    let placed = false;
-    while (!placed) {
-      let row = Math.floor(Math.random() * size);
-      let col = Math.floor(Math.random() * size);
-      villages.value.push({ x: row, y: col });
-      colors.push([Math.floor(Math.random() * 255), Math.floor(Math.random() * 255), Math.floor(Math.random() * 255)]);
-      // 确保选定的位置为空
-      if (map[row][col] === 0) {
-        map[row][col] = villageId;
-        // 设置村庄的势力范围
-        if (row > 0 && map[row - 1][col] === 0) map[row - 1][col] = villageId; // 上
-        if (row < size - 1 && map[row + 1][col] === 0) map[row + 1][col] = villageId; // 下
-        if (col > 0 && map[row][col - 1] === 0) map[row][col - 1] = villageId; // 左
-        if (col < size - 1 && map[row][col + 1] === 0) map[row][col + 1] = villageId; // 右
-        villageId++;
-        placed = true;
-      }
-    }
-  }
-
-  // 随机添加山脉
-  for (let j = 0; j < numberOfMountains; j++) {
-    let placed = false;
-    while (!placed) {
-      let row = Math.floor(Math.random() * size);
-      let col = Math.floor(Math.random() * size);
-
-      // 确保山脉不覆盖村庄或其势力范围
-      if (map[row][col] === 0) {
-        map[row][col] = -2;
-        placed = true;
-      }
-    }
-  }
-
-  // 随机分布忍者
-  for (let k = 1; k <= villageId - 1; k++) { // 对每个村庄
-    if (Math.random() > 0.5) { // 有一半的概率放置忍者
-      let placed = false;
-      while (!placed) {
-        let possiblePositions = [];
-        for (let row = 0; row < size; row++) {
-          for (let col = 0; col < size; col++) {
-            // 忍者必须放在村庄的周围空闲格子上
-            if (map[row][col] === k && ((map[row - 1]?.[col] === 0) || (map[row + 1]?.[col] === 0) ||
-              (map[row]?.[col - 1] === 0) || (map[row]?.[col + 1] === 0))) {
-              // 收集所有可能的位置
-              if (row > 0 && map[row - 1][col] === 0) possiblePositions.push([row - 1, col]);
-              if (row < size - 1 && map[row + 1][col] === 0) possiblePositions.push([row + 1, col]);
-              if (col > 0 && map[row][col - 1] === 0) possiblePositions.push([row, col - 1]);
-              if (col < size - 1 && map[row][col + 1] === 0) possiblePositions.push([row, col + 1]);
-            }
-          }
-        }
-        if (possiblePositions.length > 0) {
-          let [ninjaRow, ninjaCol] = possiblePositions[Math.floor(Math.random() * possiblePositions.length)];
-          map[ninjaRow][ninjaCol] = -1;
-          placed = true;
-        } else {
-          break; // 如果没有可用的位置，则不放置忍者
-        }
-      }
-    }
-  }
-
-  return map;
 }
 
 
@@ -158,33 +67,35 @@ const mouseup = () => {
   dragging.isDragging = false;
 }
 
+const getAllianceName = (address) => {
+  return `${address.slice(0, 4)}...${address.slice(-4)}`
+}
+
 onBeforeMount(() => {
-  const mapLocal = localStorage.getItem('map');
-  const villagesLocal = localStorage.getItem('villages');
-  const colorsLocal = localStorage.getItem('colors');
-  if (colorsLocal) {
-    colors.push(...JSON.parse(colorsLocal));
-  }
-  if (villagesLocal) {
-    villages.value = JSON.parse(villagesLocal);
-  }
-  if (mapLocal) {
-    mapData.value = JSON.parse(mapLocal);
-  } else {
-    mapData.value = createMap(100, 400, 500);
-    localStorage.setItem('map', JSON.stringify(mapData.value));
-    localStorage.setItem('villages', JSON.stringify(villages.value));
-    localStorage.setItem('colors', JSON.stringify(colors));
-  }
 })
 
 watch(() => store.state.showMap, (newData) => {
   if (newData) {
+    const playerVillage = store?.dojoComponents?.playerVillage?.[0] || {}
     nextTick(() => {
-      centerOnPower(201)
+      centerOnPower(playerVillage.x || 0, playerVillage.y || 0)
     })
   }
 })
+
+watch(() => store.dojoComponents, (newData) => {
+  const globeLocation = store?.dojoComponents?.globeLocation || []
+  globeLocation.forEach(item => {
+    mapData.value[item.x][item.y] = item.player
+    // 上下左右的值也是item.player
+    mapData.value[+item.x - 1][+item.y] = item.player
+    mapData.value[+item.x + 1][+item.y] = item.player
+    mapData.value[+item.x][+item.y - 1] = item.player
+    mapData.value[+item.x][+item.y + 1] = item.player
+
+  })
+}, {immediate: true})
+
 </script>
 
 <template>
@@ -192,25 +103,36 @@ watch(() => store.state.showMap, (newData) => {
     <div class="map" ref="mapRef" @mousemove="mousemove" @mouseup="mouseup">
       <div class="row" v-for="(row, rowIndex) in mapData" :key="rowIndex">
         <div class="col" v-for="(col, colIndex) in row" :key="colIndex">
-          <div class="item" :style="getBg(col)">
-            <n-popover v-if="col == -1" trigger="hover" :to="false" :show-arrow="false">
+          <div class="item" style="font-size: 12px;">
+            <div class="item-grass" v-if="col == 0">
+              <img src="../assets/images/item_grass.png" alt="">
+            </div>
+            <!-- <n-popover v-if="col == -1" trigger="hover" :to="false" :show-arrow="false">
               <template #trigger>
-                <div style="background: rgba(255, 0, 0, .2);">🥷🏻</div>
+                <div class="item-musketeer">
+                  <img src="../assets/images/musketeer.png" alt="">
+                </div>
               </template>
               <span>hidden soilder</span>
-            </n-popover>
-            <n-popover v-if="col == -2" trigger="hover" :to="false" :show-arrow="false">
+            </n-popover> -->
+            <n-popover v-else-if="col == 2" trigger="hover" :to="false" :show-arrow="false">
               <template #trigger>
-                <div>⛰️</div>
+                <div class="item-cliff">
+                  <img src="../assets/images/cliff.png" alt="">
+                </div>
               </template>
               <span>oasis</span>
             </n-popover>
-            <n-popover v-if="col > 0" trigger="hover" :to="false" :show-arrow="false">
+            <n-popover v-else trigger="hover" :to="false" :show-arrow="false">
               <template #trigger>
-                <div v-if="villages.some(v => v.x == rowIndex && v.y == colIndex)">🏛️</div>
-                <div v-else></div>
+                <div  v-if="store.dojoComponents.globeLocation.some(v => v.x == rowIndex && v.y == colIndex)" class="item-keep">
+                  <img src="../assets/images/cyanKeep.png" alt="">
+                </div>
+                <div v-else class="village">
+                  <img src="../assets/images/grass.png" alt="">
+                </div>
               </template>
-              <div>{{col == 201 ? 'Home' : `alliance_${col}`}}</div>
+              <div>{{col == dojoContext.account.address ? 'Home' : `alliance_${getAllianceName(col)}`}}</div>
             </n-popover>
           </div>
         </div>
@@ -233,18 +155,23 @@ watch(() => store.state.showMap, (newData) => {
 
 .map {
   display: grid;
-  grid-template-columns: repeat(100, 64px);
-  grid-template-rows: repeat(100, 64px);
+  grid-template-columns: repeat(100, 32px);
+  grid-template-rows: repeat(100, 32px);
   position: absolute;
   top: 0;
   left: 0;
 
+  img {
+    user-select: none;
+    pointer-events: none;
+  }
+
   .row {
     .col {
-      width: 64px;
-      height: 64px;
-      border-right: 1px solid #E5E5E5;
-      border-top: 1px solid #E5E5E5;
+      width: 32px;
+      height: 32px;
+      border-right: 1px solid rgba(184,208,70,1);
+      border-top: 1px solid rgba(184,208,70,1);
 
       .item {
         width: 100%;
@@ -253,15 +180,83 @@ watch(() => store.state.showMap, (newData) => {
         justify-content: center;
         align-items: center;
         font-size: 28px;
-
-        div {
+        background: url(../assets/images/grass.png) no-repeat;
+        // 处理雪碧图
+        background-size: auto 32px;
+        background-position: -64px 0;
+        .item-musketeer {
           width: 100%;
           height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
+          overflow: hidden;
+          position: relative;
+          img {
+            width: 152px;
+            height: auto;
+            position: absolute;
+            top: 1px;
+            left: 1px;
+          }
         }
+        .item-grass {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          position: relative;
+          img {
+            height: 64px;
+            width: auto;
+            position: absolute;
+            top: -32px;
+            left: -32px;
+          }
+        }
+        .item-cliff {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          position: relative;
+          img {
+            width: 110px;
+            height: auto;
+            position: absolute;
+            top: -30px;
+            left: -80px;
+          }
+        }
+        .item-keep {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          position: relative;
+          img {
+            width: 98px;
+            height: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+          }
+        }
+        .village {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          position: relative;
+          img {
+            width: auto;
+            height: 32px;
+            position: absolute;
+            top: 0;
+            left: -96px;
+          }
+        }
+        // div {
+        //   width: 100%;
+        //   height: 100%;
+        //   display: flex;
+        //   align-items: center;
+        //   justify-content: center;
+        //   cursor: pointer;
+        // }
       }
     }
   }
