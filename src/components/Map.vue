@@ -88,10 +88,18 @@ watch(() => store.dojoComponents, (newData) => {
   globeLocation.forEach(item => {
     mapData.value[item.x][item.y] = item.player
     // 上下左右的值也是item.player
-    mapData.value[+item.x - 1][+item.y] = item.player
-    mapData.value[+item.x + 1][+item.y] = item.player
-    mapData.value[+item.x][+item.y - 1] = item.player
-    mapData.value[+item.x][+item.y + 1] = item.player
+    if (+item.x - 1 >= 0) {
+      mapData.value[+item.x - 1][+item.y] = item.player
+    }
+    if (+item.x + 1 < 100) {
+      mapData.value[+item.x + 1][+item.y] = item.player
+    }
+    if (+item.y - 1 >= 0) {
+      mapData.value[+item.x][+item.y - 1] = item.player
+    }
+    if (+item.y + 1 < 100) {
+      mapData.value[+item.x][+item.y + 1] = item.player
+    }
 
   })
 }, {immediate: true})
