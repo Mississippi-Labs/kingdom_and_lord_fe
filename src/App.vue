@@ -274,9 +274,9 @@ const getData = async () => {
 onBeforeMount(() => {
   getData()
   const last = localStorage.getItem('last') || ''
-  if (last != '5.12') {
+  if (last != '5.14') {
     localStorage.clear()
-    localStorage.setItem('last', '5.12')
+    localStorage.setItem('last', '5.14')
   }
 })
 
