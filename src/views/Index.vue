@@ -164,12 +164,16 @@ const createBuilding = (item) => {
   upgrade(buildingData.value)
 }
 
-const startTrainingFun = async (barrackKind) => {
+const startTrainingFun = async (barrackKind, amount) => {
+  if (!amount) {
+    message.error('Please input amount')
+    return
+  }
   const { startTraining } = dojoContext.setup.systemCalls
   const account = dojoContext.account
   showLoading.value = true
   try {
-    await startTraining({ account, barrackKind, amount: 1 })
+    await startTraining({ account, barrackKind, amount })
   } catch (error) {
     console.error('Failed to startTraining:', error)
     message.error('Failed to startTraining:' + error)

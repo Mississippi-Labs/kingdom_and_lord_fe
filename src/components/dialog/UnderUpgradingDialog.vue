@@ -32,8 +32,35 @@ const getTrainingData = (buildingKind) => {
   }
 }
 
-const startTrainingFun = (barrackKind) => {
-  emit('startTrainingFun', barrackKind)
+const isDisabled = (resource, amount) => {
+  let disabled = false
+  if (amount <= 0) {
+    return true
+  }
+  resource.forEach(item => {
+    if (item.count * amount > props.resourceData[item.name]) {
+      disabled = true
+    }
+  })
+  return disabled
+}
+
+const startTrainingFun = (item ) => {
+  const { barrackKind, amount, resource } = item
+  if (!amount) {
+    message.error('Please input the amount')
+    return
+  } else if (amount > 100) {
+    message.error('The amount should be less than 100')
+    return
+  } else if (amount < 0) {
+    message.error('The amount should be greater than 0')
+    return
+  } else if (isDisabled(resource, amount)) {
+    message.error('Resource is not enough')
+    return
+  }
+  emit('startTrainingFun', barrackKind, amount)
 }
 
 const upgrade = (item) => {
@@ -106,12 +133,16 @@ const close = () => {
                   <div class="icon flex-center-center">
                     <img :src="resource.img" alt="">
                   </div>
-                  <div class="amount">{{ resource.count }}</div>
+                  <div class="amount">{{ item.amount ? item.amount * resource.count : resource.count }}</div>
                 </div>
+              </div>
+              <div class="train-amount flex-center">
+                <input type="number" min="0" max="100" v-model="item.amount">
+                <span>/ 100</span>
               </div>
             </div>
           </div>
-          <div class="btn flex-center-center" @click="startTrainingFun(item.barrackKind)">Train</div>
+          <div class="btn flex-center-center" :class="{'btn-disabled': isDisabled(item.resource, item.amount)}" @click="startTrainingFun(item)">Train</div>
         </div>
       </div>
     </div>
