@@ -140,13 +140,13 @@ export async function setupWorld(provider) {
       }
     };
 
-    const startTraining = async ({ account, barrackKind }) => {
+    const startTraining = async ({ account, barrackKind, amount }) => {
       try {
         const { transaction_hash } = await provider.execute(
           account,
           contract_name,
           "start_training",
-          [barrackKind]
+          [barrackKind, amount]
         );
         setLogsFun({
           hash: transaction_hash,
@@ -291,13 +291,13 @@ export async function setupWorld(provider) {
       }
     }
 
-    const createAmbush = async ({ account }) => {
+    const createAmbush = async (account, {ambush_hash, millitia, guard, heavy_infantry, scouts, knights, heavy_knights}) => {
       try {
         const { transaction_hash } = await provider.execute(
           account,
           contract_name,
           "create_ambush",
-          []
+          [ambush_hash, millitia, guard, heavy_infantry, scouts, knights, heavy_knights]
         );
         setLogsFun({
           hash: transaction_hash,

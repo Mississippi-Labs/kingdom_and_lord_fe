@@ -30,9 +30,9 @@ export function createSystemCalls(
     }
   }
 
-  const startTraining = async ({ account, barrackKind }) => {
+  const startTraining = async ({ account, barrackKind, amount }) => {
     try {
-      return await actions.startTraining({ account, barrackKind });
+      return await actions.startTraining({ account, barrackKind, amount });
     } catch (error) {
       console.error("Error executing startTraining:", error);
       throw error;
@@ -66,9 +66,10 @@ export function createSystemCalls(
     }
   }
 
-  const createAmbush = async ({ account }) => {
+  const createAmbush = async (account, arg) => {
+    console.log("createAmbush", arg);
     try {
-      return await actions.createAmbush({ account });
+      return await actions.createAmbush(account, arg);
     } catch (error) {
       console.error("Error executing createAmbush:", error);
       throw error;

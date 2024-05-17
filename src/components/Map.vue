@@ -3,6 +3,8 @@ import { ref, onBeforeMount, watch, nextTick, inject } from 'vue'
 import { useGlobalStore } from '../hooks/globalStore.js'
 import { map } from '../libs/map.js'
 
+const emit = defineEmits(['point'])
+
 const dojoContext = inject('DojoContext');
 
 const { store } = useGlobalStore()
@@ -18,6 +20,10 @@ const dragging = {
 const mapData = ref(map)
 const mapRef = ref(null)
 const viewport = ref(null)
+
+const point = (x, y) => {
+  emit('point', {x, y})
+}
 
 const centerOnPower = (x, y) => {
   if (y !== undefined && x !== undefined) {
@@ -112,7 +118,7 @@ watch(() => store.dojoComponents, (newData) => {
       <div class="row" v-for="(row, rowIndex) in mapData" :key="rowIndex">
         <div class="col" v-for="(col, colIndex) in row" :key="colIndex">
           <div class="item" style="font-size: 12px;">
-            <div class="item-grass" v-if="col == 0">
+            <div class="item-grass" v-if="col == 0" @click="point(rowIndex, colIndex)">
               <img src="../assets/images/item_grass.png" alt="">
             </div>
             <!-- <n-popover v-if="col == -1" trigger="hover" :to="false" :show-arrow="false">

@@ -169,7 +169,7 @@ const startTrainingFun = async (barrackKind) => {
   const account = dojoContext.account
   showLoading.value = true
   try {
-    await startTraining({ account, barrackKind })
+    await startTraining({ account, barrackKind, amount: 1 })
   } catch (error) {
     console.error('Failed to startTraining:', error)
     message.error('Failed to startTraining:' + error)
@@ -242,7 +242,7 @@ watch(() => blockHeight.value, (newVal) => {
     <InnerBuilding @createBuilding="showCreateBuilding" @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
     <OutBuilding @upgradeBuilding="upgradeBuilding" :resource="resourceData" />
     <CityInfo :growthRateData="growthRateData" :blockHeight="blockHeight" :troopsData="troopsData" />
-    <MapModal />
+    <MapModal :troopsData="troopsData" />
   </div>
   <div v-else class="flex-center spawn-wrap">
     <n-button type="primary" size="large" @click="spawnFun">Create Account</n-button>

@@ -17,16 +17,16 @@ export const infantry = [{
   barrackKind: 0,
   resource: [{
     img: Wood,
-    count: 50
-  }, {
-    img: Bricks,
     count: 120
   }, {
-    img: Steel,
+    img: Bricks,
     count: 100
   }, {
-    img: Food,
+    img: Steel,
     count: 150
+  }, {
+    img: Food,
+    count: 30
   }]
 }]
 
@@ -75,16 +75,16 @@ export const knights = [{
   barrackKind: 3,
   resource: [{
     img: Wood,
-    count: 0
-  }, {
-    img: Bricks,
     count: 140
   }, {
-    img: Steel,
+    img: Bricks,
     count: 160
   }, {
+    img: Steel,
+    count: 210
+  }, {
     img: Food,
-    count: 20
+    count: 80
   }]
 }]
 

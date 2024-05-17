@@ -1,9 +1,30 @@
 <script setup>
+import { ref } from 'vue'
 import Map from '../components/Map.vue'
-
+import PointDialog from './dialog/PointDialog.vue';
 import { useGlobalStore } from '../hooks/globalStore.js'
 
+const props = defineProps({
+  troopsData: {
+    type: Object,
+    default: {
+      "Millitia": 0,
+      "Guard": 0,
+      "Heavy Infantry": 0,
+      "Light Cavalry": 0,
+      "Knights": 0,
+      "Heavy Knights": 0
+    }
+  },
+})
+
 const { store, setShowMap } = useGlobalStore()
+
+const point = ref(null)
+
+const showPoint = (p) => {
+  point.value = p
+}
 
 const close = () => {
   setShowMap(false)
@@ -19,13 +40,13 @@ const close = () => {
         </div>
       </div>
       <main>
-        <Map />
+        <Map @point="showPoint" />
       </main>
       <footer>
       </footer>
     </div>
+    <PointDialog v-if="point" :troopsData="troopsData" :point="point" @close="point = null" />
   </div>
-
 </template>
 <style lang="scss" scoped>
 .modal-wrap {
@@ -37,6 +58,7 @@ const close = () => {
   bottom: 0;
   background: rgba(0, 0, 0, 0.1);
 }
+
 .modal {
   width: 640px;
   height: 720px;

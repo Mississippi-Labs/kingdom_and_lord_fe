@@ -677,8 +677,8 @@
     {
       "kind": "DojoContract",
       "address": "0x5fb9263438e41b011ce81d6bb2c75000a5411ce11230188af7d9fb8ef667651",
-      "class_hash": "0x3a89bf4c3231078b7895139683711c33a6715593f2d2b4e59791553a531a2ee",
-      "original_class_hash": "0x3a89bf4c3231078b7895139683711c33a6715593f2d2b4e59791553a531a2ee",
+      "class_hash": "0x367e8fc2dc49ad46f7fdb9e23332e39b93b580cb6e10f686efdba89d77a19e7",
+      "original_class_hash": "0x367e8fc2dc49ad46f7fdb9e23332e39b93b580cb6e10f686efdba89d77a19e7",
       "base_class_hash": "0x679177a2cb757694ac4f326d01052ff0963eac0bc2a17116a2b87badcdf6f76",
       "abi": [
         {
@@ -987,6 +987,10 @@
             {
               "name": "is_finished",
               "type": "core::bool"
+            },
+            {
+              "name": "amount",
+              "type": "core::integer::u64"
             }
           ]
         },
@@ -1013,6 +1017,10 @@
             {
               "name": "is_planned",
               "type": "core::bool"
+            },
+            {
+              "name": "amount",
+              "type": "core::integer::u64"
             }
           ]
         },
@@ -1483,6 +1491,10 @@
                 {
                   "name": "soldier_kind",
                   "type": "core::integer::u64"
+                },
+                {
+                  "name": "amount",
+                  "type": "core::integer::u64"
                 }
               ],
               "outputs": [
@@ -1745,6 +1757,10 @@
               "inputs": [
                 {
                   "name": "soldier_kind",
+                  "type": "core::integer::u64"
+                },
+                {
+                  "name": "amount",
                   "type": "core::integer::u64"
                 }
               ],
@@ -3471,10 +3487,15 @@
           "name": "is_finished",
           "type": "bool",
           "key": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "key": false
         }
       ],
-      "class_hash": "0x7f03ee0850011429dc5051642bd39be79824c1a5f669055a311a940d8b64ccf",
-      "original_class_hash": "0x7f03ee0850011429dc5051642bd39be79824c1a5f669055a311a940d8b64ccf",
+      "class_hash": "0x239949dc716530ee53e8de2bcc3108bd7984016a3364f5fb1ca4b6bd0c2c06",
+      "original_class_hash": "0x239949dc716530ee53e8de2bcc3108bd7984016a3364f5fb1ca4b6bd0c2c06",
       "abi": [
         {
           "type": "impl",
@@ -3690,6 +3711,10 @@
             {
               "name": "is_finished",
               "type": "core::bool"
+            },
+            {
+              "name": "amount",
+              "type": "core::integer::u64"
             }
           ]
         },
@@ -3747,10 +3772,15 @@
           "name": "is_planned",
           "type": "bool",
           "key": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "key": false
         }
       ],
-      "class_hash": "0x53279de68091d65cc1d7becf55d09bfb8615d6e627c5a2451dbc59b2de9f649",
-      "original_class_hash": "0x53279de68091d65cc1d7becf55d09bfb8615d6e627c5a2451dbc59b2de9f649",
+      "class_hash": "0x2a49623776ee19ecd25bff9db0239ad0a3bbf433d04cdb275841400078704ea",
+      "original_class_hash": "0x2a49623776ee19ecd25bff9db0239ad0a3bbf433d04cdb275841400078704ea",
       "abi": [
         {
           "type": "impl",
@@ -3962,6 +3992,10 @@
             {
               "name": "is_planned",
               "type": "core::bool"
+            },
+            {
+              "name": "amount",
+              "type": "core::integer::u64"
             }
           ]
         },
@@ -6871,8 +6905,8 @@
           "key": true
         },
         {
-          "name": "kind",
-          "type": "LocationKind",
+          "name": "location_kind",
+          "type": "u64",
           "key": false
         },
         {
@@ -6881,8 +6915,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x5e2c4344723e5e4e898c3530fe757e69107f1cadb261aa64a85949604493304",
-      "original_class_hash": "0x5e2c4344723e5e4e898c3530fe757e69107f1cadb261aa64a85949604493304",
+      "class_hash": "0x4aa7e9fffbb5dd31c1775bdde66688017d7119a8a1419ab5f635fe5b39a6ca4",
+      "original_class_hash": "0x4aa7e9fffbb5dd31c1775bdde66688017d7119a8a1419ab5f635fe5b39a6ca4",
       "abi": [
         {
           "type": "impl",
@@ -7058,28 +7092,6 @@
           "interface_name": "kingdom_lord::components::globe::Iglobe_location"
         },
         {
-          "type": "enum",
-          "name": "kingdom_lord::components::globe::LocationKind",
-          "variants": [
-            {
-              "name": "Nothing",
-              "type": "()"
-            },
-            {
-              "name": "Village",
-              "type": "()"
-            },
-            {
-              "name": "Army",
-              "type": "()"
-            },
-            {
-              "name": "Block",
-              "type": "()"
-            }
-          ]
-        },
-        {
           "type": "struct",
           "name": "kingdom_lord::components::globe::GlobeLocation",
           "members": [
@@ -7092,8 +7104,8 @@
               "type": "core::integer::u64"
             },
             {
-              "name": "kind",
-              "type": "kingdom_lord::components::globe::LocationKind"
+              "name": "location_kind",
+              "type": "core::integer::u64"
             },
             {
               "name": "player",
@@ -8130,10 +8142,15 @@
           "name": "is_finished",
           "type": "bool",
           "key": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "key": false
         }
       ],
-      "class_hash": "0x7b4d5e22d42a3a6614227f5b5fa87b027ce0f7576b727816382865b37ede17b",
-      "original_class_hash": "0x7b4d5e22d42a3a6614227f5b5fa87b027ce0f7576b727816382865b37ede17b",
+      "class_hash": "0x1a2634e2e6f622f3044a73e717e8ac2d050a9c09e9f1e92729971af73df597f",
+      "original_class_hash": "0x1a2634e2e6f622f3044a73e717e8ac2d050a9c09e9f1e92729971af73df597f",
       "abi": [
         {
           "type": "impl",
@@ -8349,6 +8366,10 @@
             {
               "name": "is_finished",
               "type": "core::bool"
+            },
+            {
+              "name": "amount",
+              "type": "core::integer::u64"
             }
           ]
         },
@@ -8406,10 +8427,15 @@
           "name": "is_planned",
           "type": "bool",
           "key": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "key": false
         }
       ],
-      "class_hash": "0x196b8493cd3bb314ec0ccb0f1c3817fde42643a5fe364cf0c763ee2a9b6a558",
-      "original_class_hash": "0x196b8493cd3bb314ec0ccb0f1c3817fde42643a5fe364cf0c763ee2a9b6a558",
+      "class_hash": "0x38be3b12fc1cd70a9752223d37b2e9060df961e5feed00119c0de03b99d48b0",
+      "original_class_hash": "0x38be3b12fc1cd70a9752223d37b2e9060df961e5feed00119c0de03b99d48b0",
       "abi": [
         {
           "type": "impl",
@@ -8621,6 +8647,10 @@
             {
               "name": "is_planned",
               "type": "core::bool"
+            },
+            {
+              "name": "amount",
+              "type": "core::integer::u64"
             }
           ]
         },

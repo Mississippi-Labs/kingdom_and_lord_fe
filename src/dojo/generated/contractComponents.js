@@ -59,11 +59,11 @@ export function defineContractComponents(world) {
     BarrackUnderTraining: (() => {
       return defineComponent(
         world,
-        { address: RecsType.BigInt, current_training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, start_time: RecsType.BigInt, end_time: RecsType.BigInt, is_finished: RecsType.Boolean },
+        { address: RecsType.BigInt, current_training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, start_time: RecsType.BigInt, end_time: RecsType.BigInt, is_finished: RecsType.Boolean, amount: RecsType.BigInt },
         {
           metadata: {
             name: "BarrackUnderTraining",
-            types: ["contractaddress","u64","u64","u64","u64","bool"],
+            types: ["contractaddress","u64","u64","u64","u64","bool","u64"],
             customTypes: [],
           },
         }
@@ -72,11 +72,11 @@ export function defineContractComponents(world) {
     BarrackWaitingToTrain: (() => {
       return defineComponent(
         world,
-        { address: RecsType.BigInt, training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, required_time: RecsType.BigInt, is_planned: RecsType.Boolean },
+        { address: RecsType.BigInt, training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, required_time: RecsType.BigInt, is_planned: RecsType.Boolean, amount: RecsType.BigInt },
         {
           metadata: {
             name: "BarrackWaitingToTrain",
-            types: ["contractaddress","u64","u64","u64","bool"],
+            types: ["contractaddress","u64","u64","u64","bool","u64"],
             customTypes: [],
           },
         }
@@ -280,11 +280,11 @@ export function defineContractComponents(world) {
     StableUnderTraining: (() => {
       return defineComponent(
         world,
-        { address: RecsType.BigInt, current_training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, start_time: RecsType.BigInt, end_time: RecsType.BigInt, is_finished: RecsType.Boolean },
+        { address: RecsType.BigInt, current_training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, start_time: RecsType.BigInt, end_time: RecsType.BigInt, is_finished: RecsType.Boolean, amount: RecsType.BigInt },
         {
           metadata: {
             name: "StableUnderTraining",
-            types: ["contractaddress","u64","u64","u64","u64","bool"],
+            types: ["contractaddress","u64","u64","u64","u64","bool","u64"],
             customTypes: [],
           },
         }
@@ -293,11 +293,11 @@ export function defineContractComponents(world) {
     StableWaitingToTrain: (() => {
       return defineComponent(
         world,
-        { address: RecsType.BigInt, training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, required_time: RecsType.BigInt, is_planned: RecsType.Boolean },
+        { address: RecsType.BigInt, training_id: RecsType.BigInt, soldier_kind: RecsType.BigInt, required_time: RecsType.BigInt, is_planned: RecsType.Boolean, amount: RecsType.BigInt },
         {
           metadata: {
             name: "StableWaitingToTrain",
-            types: ["contractaddress","u64","u64","u64","bool"],
+            types: ["contractaddress","u64","u64","u64","bool","u64"],
             customTypes: [],
           },
         }
