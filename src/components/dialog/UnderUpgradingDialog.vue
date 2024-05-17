@@ -38,6 +38,7 @@ const isDisabled = (resource, amount) => {
     return true
   }
   resource.forEach(item => {
+    console.log(item.count * amount, props.resourceData, [item])
     if (item.count * amount > props.resourceData[item.name]) {
       disabled = true
     }

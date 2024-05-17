@@ -79,15 +79,19 @@ export const knights = [{
   barrackKind: 3,
   resource: [{
     img: Wood,
+    name: 'wood',
     count: 140
   }, {
     img: Bricks,
+    name: 'bricks',
     count: 160
   }, {
     img: Steel,
+    name: 'steel',
     count: 20
   }, {
     img: Food,
+    name: 'food',
     count: 80
   }]
 }]
