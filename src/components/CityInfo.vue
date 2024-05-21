@@ -3,6 +3,9 @@ import { watch, ref } from 'vue'
 import { innerBuildingOptions, outBuildingOptions, cityWall } from '../libs/building.js'
 import { infantry, knights } from '../libs/barrack.js'
 import { getBuildingList, getTrainingList } from '../utils/data'
+import { useGlobalStore } from '../hooks/globalStore'
+
+const { store } = useGlobalStore()
 
 const props = defineProps({
   troopsData: {
@@ -49,6 +52,11 @@ const getBuilding = (buildingKind) => {
   } else {
     return outBuildingOptions.filter(e => e.buildingKind == buildingKind)[0]
   }
+}
+
+const getAmbushList = () => {
+  const { ambushInfo } = store.dojoComponents
+  return ambushInfo.filter(e => e.end_time && !e.is_ambushed)
 }
 
 watch(() => props.troopsData, (newData) => {
@@ -151,6 +159,24 @@ watch(() => props.troopsData, (newData) => {
               <span v-if="item.is_planned" style="color: #f17d00;">Waiting</span>
               <span v-else>{{ Number(item.end_time) - blockHeight >= 0 ? Number(item.end_time) - blockHeight : 0 }} blocks</span>
               <!-- {{ item.is_planned ? 'waiting' : item.end_time - blockHeight >= 0 ? item.end_time - blockHeight : 0 }} -->
+            </div>
+          </div>
+        </div>
+        <div v-else class="no-data flex-center-center"> No training data</div>
+        <div class="ft"></div>
+      </div>
+      <div class="section">
+        <div class="hd flex-center">Ambush</div>
+        <div class="bd" v-if="getAmbushList().length">
+          <div v-for="(item, index) in getAmbushList()" :key="index" class="bd-item flex-center-sb">
+            <div class="flex-center">
+              <!-- <div class="img flex-center-center training-img">
+                <img :src="getTraining(item?.soldier_kind)?.img" alt="">
+              </div> -->
+              <span>{{ item.start_x }}, {{ item.start_y }} -> {{ item.target_x }}, {{ item.target_y }} </span>
+            </div>
+            <div>
+              <span>{{ Number(item.end_time) - blockHeight >= 0 ? Number(item.end_time) - blockHeight : 0 }} blocks</span>
             </div>
           </div>
         </div>

@@ -6,7 +6,6 @@ import { useMessage } from 'naive-ui'
 import { getProof, getUpgradeData, toObject } from '../utils/index'
 import { getBuildingList } from '../utils/data'
 import { useGlobalStore } from '../hooks/globalStore.js'
-import { RpcProvider } from "starknet";
 import { innerBuildingOptions } from '../libs/building.js'
 import Nav from '../components/Nav.vue'
 import OutBuilding from '../components/OutBuilding.vue'
@@ -15,12 +14,6 @@ import CityInfo from '../components/CityInfo.vue'
 import UnderUpgradingDialog from '../components/dialog/UnderUpgradingDialog.vue'
 import CreateBuildingDialog from '../components/dialog/CreateBuildingDialog.vue'
 import MapModal from '../components/MapModal.vue'
-
-let interval = null
-
-const providerRPC = new RpcProvider({
-  nodeUrl: import.meta.env.VITE_PUBLIC_NODE_URL,
-});
 
 const dojoContext = inject('DojoContext');
 
@@ -59,11 +52,6 @@ const setInnerBuildingListFun = (cityHall, warehouse, barn, barrack, college, st
     })
   })
   setInnerBuildingList(toObject(innerBuildingList))
-}
-
-const getLastBlock = async () => {
-  const lastBlock = await providerRPC.getBlockLatestAccepted();
-  blockHeight.value = lastBlock.block_number
 }
 
 const getData = async () => {
@@ -183,18 +171,7 @@ const startTrainingFun = async (barrackKind, amount) => {
 
 
 onBeforeMount(() => {
-  getLastBlock()
   getData()
-  interval = setInterval(() => {
-    getLastBlock()
-    if (dojoContext.setup) {
-      getData()
-    }
-  }, 2000)
-})
-
-onBeforeUnmount(() => {
-  clearInterval(interval)
 })
 
 watch(() => store.dojoComponents, (newVal) => {
@@ -238,6 +215,12 @@ watch(() => blockHeight.value, (newVal) => {
     }
   })
 }, { immediate: true })
+
+watch(() => store.state.blockHeight, (newVal) => {
+  if (newVal) {
+    blockHeight.value = newVal
+  }
+})
 </script>
 
 <template>

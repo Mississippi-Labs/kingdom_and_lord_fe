@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch, onBeforeMount, h, toRaw } from 'vue'
+import { ref, watch, onBeforeMount, onBeforeUnmount } from 'vue'
+import { RpcProvider } from "starknet";
 import { setup } from './dojo/generated/setup.js'
 import { dojoConfig } from '../dojoConfig.js'
 import { getAccount, createAccount } from './utils/accountUtils.js'
@@ -10,12 +11,25 @@ import { useGlobalStore } from './hooks/globalStore.js'
 import Loading from './components/Loading.vue'
 import { toObject } from './utils/index.js'
 
-const { setDojoComponents } = useGlobalStore()
+let interval = null
+
+const providerRPC = new RpcProvider({
+  nodeUrl: import.meta.env.VITE_PUBLIC_NODE_URL,
+});
+
+const { setDojoComponents, setBlockHeight } = useGlobalStore()
 
 const dojoContext = ref({
   account: null,
   setup: null
 })
+const blockHeight = ref(0)
+
+const getLastBlock = async () => {
+  const lastBlock = await providerRPC.getBlockLatestAccepted();
+  blockHeight.value = lastBlock.block_number
+  setBlockHeight(lastBlock.block_number)
+}
 
 const getHexAddress = (address) => {
   const bn = BigInt(address);
@@ -209,6 +223,22 @@ const getData = async () => {
       const ambushInfoData = newAmbushInfo.value.map((entity) => {
         let data = toObject(getComponentValue(AmbushInfo, entity))
         data.player = getHexAddress(data.player)
+        data.ambush_hash = getHexAddress(data.ambush_hash)
+        const ambushList = localStorage.getItem('ambushList')
+        if (ambushList) {
+          const list = JSON.parse(ambushList)
+          list.forEach(e => {
+            if (e.ambush_hash == data.ambush_hash) {
+              data.end_time = Number(data.created_time) + Number(e.time)
+              data = Object.assign(data, e)
+            }
+          });
+          if (data.end_time && data.end_time < blockHeight.value) {
+            data.is_ambushed = true
+          } else {
+            data.is_ambushed = false
+          }
+        }
         return data
       }).filter((ambushInfo) => ambushInfo.player == account.address)
 
@@ -273,11 +303,22 @@ const getData = async () => {
 }
 onBeforeMount(() => {
   getData()
+  getLastBlock()
+  interval = setInterval(() => {
+    getLastBlock()
+    if (dojoContext.setup) {
+      getData()
+    }
+  }, 2000)
   const last = localStorage.getItem('last') || ''
-  if (last != '5.17') {
+  if (last != '5.21') {
     localStorage.clear()
-    localStorage.setItem('last', '5.17')
+    localStorage.setItem('last', '5.21')
   }
+})
+
+onBeforeUnmount(() => {
+  clearInterval(interval)
 })
 
 </script>

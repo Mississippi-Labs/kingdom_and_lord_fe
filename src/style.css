@@ -109,6 +109,10 @@ table {
   justify-content: space-between;
 }
 
+.v-binder-follower-container {
+  z-index: 3001 !important;
+}
+
 @font-face {
 	font-family: 'Chalkboard';
 	src: url(./assets/fonts/ChalkboardSE-Regular.ttf);

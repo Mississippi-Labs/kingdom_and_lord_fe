@@ -17,7 +17,8 @@ const store = reactive({
     lastBlock: 0,
     innerBuildingList: innerBuildingList,
     menuIndex: 0,
-    showMap: false
+    showMap: false,
+    blockHeight: 0
   }
 });
 
@@ -49,6 +50,9 @@ const setInnerBuildingList = (list) => {
   store.state.innerBuildingList = list
 }
 
+const setBlockHeight = (height) => {
+  store.state.blockHeight = height
+}
 
 export const useGlobalStore = () => ({
   store,
@@ -57,5 +61,6 @@ export const useGlobalStore = () => ({
   setLastBlock,
   setInnerBuildingList,
   setMenuIndex,
-  setShowMap
+  setShowMap,
+  setBlockHeight
 });

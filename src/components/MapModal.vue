@@ -15,7 +15,7 @@ const props = defineProps({
       "Knights": 0,
       "Heavy Knights": 0
     }
-  },
+  }
 })
 
 const { store, setShowMap } = useGlobalStore()

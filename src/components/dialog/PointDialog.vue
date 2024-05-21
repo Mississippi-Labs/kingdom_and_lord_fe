@@ -28,7 +28,7 @@ const props = defineProps({
   point: {
     type: Object,
     default: () => ({ x: 0, y: 0 })
-  },
+  }
 })
 
 const emit = defineEmits(['close'])
@@ -91,7 +91,7 @@ const createAmbushFun = async () => {
     // console.log('distance', distance, 'speed', speed)
     // return
     console.log('ambushData', ambushData.value)
-    const time = Math.floor((distance / speed) * 1800)
+    const time = Math.floor((distance / speed) * 100)
     const nonce = `${playerVillage.x}${playerVillage.y}`
     const {millitia, guard, heavy_infantry, scouts, knights, heavy_knights} = ambushData.value
     console.log('ambushData', [millitia, guard, heavy_infantry, scouts, knights, heavy_knights, props.point.x, props.point.y, time, nonce])
@@ -99,6 +99,15 @@ const createAmbushFun = async () => {
     console.log('ambushData', ambushData.value)
     
     await createAmbush(dojoContext.account, ambushData.value)
+    let ambushList = localStorage.getItem('ambushList')
+    const data = { time, nonce, target_x: props.point.x, target_y: props.point.y, ambush_hash: ambushData.value.ambush_hash }
+    if (ambushList) {
+      ambushList = JSON.parse(ambushList)
+      ambushList.push(data)
+    } else {
+      ambushList = [data]
+    }
+    localStorage.setItem('ambushList', JSON.stringify(ambushList))
   } catch (error) {
     console.error('Failed to createAmbush:', error)
     message.error('Failed to createAmbush:' + error)

@@ -20,9 +20,20 @@ const dragging = {
 const mapData = ref(map)
 const mapRef = ref(null)
 const viewport = ref(null)
+const value = ref('')
+const options = [
+  {
+    label: "attack",
+    value: "attack"
+  },
+  {
+    label: "hide",
+    value: "hide"
+  }
+]
 
 const point = (x, y) => {
-  emit('point', {x, y})
+  emit('point', { x, y })
 }
 
 const centerOnPower = (x, y) => {
@@ -91,6 +102,7 @@ watch(() => store.state.showMap, (newData) => {
 
 watch(() => store.dojoComponents, (newData) => {
   const globeLocation = store?.dojoComponents?.globeLocation || []
+  const ambushInfo = store?.dojoComponents?.ambushInfo || []
   globeLocation.forEach(item => {
     mapData.value[item.x][item.y] = item.player
     // 上下左右的值也是item.player
@@ -106,9 +118,13 @@ watch(() => store.dojoComponents, (newData) => {
     if (+item.y + 1 < 100) {
       mapData.value[+item.x][+item.y + 1] = item.player
     }
-
   })
-}, {immediate: true})
+  ambushInfo.forEach(item => {
+    if (item.is_ambushed && item.target_x && item.target_y) {
+      mapData.value[item.target_x][item.target_y] = 3
+    }
+  })
+}, { immediate: true })
 
 </script>
 
@@ -121,14 +137,6 @@ watch(() => store.dojoComponents, (newData) => {
             <div class="item-grass" v-if="col == 0" @click="point(rowIndex, colIndex)">
               <img src="../assets/images/item_grass.png" alt="">
             </div>
-            <!-- <n-popover v-if="col == -1" trigger="hover" :to="false" :show-arrow="false">
-              <template #trigger>
-                <div class="item-musketeer">
-                  <img src="../assets/images/musketeer.png" alt="">
-                </div>
-              </template>
-              <span>hidden soilder</span>
-            </n-popover> -->
             <n-popover v-else-if="col == 2" trigger="hover" :to="false" :show-arrow="false">
               <template #trigger>
                 <div class="item-cliff">
@@ -137,16 +145,27 @@ watch(() => store.dojoComponents, (newData) => {
               </template>
               <span>oasis</span>
             </n-popover>
+            <n-popselect v-else-if="col == 3" v-model:value="value" :options="options" trigger="click">
+              <n-popover trigger="hover" :to="false" :show-arrow="false">
+                <template #trigger>
+                  <div class="item-musketeer">
+                    <img src="../assets/images/musketeer.png" alt="">
+                  </div>
+                </template>
+                <span>ambush</span>
+              </n-popover>
+            </n-popselect>
             <n-popover v-else trigger="hover" :to="false" :show-arrow="false">
               <template #trigger>
-                <div  v-if="store.dojoComponents.globeLocation.some(v => v.x == rowIndex && v.y == colIndex)" class="item-keep">
+                <div v-if="store.dojoComponents.globeLocation.some(v => v.x == rowIndex && v.y == colIndex)"
+                  class="item-keep">
                   <img src="../assets/images/cyanKeep.png" alt="">
                 </div>
                 <div v-else class="village">
                   <img src="../assets/images/grass.png" alt="">
                 </div>
               </template>
-              <div>{{col == dojoContext.account.address ? 'Home' : `alliance_${getAllianceName(col)}`}}</div>
+              <div>{{ col == dojoContext.account.address ? 'Home' : `alliance_${getAllianceName(col)}` }}</div>
             </n-popover>
           </div>
         </div>
@@ -184,8 +203,8 @@ watch(() => store.dojoComponents, (newData) => {
     .col {
       width: 32px;
       height: 32px;
-      border-right: 1px solid rgba(184,208,70,1);
-      border-top: 1px solid rgba(184,208,70,1);
+      border-right: 1px solid rgba(184, 208, 70, 1);
+      border-top: 1px solid rgba(184, 208, 70, 1);
 
       .item {
         width: 100%;
@@ -198,11 +217,13 @@ watch(() => store.dojoComponents, (newData) => {
         // 处理雪碧图
         background-size: auto 32px;
         background-position: -64px 0;
+
         .item-musketeer {
           width: 100%;
           height: 100%;
           overflow: hidden;
           position: relative;
+
           img {
             width: 152px;
             height: auto;
@@ -211,11 +232,13 @@ watch(() => store.dojoComponents, (newData) => {
             left: 1px;
           }
         }
+
         .item-grass {
           width: 100%;
           height: 100%;
           overflow: hidden;
           position: relative;
+
           img {
             height: 64px;
             width: auto;
@@ -224,11 +247,13 @@ watch(() => store.dojoComponents, (newData) => {
             left: -32px;
           }
         }
+
         .item-cliff {
           width: 100%;
           height: 100%;
           overflow: hidden;
           position: relative;
+
           img {
             width: 110px;
             height: auto;
@@ -237,11 +262,13 @@ watch(() => store.dojoComponents, (newData) => {
             left: -80px;
           }
         }
+
         .item-keep {
           width: 100%;
           height: 100%;
           overflow: hidden;
           position: relative;
+
           img {
             width: 98px;
             height: auto;
@@ -250,11 +277,13 @@ watch(() => store.dojoComponents, (newData) => {
             left: 0;
           }
         }
+
         .village {
           width: 100%;
           height: 100%;
           overflow: hidden;
           position: relative;
+
           img {
             width: auto;
             height: 32px;
@@ -263,6 +292,7 @@ watch(() => store.dojoComponents, (newData) => {
             left: -96px;
           }
         }
+
         // div {
         //   width: 100%;
         //   height: 100%;
