@@ -1,6 +1,7 @@
 <script setup>
 // emit
 const emit = defineEmits(['close'])
+const props = defineProps(['mainStyle', 'style'])
 
 const close = () => {
   emit('close')
@@ -8,7 +9,7 @@ const close = () => {
 </script>
 <template>
   <div class="modal-wrap flex-center-center" @click="close">
-    <div class="modal flex-center-center" @click.stop>
+    <div class="modal flex-center-center" :style="style" @click.stop>
       <div class="header">
         <div class="header-content flex-center-sb">
           <div class="title">
@@ -17,7 +18,7 @@ const close = () => {
           <img src="../assets/images/button_3.png" alt="" class="close-btn" @click="close">
         </div>
       </div>
-      <main>
+      <main :style="mainStyle">
         <slot></slot>
       </main>
       <footer>

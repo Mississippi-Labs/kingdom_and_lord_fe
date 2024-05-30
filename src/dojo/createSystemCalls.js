@@ -76,18 +76,18 @@ export function createSystemCalls(
     }
   }
 
-  const revealAttack = async ({ account }) => {
+  const revealAttack = async (account, arg) => {
     try {
-      return await actions.revealAttack({ account });
+      return await actions.revealAttack(account, arg);
     } catch (error) {
       console.error("Error executing revealAttack:", error);
       throw error;
     }
   }
 
-  const revealHide = async ({ account }) => {
+  const revealHide = async (account, arg) => {
     try {
-      return await actions.revealHide({ account });
+      return await actions.revealHide(account, arg);
     } catch (error) {
       console.error("Error executing revealHide:", error);
       throw error;

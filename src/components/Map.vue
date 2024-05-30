@@ -33,6 +33,8 @@ const options = [
 ]
 
 const point = (x, y) => {
+  if (dragging.isDragging) return
+  if (mapData.value[x][y] == dojoContext.account.address) return
   emit('point', { x, y })
 }
 
@@ -56,16 +58,18 @@ const mousedown = (e) => {
   dragging.startY = e.clientY;
   dragging.originalX = mapRef.value.offsetLeft;
   dragging.originalY = mapRef.value.offsetTop;
-  dragging.isDragging = true;
+  // dragging.isDragging = true;
   document.addEventListener('mousemove', mousemove);
   document.addEventListener('mouseup', mouseup);
 }
 
 const mousemove = (e) => {
   const { startX, startY, originalX, originalY } = dragging;
-  if (dragging.isDragging) {
+  if (e.buttons === 1) {
     const deltaX = e.clientX - startX;
     const deltaY = e.clientY - startY;
+    if (deltaX === 0 && deltaY === 0) return;
+    dragging.isDragging = true;
     const newX = originalX + deltaX;
     const newY = originalY + deltaY;
 
@@ -81,6 +85,10 @@ const mousemove = (e) => {
 const mouseup = () => {
   document.removeEventListener('mousemove', mousemove);
   document.removeEventListener('mouseup', mouseup);
+  // dragging.isDragging = false;
+}
+
+const setIsDragging = () => {
   dragging.isDragging = false;
 }
 
@@ -100,7 +108,7 @@ watch(() => store.state.showMap, (newData) => {
   }
 })
 
-watch(() => store.dojoComponents, (newData) => {
+watch(() => store.dojoComponents, () => {
   const globeLocation = store?.dojoComponents?.globeLocation || []
   const ambushInfo = store?.dojoComponents?.ambushInfo || []
   globeLocation.forEach(item => {
@@ -120,17 +128,19 @@ watch(() => store.dojoComponents, (newData) => {
     }
   })
   ambushInfo.forEach(item => {
-    if (item.is_ambushed && item.target_x && item.target_y) {
+    if (item.is_ambushed && item.target_x && item.target_y && item.is_revealed == 0) {
       mapData.value[item.target_x][item.target_y] = 3
+    } else if (item.is_ambushed && item.target_x && item.target_y && item.is_revealed == 1) {
+      mapData.value[item.target_x][item.target_y] = 0
     }
   })
-}, { immediate: true })
+}, { immediate: true, deep: true })
 
 </script>
 
 <template>
   <div class="map-wrap" ref="viewport" @mousedown="mousedown">
-    <div class="map" ref="mapRef" @mousemove="mousemove" @mouseup="mouseup">
+    <div class="map" ref="mapRef" @mousemove="mousemove" @mouseup="mouseup" @click="setIsDragging">
       <div class="row" v-for="(row, rowIndex) in mapData" :key="rowIndex">
         <div class="col" v-for="(col, colIndex) in row" :key="colIndex">
           <div class="item" style="font-size: 12px;">
@@ -145,20 +155,18 @@ watch(() => store.dojoComponents, (newData) => {
               </template>
               <span>oasis</span>
             </n-popover>
-            <n-popselect v-else-if="col == 3" v-model:value="value" :options="options" trigger="click">
-              <n-popover trigger="hover" :to="false" :show-arrow="false">
-                <template #trigger>
-                  <div class="item-musketeer">
-                    <img src="../assets/images/musketeer.png" alt="">
-                  </div>
-                </template>
-                <span>ambush</span>
-              </n-popover>
-            </n-popselect>
+            <n-popover v-else-if="col == 3" trigger="hover" :to="false" :show-arrow="false">
+              <template #trigger>
+                <div class="item-musketeer">
+                  <img src="../assets/images/musketeer.png" alt="">
+                </div>
+              </template>
+              <span>ambush</span>
+            </n-popover>
             <n-popover v-else trigger="hover" :to="false" :show-arrow="false">
               <template #trigger>
                 <div v-if="store.dojoComponents.globeLocation.some(v => v.x == rowIndex && v.y == colIndex)"
-                  class="item-keep">
+                  class="item-keep" @click="point(rowIndex, colIndex)">
                   <img src="../assets/images/cyanKeep.png" alt="">
                 </div>
                 <div v-else class="village">

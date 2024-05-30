@@ -17,7 +17,7 @@ import MapModal from '../components/MapModal.vue'
 
 const dojoContext = inject('DojoContext');
 
-const { store, setInnerBuildingList } = useGlobalStore()
+const { store, setInnerBuildingList, setDojoComponents } = useGlobalStore()
 const message = useMessage()
 
 const showLoading = ref(false)
@@ -93,9 +93,9 @@ const spawnFun = async () => {
   const { spawn, createVillageConfirm, createVillageReveal } = dojoContext.setup.systemCalls
   try {
     // console.log('spawn', dojoContext.account)
-    await createVillageConfirm({account: dojoContext.account})
+    await createVillageConfirm({ account: dojoContext.account })
     await spawn({ account: dojoContext.account })
-    await createVillageReveal({account: dojoContext.account})
+    await createVillageReveal({ account: dojoContext.account })
     showLoading.value = false
   } catch (error) {
     console.error('Failed to spawn:', error)
@@ -169,6 +169,30 @@ const startTrainingFun = async (barrackKind, amount) => {
   closeDialog()
 }
 
+const updateAmbustList = () => {
+  const ambushList = localStorage.getItem('ambushList')
+  const dojoComponents = store.dojoComponents
+  const { ambushInfo } = dojoComponents
+  if (ambushList && ambushInfo?.length) {
+    const list = JSON.parse(ambushList)
+
+    ambushInfo.forEach(data => {
+      list.forEach(e => {
+        if (e.ambush_hash == data.ambush_hash) {
+          data.end_time = Number(data.created_time) + Number(e.time)
+          data = Object.assign(data, e)
+        }
+      });
+      if (data.end_time && data.end_time < blockHeight.value) {
+        data.is_ambushed = true
+      } else {
+        data.is_ambushed = false
+      }
+    })
+    dojoComponents.ambushInfo = ambushInfo
+    setDojoComponents(dojoComponents)
+  }
+}
 
 onBeforeMount(() => {
   getData()
@@ -189,7 +213,8 @@ watch(() => store.dojoComponents, (newVal) => {
 }, { deep: true, immediate: true })
 
 watch(() => blockHeight.value, (newVal) => {
-  console.log('blockHeight', newVal)
+  getData()
+  updateAmbustList()
   const { underUpgrading, barrackUnderTraining, stableUnderTraining } = store.dojoComponents
   const { finishUpgrade, finishTraining } = dojoContext.setup.systemCalls
   if (!underUpgrading) return
@@ -220,7 +245,7 @@ watch(() => store.state.blockHeight, (newVal) => {
   if (newVal) {
     blockHeight.value = newVal
   }
-})
+}, { immediate: true })
 </script>
 
 <template>
@@ -234,8 +259,10 @@ watch(() => store.state.blockHeight, (newVal) => {
   <div v-else class="flex-center spawn-wrap">
     <n-button type="primary" size="large" @click="spawnFun">Create Account</n-button>
   </div>
-  <UnderUpgradingDialog :underUpgradingData="underUpgradingData" :resourceData="resourceData" @startTrainingFun="startTrainingFun" @upgrade="upgrade" @close="closeDialog" />
-  <CreateBuildingDialog :buildingData="buildingData" :resourceData="resourceData"  @createBuilding="createBuilding" @close="closeDialog" />
+  <UnderUpgradingDialog :underUpgradingData="underUpgradingData" :resourceData="resourceData"
+    @startTrainingFun="startTrainingFun" @upgrade="upgrade" @close="closeDialog" />
+  <CreateBuildingDialog :buildingData="buildingData" :resourceData="resourceData" @createBuilding="createBuilding"
+    @close="closeDialog" />
   <Loading v-if="showLoading" />
 </template>
 
@@ -245,6 +272,7 @@ watch(() => store.state.blockHeight, (newVal) => {
   height: 100vh;
   overflow: hidden;
 }
+
 .spawn-wrap {
   width: 100vw;
   height: 100vh;
@@ -252,6 +280,7 @@ watch(() => store.state.blockHeight, (newVal) => {
   justify-content: center;
   font-size: 24px;
   flex-direction: column;
+
   p {
     margin-bottom: 40px;
   }

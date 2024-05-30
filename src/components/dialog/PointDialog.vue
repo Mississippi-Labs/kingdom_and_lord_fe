@@ -35,6 +35,10 @@ const emit = defineEmits(['close'])
 
 const tabIndex = ref(1)
 const troopsRef = ref({})
+const ambushType = ref(0)
+const selectedData = ref({})
+const showAmbushList = ref(false)
+const targetPoint = ref({ x: 0, y: 0 })
 const ambushData = ref({
   ambush_hash: '',
   millitia: 0,
@@ -57,9 +61,14 @@ const manhattanDistance = (x1, y1, x2, y2) => {
   return Math.abs(x2 - x1) + Math.abs(y2 - y1);
 }
 
-const getSpeed = () => {
+const getAmbushList = () => {
+  const { ambushInfo } = store.dojoComponents
+  return ambushInfo.filter(e => e.end_time && e.is_ambushed && !e.is_revealed)
+}
+
+const getSpeed = (ambushData) => {
   let speed = 0
-  const {millitia, guard, heavy_infantry, scouts, knights, heavy_knights} = ambushData.value
+  const { millitia, guard, heavy_infantry, scouts, knights, heavy_knights } = ambushData
   if (guard > 0) {
     speed = soldiers[1][2]
   } else if (millitia > 0) {
@@ -76,31 +85,33 @@ const getSpeed = () => {
   return speed
 }
 
+const getBlocks = (item) => {
+  const distance = manhattanDistance(item.target_x, item.target_y, targetPoint.value.x, targetPoint.value.y)
+  const speed = getSpeed(item.army)
+  const blocks = Math.floor((distance / speed) * 100)
+  return blocks
+}
+
 const createAmbushFun = async () => {
-  console.log('createAmbushFun', dojoContext)
   const { createAmbush } = dojoContext.setup.systemCalls
   try {
-    const address = dojoContext?.account?.address
-    const distance = manhattanDistance(playerVillage.x, playerVillage.y, props.point.x, props.point.y)
+    const distance = manhattanDistance(playerVillage.x, playerVillage.y, targetPoint.value.x, targetPoint.value.y)
     // 移动速度
-    const speed = getSpeed()
+    const speed = getSpeed(ambushData.value)
     if (speed == 0) {
       message.error('Please select troops')
       return
     }
     // console.log('distance', distance, 'speed', speed)
     // return
-    console.log('ambushData', ambushData.value)
     const time = Math.floor((distance / speed) * 100)
     const nonce = `${playerVillage.x}${playerVillage.y}`
-    const {millitia, guard, heavy_infantry, scouts, knights, heavy_knights} = ambushData.value
-    console.log('ambushData', [millitia, guard, heavy_infantry, scouts, knights, heavy_knights, props.point.x, props.point.y, time, nonce])
-    ambushData.value.ambush_hash = await hashPosei([millitia, guard, heavy_infantry, scouts, knights, heavy_knights, props.point.x, props.point.y, time, nonce])
-    console.log('ambushData', ambushData.value)
-    
+    const { millitia, guard, heavy_infantry, scouts, knights, heavy_knights } = ambushData.value
+    ambushData.value.ambush_hash = await hashPosei([millitia, guard, heavy_infantry, scouts, knights, heavy_knights, targetPoint.value.x, targetPoint.value.y, time, nonce])
+
     await createAmbush(dojoContext.account, ambushData.value)
     let ambushList = localStorage.getItem('ambushList')
-    const data = { time, nonce, target_x: props.point.x, target_y: props.point.y, ambush_hash: ambushData.value.ambush_hash }
+    const data = { time, nonce, target_x: targetPoint.value.x, target_y: targetPoint.value.y, ambush_hash: ambushData.value.ambush_hash }
     if (ambushList) {
       ambushList = JSON.parse(ambushList)
       ambushList.push(data)
@@ -113,6 +124,115 @@ const createAmbushFun = async () => {
     message.error('Failed to createAmbush:' + error)
   }
 }
+
+const revealHideFun = async () => {
+  const { revealHide } = dojoContext.setup.systemCalls
+  const { millitia, guard, heavy_infantry, scouts, knights, heavy_knights } = selectedData.value.army
+  const time = getBlocks(selectedData.value)
+  const nonce = `${playerVillage.x}${playerVillage.y}`
+  const newHash = await hashPosei([millitia, guard, heavy_infantry, scouts, knights, heavy_knights, targetPoint.value.x, targetPoint.value.y, time, nonce])
+  const args = {
+    originHash: selectedData.value.ambush_hash,
+    originX: selectedData.value.target_x,
+    originY: selectedData.value.target_y,
+    originTime: selectedData.value.time,
+    originNonce: selectedData.value.nonce,
+    newHash
+  }
+  try {
+    await revealHide(dojoContext.account, args)
+    let ambushList = localStorage.getItem('ambushList')
+    const data = { time, nonce, target_x: targetPoint.value.x, target_y: targetPoint.value.y, ambush_hash: newHash }
+    if (ambushList) {
+      ambushList = JSON.parse(ambushList)
+      ambushList.push(data)
+    } else {
+      ambushList = [data]
+    }
+    localStorage.setItem('ambushList', JSON.stringify(ambushList))
+  } catch (error) {
+    console.error('Failed to revealHide:', error)
+    message.error('Failed to revealHide:' + error)
+  }
+}
+
+const revealAttackFun = async () => {
+  const { revealAttack } = dojoContext.setup.systemCalls
+  const args = {
+    hash: selectedData.value.ambush_hash,
+    x: selectedData.value.target_x,
+    y: selectedData.value.target_y,
+    time: selectedData.value.time,
+    nonce: selectedData.value.nonce,
+    targetX: targetPoint.value.x,
+    targetY: targetPoint.value.y,
+    isRobbed: true
+  }
+  try {
+    await revealAttack(dojoContext.account, args)
+    let ambushList = localStorage.getItem('ambushList')
+    if (ambushList) {
+      ambushList = JSON.parse(ambushList)
+      // 删除已经揭示的数据
+      // ambushList = ambushList.filter(e => e.ambush_hash != selectedData.value.ambush_hash)
+    }
+    // localStorage.setItem('ambushList', JSON.stringify(ambushList))
+  } catch (error) {
+    console.error('Failed to revealAttack:', error)
+    message.error('Failed to revealAttack:' + error)
+  }
+}
+
+const send = async () => {
+  if (ambushType.value == 0) {
+    try {
+      await createAmbushFun()
+      close()
+    } catch (error) {
+      console.error('Failed to createAmbush:', error)
+    }
+  } else if (ambushType.value == 1) {
+    try {
+      await revealHideFun()
+      close()
+    } catch (error) {
+      console.error('Failed to revealHide:', error)
+    }
+  } else if (ambushType.value == 2) {
+    try {
+      await revealAttackFun()
+      close()
+    } catch (error) {
+      console.error('Failed to revealAttack:', error)
+    }
+  }
+}
+
+const changeAmbushType = (type) => {
+  const globeLocation = store?.dojoComponents?.globeLocation
+  if (type == 2 && !globeLocation.some(v => v.x == targetPoint.value.x && v.y == targetPoint.value.y)) {
+    message.error('Please select a village to attack')
+    return
+  } else if ((type == 1 || type == 0) && globeLocation.some(v => v.x == targetPoint.value.x && v.y == targetPoint.value.y)) {
+    message.error('Cannot ambush in a village')
+    return
+  }
+  ambushType.value = type
+}
+
+watch(() => ambushType.value, (newData) => {
+  if (newData != 0) {
+    selectedData.value = getAmbushList()[0] || {}
+  }
+}, { immediate: true })
+
+watch(() => props.point, (newData) => {
+  const globeLocation = store?.dojoComponents?.globeLocation
+  if (globeLocation.some(v => v.x == newData.x && v.y == newData.y)) {
+    ambushType.value = 2
+  }
+  targetPoint.value = newData
+}, { immediate: true })
 
 watch(() => props.troopsData, (newData) => {
   // 删除为0字段
@@ -141,7 +261,7 @@ watch(() => props.troopsData, (newData) => {
 
 </script>
 <template>
-  <Modal @close="close">
+  <Modal @close="close" :mainStyle="{'overflow-y': 'visible'}" :style="{'overflow': 'visible'}">
     <template v-slot:title>Rally Point</template>
     <div class="hd flex-center-center">
       <div class="img" @click="tabIndex = 0">
@@ -167,9 +287,30 @@ watch(() => props.troopsData, (newData) => {
       </div>
       <div class="form-item flex-center">
         <p class="key">To</p>
-        <p class="value">{{point.x}}, {{point.y}}</p>
+        <div class="point flex-center">
+          <span>X</span><input type="number" v-model="targetPoint.x" />
+          <span>,</span>
+          <span>Y</span><input type="number" v-model="targetPoint.y" />
+        </div>
       </div>
-      <div class="troops flex-center-sb">
+      <div class="type flex-center-sb">
+        <div class="type-item flex-center" @click="changeAmbushType(0)">
+          <img v-if="ambushType != 0" src="../../assets/images/check.svg" alt="">
+          <img v-else src="../../assets/images/checked.svg" alt="">
+          <span>Ambush</span>
+        </div>
+        <div class="type-item flex-center" @click="changeAmbushType(1)">
+          <img v-if="ambushType != 1" src="../../assets/images/check.svg" alt="">
+          <img v-else src="../../assets/images/checked.svg" alt="">
+          <span>Re-Hide</span>
+        </div>
+        <div class="type-item flex-center" @click="changeAmbushType(2)">
+          <img v-if="ambushType != 2" src="../../assets/images/check.svg" alt="">
+          <img v-else src="../../assets/images/checked.svg" alt="">
+          <span>Pillage</span>
+        </div>
+      </div>
+      <div v-if="ambushType == 0" class="troops flex-center-sb">
         <div class="troops-item flex-center" v-for="(value, key) in troopsRef">
           <div class="img flex-center-center">
             <img v-if="key == 'millitia'" src="../../assets/images/millita.png" alt="">
@@ -185,7 +326,53 @@ watch(() => props.troopsData, (newData) => {
           </div>
         </div>
       </div>
-      <div class="btn flex-center-center" @click="createAmbushFun">Build</div>
+      <div v-else class="ambush-select" @click="showAmbushList = !showAmbushList">
+        <div class="ambush-list" v-if="Object.keys(selectedData).length">
+          <div class="ambush-item flex-center-sb">
+            <div class="flex-center ambush-item-troops">
+              <div class="ambush-troops-item flex-center" v-for="(value, key) in selectedData?.army" :key="key">
+                <div class="img flex-center-center">
+                  <img v-if="key == 'guard'" src="../../assets/images/guard.png" alt="">
+                  <img v-else-if="key == 'millitia'" src="../../assets/images/millita.png" alt="">
+                  <img v-else-if="key == 'heavy_infantry'" src="../../assets/images/heavy_infantry.png" alt="">
+                  <img v-else-if="key == 'scouts'" src="../../assets/images/scout.png" alt="">
+                  <img v-else-if="key == 'knights'" src="../../assets/images/knights.png" alt="">
+                  <img v-else-if="key == 'heavy_knights'" src="../../assets/images/heavy_knights.png" alt="">
+                </div>
+                <span>{{ value }}</span>
+              </div>
+
+              <span>{{ selectedData?.target_x }}, {{ selectedData?.target_y }}</span>
+            </div>
+            <div class="time flex-center"><span v-if="Object.keys(selectedData).length != 0">{{ getBlocks(selectedData) }} blocks</span><img src="../../assets/images/icon_arrow.svg" alt="">
+            </div>
+          </div>
+          <!-- </div> -->
+        </div>
+        <div v-show="showAmbushList" class="ambush-list ambush-absolute">
+          <div class="ambush-item flex-center-sb" v-for="(item, index) in getAmbushList()" :key="index" @click="selectedData = item">
+            <div class="flex-center ambush-item-troops">
+              <div class="ambush-troops-item flex-center" v-for="(value, key) in item.army" :key="key">
+                <div class="img flex-center-center">
+                  <img v-if="key == 'guard'" src="../../assets/images/guard.png" alt="">
+                  <img v-else-if="key == 'millitia'" src="../../assets/images/millita.png" alt="">
+                  <img v-else-if="key == 'heavy_infantry'" src="../../assets/images/heavy_infantry.png" alt="">
+                  <img v-else-if="key == 'scouts'" src="../../assets/images/scout.png" alt="">
+                  <img v-else-if="key == 'knights'" src="../../assets/images/knights.png" alt="">
+                  <img v-else-if="key == 'heavy_knights'" src="../../assets/images/heavy_knights.png" alt="">
+                </div>
+                <span>{{ value }}</span>
+              </div>
+
+              <span>{{ item.target_x }}, {{ item.target_y }}</span>
+            </div>
+            <div class="time flex-center"><span>{{ getBlocks(item) }} blocks</span><img src="../../assets/images/icon_arrow.svg" alt="">
+            </div>
+          </div>
+          <!-- </div> -->
+        </div>
+      </div>
+      <div class="btn flex-center-center" @click="send">Send</div>
     </div>
   </Modal>
 </template>
@@ -227,7 +414,7 @@ watch(() => props.troopsData, (newData) => {
   width: 490px;
 
   .form-item {
-    margin-bottom: 8px;
+    margin-bottom: 16px;
 
     .key {
       font-size: 14px;
@@ -239,39 +426,160 @@ watch(() => props.troopsData, (newData) => {
       font-size: 14px;
       font-family: Chalkboard-Bold;
     }
+
+    .point {
+      font-size: 14px;
+
+      input {
+        width: 60px;
+        height: 25px;
+        font-size: 14px;
+        margin-right: .25em;
+        border: 1px solid #000;
+        border-radius: 5px;
+        outline: none;
+      }
+
+      span {
+        font-size: 14px;
+        margin-right: .5em;
+      }
+
+    }
   }
+
+  .type {
+    margin-top: 24px;
+  }
+
+  .type-item {
+    cursor: pointer;
+
+    img {
+      width: 12px;
+      height: 12px;
+    }
+
+    span {
+      font-size: 12px;
+      line-height: 1;
+      margin-left: .5em;
+    }
+  }
+
   .troops {
     flex-wrap: wrap;
+
     .troops-item {
       width: 50%;
       margin-top: 20px;
+
       .img {
         width: 40px;
         height: 40px;
         background: #ECECEC;
         border-radius: 50%;
+
         img {
           width: 120%;
           height: 120%;
         }
       }
+
       .input {
         margin-left: 20px;
+
         input {
           height: 30px;
           width: 40px;
           font-size: 14px;
           // 去掉数字输入框的上下箭头
           -moz-appearance: textfield;
+
           &::-webkit-inner-spin-button,
           &::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
           }
         }
+
         span {
           margin-left: 10px;
           font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .ambush-select {
+    margin-top: 40px;
+    position: relative;
+    .ambush-selected {
+      height: 100px;
+      border-radius: 20px;
+      border: 1px solid #C3C3C3;
+    }
+  }
+
+  .ambush-list {
+    background: #fff;
+    border: 1px solid #C3C3C3;
+    border-radius: 20px;
+    &.ambush-absolute {
+      position: absolute;
+      top: 120px;
+      left: 0;
+      right: 0;
+      max-height: 220px;
+      overflow: auto;
+    }
+
+    .ambush-item {
+      height: 100px;
+      border-bottom: 1px solid #f5f5f5;
+      padding: 16px;
+      padding-top: 6px;
+      box-sizing: border-box;
+
+      .ambush-item-troops {
+        width: 300px;
+        flex-wrap: wrap;
+
+        .ambush-troops-item {
+          margin-right: 15px;
+          margin-top: 10px;
+          width: 80px;
+          flex: 0 0 70px;
+
+          .img {
+            width: 30px;
+            height: 30px;
+            background: #ECECEC;
+            border-radius: 50%;
+
+            img {
+              width: 120%;
+              height: 120%;
+            }
+          }
+
+          span {
+            margin-left: 10px;
+            font-size: 14px;
+          }
+        }
+      }
+
+      .time {
+        font-size: 14px;
+        color: rgba($color: #000000, $alpha: .6);
+        cursor: pointer;
+
+        img {
+          width: 8px;
+          height: auto;
+          margin-top: 4px;
+          margin-left: 20px;
         }
       }
     }

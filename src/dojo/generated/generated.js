@@ -329,13 +329,13 @@ export async function setupWorld(provider) {
       }
     }
 
-    const revealAttack = async ({ account }) => {
+    const revealAttack = async (account, { hash, x, y, time, nonce, targetX, targetY, isRobbed }) => {
       try {
         const { transaction_hash } = await provider.execute(
           account,
           contract_name,
           "reveal_attack",
-          []
+          [hash, x, y, time, nonce, targetX, targetY, isRobbed]
         );
         setLogsFun({
           hash: transaction_hash,
@@ -367,13 +367,13 @@ export async function setupWorld(provider) {
       }
     }
 
-    const revealHide = async ({ account }) => {
+    const revealHide = async (account, {originHash, originX, originY, originTime, originNonce, newHash}) => {
       try {
         const { transaction_hash } = await provider.execute(
           account,
           contract_name,
           "reveal_hide",
-          []
+          [originHash, originX, originY, originTime, originNonce, newHash]
         );
         setLogsFun({
           hash: transaction_hash,

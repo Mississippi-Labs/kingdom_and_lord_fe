@@ -49,10 +49,10 @@ const getData = async () => {
     }
     console.log('account', account)
     dojoContext.value = { account, setup: setupResult }
-    const { AlreadySpawnedEvent, AmbushInfo, Barn, BarnStorage, Barrack, BarrackUnderTraining, BarrackWaitingToTrain, BuildingAreaInfo, CityBuilding, CityHall, College, CityWall, Config, 
+    const { AlreadySpawnedEvent, AmbushInfo, Barn, BarnStorage, Barrack, BarrackUnderTraining, BarrackWaitingToTrain, BuildingAreaInfo, CityBuilding, CityHall, College, CityWall, Config,
       Embassy, GlobeLocation, NewPlayerSpawnEvent, OuterCity, PayToFinishedUpgradeEvent, PlayerVillage, SpawnStatus, Stable, StableUnderTraining, StableWaitingToTrain, StartTrainingEvent,
-      StartUpgradeEvent, TrainingFinishedEvent, Troops, UnderUpgrading, UpgradeCompleteEvent, UpgradeNotEnoughResourceEvent, UpgradeNotFinishedEvent, VillageConfirm, Warehouse, 
-      WaitingToUpgrade, WarehouseStorage,  
+      StartUpgradeEvent, TrainingFinishedEvent, Troops, UnderUpgrading, UpgradeCompleteEvent, UpgradeNotEnoughResourceEvent, UpgradeNotFinishedEvent, VillageConfirm, Warehouse,
+      WaitingToUpgrade, WarehouseStorage,
     } = setupResult.clientComponents
     const barn = useEntityQuery([Has(Barn)]);
     const cityBuilding = useEntityQuery([Has(CityBuilding)]);
@@ -296,11 +296,12 @@ const getData = async () => {
         startUpgradeEvent: startUpgradeEventData
       }
       setDojoComponents(dojoComponents)
-    }, { deep: true, immediate: true})
+    }, { deep: true, immediate: true })
   } catch (error) {
     console.error('Failed to fetch data:', error);
   }
 }
+
 onBeforeMount(() => {
   getData()
   getLastBlock()
@@ -311,9 +312,9 @@ onBeforeMount(() => {
     }
   }, 2000)
   const last = localStorage.getItem('last') || ''
-  if (last != '5.21') {
+  if (last != '5.29') {
     localStorage.clear()
-    localStorage.setItem('last', '5.21')
+    localStorage.setItem('last', '5.29')
   }
 })
 
