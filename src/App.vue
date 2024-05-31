@@ -157,7 +157,6 @@ const getData = async () => {
       })
 
       const troopsData = newTroopsData.value.map((entity) => {
-        console.log(getComponentValue(Troops, entity))
         let data = toObject(getComponentValue(Troops, entity))
         data.player = getHexAddress(data.player)
         return data
